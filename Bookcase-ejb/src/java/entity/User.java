@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -36,13 +31,14 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")})
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Column(name = "name", length = 255)
     private String name;
     @Column(name = "surname", length = 255)
     private String surname;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -182,5 +178,4 @@ public class User implements Serializable {
     public String toString() {
         return "model.User[id=" + id + "]";
     }
-
 }

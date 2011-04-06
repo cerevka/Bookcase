@@ -1,23 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -25,30 +19,31 @@ import javax.persistence.Table;
  * @author Adam
  */
 @Entity
-@Table(name = "shelf", catalog = "bookcase", schema = "")
+@Table(name = "author", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Shelf.findAll", query = "SELECT s FROM Shelf s"),
-    @NamedQuery(name = "Shelf.findById", query = "SELECT s FROM Shelf s WHERE s.id = :id"),
-    @NamedQuery(name = "Shelf.findByName", query = "SELECT s FROM Shelf s WHERE s.name = :name")})
-public class Shelf implements Serializable {
+    @NamedQuery(name = "Author.findAll", query = "SELECT a FROM Author a"),
+    @NamedQuery(name = "Author.findById", query = "SELECT a FROM Author a WHERE a.id = :id"),
+    @NamedQuery(name = "Author.findByName", query = "SELECT a FROM Author a WHERE a.name = :name"),
+    @NamedQuery(name = "Author.findBySurname", query = "SELECT a FROM Author a WHERE a.surname = :surname")})
+public class Author implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
     @Column(name = "name", length = 255)
     private String name;
-    @ManyToMany(mappedBy = "shelfCollection")
-    private Collection<Copy> copyCollection;
-    @JoinColumn(name = "belongs", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private User belongs;
+    @Column(name = "surname", length = 255)
+    private String surname;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorid")
+    private Collection<Book> bookCollection;
 
-    public Shelf() {
+    public Author() {
     }
 
-    public Shelf(Integer id) {
+    public Author(Integer id) {
         this.id = id;
     }
 
@@ -68,20 +63,20 @@ public class Shelf implements Serializable {
         this.name = name;
     }
 
-    public Collection<Copy> getCopyCollection() {
-        return copyCollection;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setCopyCollection(Collection<Copy> copyCollection) {
-        this.copyCollection = copyCollection;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
-    public User getBelongs() {
-        return belongs;
+    public Collection<Book> getBookCollection() {
+        return bookCollection;
     }
 
-    public void setBelongs(User belongs) {
-        this.belongs = belongs;
+    public void setBookCollection(Collection<Book> bookCollection) {
+        this.bookCollection = bookCollection;
     }
 
     @Override
@@ -94,10 +89,10 @@ public class Shelf implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Shelf)) {
+        if (!(object instanceof Author)) {
             return false;
         }
-        Shelf other = (Shelf) object;
+        Author other = (Author) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -106,7 +101,6 @@ public class Shelf implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Shelf[id=" + id + "]";
+        return "model.Author[id=" + id + "]";
     }
-
 }

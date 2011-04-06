@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -31,9 +26,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
     @NamedQuery(name = "Role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")})
 public class Role implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -100,5 +96,4 @@ public class Role implements Serializable {
     public String toString() {
         return "model.Role[id=" + id + "]";
     }
-
 }

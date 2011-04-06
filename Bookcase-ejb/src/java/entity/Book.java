@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -33,9 +28,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "Book.findByTitle", query = "SELECT b FROM Book b WHERE b.title = :title"),
     @NamedQuery(name = "Book.findByDescription", query = "SELECT b FROM Book b WHERE b.description = :description")})
 public class Book implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -120,5 +116,4 @@ public class Book implements Serializable {
     public String toString() {
         return "model.Book[id=" + id + "]";
     }
-
 }

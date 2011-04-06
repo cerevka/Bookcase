@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -16,6 +11,7 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class FriendshipPK implements Serializable {
+
     @Basic(optional = false)
     @Column(name = "User_1_id", nullable = false)
     private int user1id;
@@ -75,5 +71,4 @@ public class FriendshipPK implements Serializable {
     public String toString() {
         return "model.FriendshipPK[user1id=" + user1id + ", user2id=" + user2id + "]";
     }
-
 }

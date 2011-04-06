@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -27,6 +22,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Friendship.findByUser1id", query = "SELECT f FROM Friendship f WHERE f.friendshipPK.user1id = :user1id"),
     @NamedQuery(name = "Friendship.findByUser2id", query = "SELECT f FROM Friendship f WHERE f.friendshipPK.user2id = :user2id")})
 public class Friendship implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected FriendshipPK friendshipPK;
@@ -106,5 +102,4 @@ public class Friendship implements Serializable {
     public String toString() {
         return "model.Friendship[friendshipPK=" + friendshipPK + "]";
     }
-
 }

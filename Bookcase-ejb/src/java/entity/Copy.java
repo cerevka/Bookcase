@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -38,9 +33,10 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Copy.findByNote", query = "SELECT c FROM Copy c WHERE c.note = :note"),
     @NamedQuery(name = "Copy.findByPublished", query = "SELECT c FROM Copy c WHERE c.published = :published")})
 public class Copy implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -149,5 +145,4 @@ public class Copy implements Serializable {
     public String toString() {
         return "model.Copy[id=" + id + "]";
     }
-
 }

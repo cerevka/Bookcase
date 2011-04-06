@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package model;
+package entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,22 +21,28 @@ import javax.persistence.TemporalType;
  * @author Adam
  */
 @Entity
-@Table(name = "reservation", catalog = "bookcase", schema = "")
+@Table(name = "borrow", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
-    @NamedQuery(name = "Reservation.findByStatus", query = "SELECT r FROM Reservation r WHERE r.status = :status"),
-    @NamedQuery(name = "Reservation.findByDatum", query = "SELECT r FROM Reservation r WHERE r.datum = :datum"),
-    @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id")})
-public class Reservation implements Serializable {
+    @NamedQuery(name = "Borrow.findAll", query = "SELECT b FROM Borrow b"),
+    @NamedQuery(name = "Borrow.findByLimitDate", query = "SELECT b FROM Borrow b WHERE b.limitDate = :limitDate"),
+    @NamedQuery(name = "Borrow.findByDo1", query = "SELECT b FROM Borrow b WHERE b.do1 = :do1"),
+    @NamedQuery(name = "Borrow.findByOd", query = "SELECT b FROM Borrow b WHERE b.od = :od"),
+    @NamedQuery(name = "Borrow.findById", query = "SELECT b FROM Borrow b WHERE b.id = :id")})
+public class Borrow implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Column(name = "status", length = 255)
-    private String status;
-    @Basic(optional = false)
-    @Column(name = "datum", nullable = false)
+    @Column(name = "limit_date")
     @Temporal(TemporalType.DATE)
-    private Date datum;
+    private Date limitDate;
+    @Column(name = "do")
+    @Temporal(TemporalType.DATE)
+    private Date do1;
+    @Basic(optional = false)
+    @Column(name = "od", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date od;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
@@ -52,32 +53,40 @@ public class Reservation implements Serializable {
     @ManyToOne(optional = false)
     private User userid;
 
-    public Reservation() {
+    public Borrow() {
     }
 
-    public Reservation(Integer id) {
+    public Borrow(Integer id) {
         this.id = id;
     }
 
-    public Reservation(Integer id, Date datum) {
+    public Borrow(Integer id, Date od) {
         this.id = id;
-        this.datum = datum;
+        this.od = od;
     }
 
-    public String getStatus() {
-        return status;
+    public Date getLimitDate() {
+        return limitDate;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setLimitDate(Date limitDate) {
+        this.limitDate = limitDate;
     }
 
-    public Date getDatum() {
-        return datum;
+    public Date getDo1() {
+        return do1;
     }
 
-    public void setDatum(Date datum) {
-        this.datum = datum;
+    public void setDo1(Date do1) {
+        this.do1 = do1;
+    }
+
+    public Date getOd() {
+        return od;
+    }
+
+    public void setOd(Date od) {
+        this.od = od;
     }
 
     public Integer getId() {
@@ -114,10 +123,10 @@ public class Reservation implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Reservation)) {
+        if (!(object instanceof Borrow)) {
             return false;
         }
-        Reservation other = (Reservation) object;
+        Borrow other = (Borrow) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -126,7 +135,6 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Reservation[id=" + id + "]";
+        return "model.Borrow[id=" + id + "]";
     }
-
 }
