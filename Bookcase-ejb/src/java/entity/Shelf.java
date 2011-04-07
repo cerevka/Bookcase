@@ -37,9 +37,9 @@ public class Shelf implements Serializable {
     private String name;
     @ManyToMany(mappedBy = "shelfCollection")
     private Collection<Copy> copyCollection;
-    @JoinColumn(name = "belongs", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private User belongs;
+    private Person personId;
 
     public Shelf() {
     }
@@ -72,12 +72,12 @@ public class Shelf implements Serializable {
         this.copyCollection = copyCollection;
     }
 
-    public User getBelongs() {
-        return belongs;
+    public Person getPersonId() {
+        return personId;
     }
 
-    public void setBelongs(User belongs) {
-        this.belongs = belongs;
+    public void setPersonId(Person personId) {
+        this.personId = personId;
     }
 
     @Override

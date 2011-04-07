@@ -1,9 +1,13 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -12,46 +16,45 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
 @Table(name = "friendship", catalog = "bookcase", schema = "")
 @NamedQueries({
     @NamedQuery(name = "Friendship.findAll", query = "SELECT f FROM Friendship f"),
     @NamedQuery(name = "Friendship.findByAuthorized", query = "SELECT f FROM Friendship f WHERE f.authorized = :authorized"),
-    @NamedQuery(name = "Friendship.findByUser1id", query = "SELECT f FROM Friendship f WHERE f.friendshipPK.user1id = :user1id"),
-    @NamedQuery(name = "Friendship.findByUser2id", query = "SELECT f FROM Friendship f WHERE f.friendshipPK.user2id = :user2id")})
+    @NamedQuery(name = "Friendship.findByPersonId1", query = "SELECT f FROM Friendship f WHERE f.personId1 = :personId1"),
+    @NamedQuery(name = "Friendship.findByPersonId2", query = "SELECT f FROM Friendship f WHERE f.personId2 = :personId2")})
 public class Friendship implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected FriendshipPK friendshipPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
     @Column(name = "authorized")
     private Integer authorized;
-    @JoinColumn(name = "User_2_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "personId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private User user;
-    @JoinColumn(name = "User_1_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Person personId1;
+    @JoinColumn(name = "personId2", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private User user1;
+    private Person personId2;
 
     public Friendship() {
     }
 
-    public Friendship(FriendshipPK friendshipPK) {
-        this.friendshipPK = friendshipPK;
+    public Friendship(int id) {
+        this.id = id;
     }
 
-    public Friendship(int user1id, int user2id) {
-        this.friendshipPK = new FriendshipPK(user1id, user2id);
+    public int getId() {
+        return id;
     }
 
-    public FriendshipPK getFriendshipPK() {
-        return friendshipPK;
-    }
-
-    public void setFriendshipPK(FriendshipPK friendshipPK) {
-        this.friendshipPK = friendshipPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Integer getAuthorized() {
@@ -62,26 +65,26 @@ public class Friendship implements Serializable {
         this.authorized = authorized;
     }
 
-    public User getUser() {
-        return user;
+    public Person getPersonId1() {
+        return personId1;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPersonId1(Person personId) {
+        this.personId1 = personId;
     }
 
-    public User getUser1() {
-        return user1;
+    public Person getPersonId2() {
+        return personId2;
     }
 
-    public void setUser1(User user1) {
-        this.user1 = user1;
+    public void setPersonId2(Person personId) {
+        this.personId2 = personId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (friendshipPK != null ? friendshipPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -92,7 +95,7 @@ public class Friendship implements Serializable {
             return false;
         }
         Friendship other = (Friendship) object;
-        if ((this.friendshipPK == null && other.friendshipPK != null) || (this.friendshipPK != null && !this.friendshipPK.equals(other.friendshipPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -100,6 +103,6 @@ public class Friendship implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Friendship[friendshipPK=" + friendshipPK + "]";
+        return "entity.Friendship[id=" + id + "]";
     }
 }

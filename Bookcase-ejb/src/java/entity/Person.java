@@ -18,51 +18,51 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
-@Table(name = "user", catalog = "bookcase", schema = "", uniqueConstraints = {
+@Table(name = "person", catalog = "bookcase", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email"})})
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
-    @NamedQuery(name = "User.findBySurname", query = "SELECT u FROM User u WHERE u.surname = :surname"),
-    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")})
-public class User implements Serializable {
+    @NamedQuery(name = "Person.findAll", query = "SELECT u FROM Person u"),
+    @NamedQuery(name = "Person.findByName", query = "SELECT u FROM Person u WHERE u.name = :name"),
+    @NamedQuery(name = "Person.findBySurname", query = "SELECT u FROM Person u WHERE u.surname = :surname"),
+    @NamedQuery(name = "Person.findById", query = "SELECT u FROM Person u WHERE u.id = :id"),
+    @NamedQuery(name = "Person.findByEmail", query = "SELECT u FROM Person u WHERE u.email = :email"),
+    @NamedQuery(name = "Person.findByPassword", query = "SELECT u FROM Person u WHERE u.password = :password")})
+public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Column(name = "name", length = 255)
-    private String name;
-    @Column(name = "surname", length = 255)
-    private String surname;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+    @Column(name = "name", length = 255)
+    private String name;
+    @Column(name = "surname", length = 255)
+    private String surname;
     @Column(name = "email", length = 255)
     private String email;
     @Column(name = "password", length = 255)
     private String password;
-    @ManyToMany(mappedBy = "userCollection")
-    private Collection<Role> roleCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userid")
+    @ManyToMany(mappedBy = "personCollection")
+    private Collection<Privilege> privilegeCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
     private Collection<Reservation> reservationCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Collection<Friendship> friendshipCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user1")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId1")
     private Collection<Friendship> friendshipCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "belongs")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId2")
+    private Collection<Friendship> friendshipCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
     private Collection<Shelf> shelfCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
     private Collection<Borrow> borrowCollection;
 
-    public User() {
+    public Person() {
     }
 
-    public User(Integer id) {
+    public Person(Integer id) {
         this.id = id;
     }
 
@@ -106,12 +106,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Collection<Role> getRoleCollection() {
-        return roleCollection;
+    public Collection<Privilege> getPrivilegeCollection() {
+        return privilegeCollection;
     }
 
-    public void setRoleCollection(Collection<Role> roleCollection) {
-        this.roleCollection = roleCollection;
+    public void setPrivilegeCollection(Collection<Privilege> privilegeCollection) {
+        this.privilegeCollection = privilegeCollection;
     }
 
     public Collection<Reservation> getReservationCollection() {
@@ -123,19 +123,19 @@ public class User implements Serializable {
     }
 
     public Collection<Friendship> getFriendshipCollection() {
-        return friendshipCollection;
-    }
-
-    public void setFriendshipCollection(Collection<Friendship> friendshipCollection) {
-        this.friendshipCollection = friendshipCollection;
-    }
-
-    public Collection<Friendship> getFriendshipCollection1() {
         return friendshipCollection1;
     }
 
+    public void setFriendshipCollection(Collection<Friendship> friendshipCollection) {
+        this.friendshipCollection1 = friendshipCollection;
+    }
+
+    public Collection<Friendship> getFriendshipCollection1() {
+        return friendshipCollection2;
+    }
+
     public void setFriendshipCollection1(Collection<Friendship> friendshipCollection1) {
-        this.friendshipCollection1 = friendshipCollection1;
+        this.friendshipCollection2 = friendshipCollection1;
     }
 
     public Collection<Shelf> getShelfCollection() {
@@ -164,10 +164,10 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
+        if (!(object instanceof Person)) {
             return false;
         }
-        User other = (User) object;
+        Person other = (Person) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -176,6 +176,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "model.User[id=" + id + "]";
+        return "entity.Person[id=" + id + "]";
     }
 }

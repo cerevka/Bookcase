@@ -17,15 +17,15 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
-@Table(name = "role", catalog = "bookcase", schema = "")
+@Table(name = "privilege", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
-    @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
-    @NamedQuery(name = "Role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")})
-public class Role implements Serializable {
+    @NamedQuery(name = "Privilege.findAll", query = "SELECT r FROM Privilege r"),
+    @NamedQuery(name = "Privilige.findById", query = "SELECT r FROM Privilege r WHERE r.id = :id"),
+    @NamedQuery(name = "Privilege.findByName", query = "SELECT r FROM Privilege r WHERE r.name = :name")})
+public class Privilege implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,16 +35,16 @@ public class Role implements Serializable {
     private Integer id;
     @Column(name = "name", length = 255)
     private String name;
-    @JoinTable(name = "usersrole", joinColumns = {
-        @JoinColumn(name = "User_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "Role_id", referencedColumnName = "id", nullable = false)})
+    @JoinTable(name = "personHasPrivilege", joinColumns = {
+        @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "privilegeId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
-    private Collection<User> userCollection;
+    private Collection<Person> personCollection;
 
-    public Role() {
+    public Privilege() {
     }
 
-    public Role(Integer id) {
+    public Privilege(Integer id) {
         this.id = id;
     }
 
@@ -64,12 +64,12 @@ public class Role implements Serializable {
         this.name = name;
     }
 
-    public Collection<User> getUserCollection() {
-        return userCollection;
+    public Collection<Person> getPersonCollection() {
+        return personCollection;
     }
 
-    public void setUserCollection(Collection<User> userCollection) {
-        this.userCollection = userCollection;
+    public void setPersonCollection(Collection<Person> personCollection) {
+        this.personCollection = personCollection;
     }
 
     @Override
@@ -82,10 +82,10 @@ public class Role implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Role)) {
+        if (!(object instanceof Privilege)) {
             return false;
         }
-        Role other = (Role) object;
+        Privilege other = (Privilege) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -94,6 +94,6 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Role[id=" + id + "]";
+        return "entity.Privilege[id=" + id + "]";
     }
 }

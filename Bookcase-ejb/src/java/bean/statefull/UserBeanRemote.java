@@ -1,9 +1,9 @@
-package sessionBean;
+package bean.statefull;
 
 import javax.ejb.Remote;
 
 /**
- *s
+ *
  * @author Tomáš Čerevka
  */
 @Remote

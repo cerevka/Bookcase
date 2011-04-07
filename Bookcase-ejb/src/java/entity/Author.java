@@ -15,8 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- *
- * @author Adam
+ * Autor knihy.
+ * @author Adam Činčura
  */
 @Entity
 @Table(name = "author", catalog = "bookcase", schema = "")
@@ -37,7 +37,7 @@ public class Author implements Serializable {
     private String name;
     @Column(name = "surname", length = 255)
     private String surname;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
     private Collection<Book> bookCollection;
 
     public Author() {
@@ -101,6 +101,6 @@ public class Author implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Author[id=" + id + "]";
+        return "entity.Author[id=" + id + "]";
     }
 }

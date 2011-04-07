@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
 @Table(name = "copy", catalog = "bookcase", schema = "")
@@ -45,18 +45,18 @@ public class Copy implements Serializable {
     @Column(name = "published")
     @Temporal(TemporalType.DATE)
     private Date published;
-    @JoinTable(name = "bookinshelf", joinColumns = {
-        @JoinColumn(name = "Shelf_id", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "Copy_id", referencedColumnName = "id", nullable = false)})
+    @JoinTable(name = "bookInShelf", joinColumns = {
+        @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
     private Collection<Shelf> shelfCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
     private Collection<Reservation> reservationCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
     private Collection<Borrow> borrowCollection;
-    @JoinColumn(name = "Book_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Book bookid;
+    private Book bookId;
 
     public Copy() {
     }
@@ -113,12 +113,12 @@ public class Copy implements Serializable {
         this.borrowCollection = borrowCollection;
     }
 
-    public Book getBookid() {
-        return bookid;
+    public Book getBookId() {
+        return bookId;
     }
 
-    public void setBookid(Book bookid) {
-        this.bookid = bookid;
+    public void setBookId(Book bookId) {
+        this.bookId = bookId;
     }
 
     @Override
@@ -143,6 +143,6 @@ public class Copy implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Copy[id=" + id + "]";
+        return "entity.Copy[id=" + id + "]";
     }
 }

@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
 @Table(name = "book", catalog = "bookcase", schema = "")
@@ -39,10 +39,10 @@ public class Book implements Serializable {
     private String title;
     @Column(name = "description", length = 1024)
     private String description;
-    @JoinColumn(name = "Author_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Author authorid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookid")
+    private Author authorId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
     private Collection<Copy> copyCollection;
 
     public Book() {
@@ -76,12 +76,12 @@ public class Book implements Serializable {
         this.description = description;
     }
 
-    public Author getAuthorid() {
-        return authorid;
+    public Author getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorid(Author authorid) {
-        this.authorid = authorid;
+    public void setAuthorId(Author authorId) {
+        this.authorId = authorId;
     }
 
     public Collection<Copy> getCopyCollection() {
@@ -114,6 +114,6 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Book[id=" + id + "]";
+        return "entity.Book[id=" + id + "]";
     }
 }

@@ -18,40 +18,40 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Adam
+ * @author Adam Činčura
  */
 @Entity
 @Table(name = "borrow", catalog = "bookcase", schema = "")
 @NamedQueries({
     @NamedQuery(name = "Borrow.findAll", query = "SELECT b FROM Borrow b"),
     @NamedQuery(name = "Borrow.findByLimitDate", query = "SELECT b FROM Borrow b WHERE b.limitDate = :limitDate"),
-    @NamedQuery(name = "Borrow.findByDo1", query = "SELECT b FROM Borrow b WHERE b.do1 = :do1"),
-    @NamedQuery(name = "Borrow.findByOd", query = "SELECT b FROM Borrow b WHERE b.od = :od"),
+    @NamedQuery(name = "Borrow.findByToDate", query = "SELECT b FROM Borrow b WHERE b.toDate = :toDate"),
+    @NamedQuery(name = "Borrow.findByFromDate", query = "SELECT b FROM Borrow b WHERE b.fromDate = :fromDate"),
     @NamedQuery(name = "Borrow.findById", query = "SELECT b FROM Borrow b WHERE b.id = :id")})
 public class Borrow implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Column(name = "limit_date")
-    @Temporal(TemporalType.DATE)
-    private Date limitDate;
-    @Column(name = "do")
-    @Temporal(TemporalType.DATE)
-    private Date do1;
-    @Basic(optional = false)
-    @Column(name = "od", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date od;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @JoinColumn(name = "Copy_id", referencedColumnName = "id", nullable = false)
+    @Column(name = "limitDate")
+    @Temporal(TemporalType.DATE)
+    private Date limitDate;
+    @Column(name = "toDate")
+    @Temporal(TemporalType.DATE)
+    private Date toDate;
+    @Basic(optional = false)
+    @Column(name = "fromDate", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date fromDate;
+    @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Copy copyid;
-    @JoinColumn(name = "User_id", referencedColumnName = "id", nullable = false)
+    private Copy copyId;
+    @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private User userid;
+    private Person personId;
 
     public Borrow() {
     }
@@ -60,9 +60,9 @@ public class Borrow implements Serializable {
         this.id = id;
     }
 
-    public Borrow(Integer id, Date od) {
+    public Borrow(Integer id, Date fromDate) {
         this.id = id;
-        this.od = od;
+        this.fromDate = fromDate;
     }
 
     public Date getLimitDate() {
@@ -73,20 +73,20 @@ public class Borrow implements Serializable {
         this.limitDate = limitDate;
     }
 
-    public Date getDo1() {
-        return do1;
+    public Date getToDate() {
+        return toDate;
     }
 
-    public void setDo1(Date do1) {
-        this.do1 = do1;
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
     }
 
-    public Date getOd() {
-        return od;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setOd(Date od) {
-        this.od = od;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
     public Integer getId() {
@@ -97,20 +97,20 @@ public class Borrow implements Serializable {
         this.id = id;
     }
 
-    public Copy getCopyid() {
-        return copyid;
+    public Copy getCopyId() {
+        return copyId;
     }
 
-    public void setCopyid(Copy copyid) {
-        this.copyid = copyid;
+    public void setCopyId(Copy copyId) {
+        this.copyId = copyId;
     }
 
-    public User getUserid() {
-        return userid;
+    public Person getPersonId() {
+        return personId;
     }
 
-    public void setUserid(User userid) {
-        this.userid = userid;
+    public void setPersonId(Person personId) {
+        this.personId = personId;
     }
 
     @Override
@@ -135,6 +135,6 @@ public class Borrow implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Borrow[id=" + id + "]";
+        return "entity.Borrow[id=" + id + "]";
     }
 }
