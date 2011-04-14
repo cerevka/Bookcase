@@ -16,16 +16,17 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- *
- * @author Adam
+ * Entita policky.
+ * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "shelf", catalog = "bookcase", schema = "")
+@Table(name = "entityShelf", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Shelf.findAll", query = "SELECT s FROM Shelf s"),
-    @NamedQuery(name = "Shelf.findById", query = "SELECT s FROM Shelf s WHERE s.id = :id"),
-    @NamedQuery(name = "Shelf.findByName", query = "SELECT s FROM Shelf s WHERE s.name = :name")})
-public class Shelf implements Serializable {
+    @NamedQuery(name = "EntityShelf.findAll", query = "SELECT s FROM EntityShelf s"),
+    @NamedQuery(name = "EntityShelf.findById", query = "SELECT s FROM EntityShelf s WHERE s.id = :id"),
+    @NamedQuery(name = "EntityShelf.findByName", query = "SELECT s FROM EntityShelf s WHERE s.name = :name")})
+public class EntityShelf implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,15 +37,15 @@ public class Shelf implements Serializable {
     @Column(name = "name", length = 255)
     private String name;
     @ManyToMany(mappedBy = "shelfCollection")
-    private Collection<Copy> copyCollection;
-    @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)
+    private Collection<EntityCopy> copyCollection;
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Person personId;
+    private EntityUser userId;
 
-    public Shelf() {
+    public EntityShelf() {
     }
 
-    public Shelf(Integer id) {
+    public EntityShelf(Integer id) {
         this.id = id;
     }
 
@@ -64,20 +65,20 @@ public class Shelf implements Serializable {
         this.name = name;
     }
 
-    public Collection<Copy> getCopyCollection() {
+    public Collection<EntityCopy> getCopyCollection() {
         return copyCollection;
     }
 
-    public void setCopyCollection(Collection<Copy> copyCollection) {
+    public void setCopyCollection(Collection<EntityCopy> copyCollection) {
         this.copyCollection = copyCollection;
     }
 
-    public Person getPersonId() {
-        return personId;
+    public EntityUser getUserId() {
+        return userId;
     }
 
-    public void setPersonId(Person personId) {
-        this.personId = personId;
+    public void setUserId(EntityUser userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -90,10 +91,10 @@ public class Shelf implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Shelf)) {
+        if (!(object instanceof EntityShelf)) {
             return false;
         }
-        Shelf other = (Shelf) object;
+        EntityShelf other = (EntityShelf) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -102,6 +103,6 @@ public class Shelf implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Shelf[id=" + id + "]";
+        return "model.EntityShelf[id=" + id + "]";
     }
 }

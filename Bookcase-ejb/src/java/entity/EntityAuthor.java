@@ -17,15 +17,16 @@ import javax.persistence.Table;
 /**
  * Autor knihy.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "author", catalog = "bookcase", schema = "")
+@Table(name = "entityAuthor", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Author.findAll", query = "SELECT a FROM Author a"),
-    @NamedQuery(name = "Author.findById", query = "SELECT a FROM Author a WHERE a.id = :id"),
-    @NamedQuery(name = "Author.findByName", query = "SELECT a FROM Author a WHERE a.name = :name"),
-    @NamedQuery(name = "Author.findBySurname", query = "SELECT a FROM Author a WHERE a.surname = :surname")})
-public class Author implements Serializable {
+    @NamedQuery(name = "EntityAuthor.findAll", query = "SELECT a FROM EntityAuthor a"),
+    @NamedQuery(name = "EntityAuthor.findById", query = "SELECT a FROM EntityAuthor a WHERE a.id = :id"),
+    @NamedQuery(name = "EntityAuthor.findByName", query = "SELECT a FROM EntityAuthor a WHERE a.name = :name"),
+    @NamedQuery(name = "EntityAuthor.findBySurname", query = "SELECT a FROM EntityAuthor a WHERE a.surname = :surname")})
+public class EntityAuthor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,12 +39,12 @@ public class Author implements Serializable {
     @Column(name = "surname", length = 255)
     private String surname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
-    private Collection<Book> bookCollection;
+    private Collection<EntityBook> bookCollection;
 
-    public Author() {
+    public EntityAuthor() {
     }
 
-    public Author(Integer id) {
+    public EntityAuthor(Integer id) {
         this.id = id;
     }
 
@@ -71,11 +72,11 @@ public class Author implements Serializable {
         this.surname = surname;
     }
 
-    public Collection<Book> getBookCollection() {
+    public Collection<EntityBook> getBookCollection() {
         return bookCollection;
     }
 
-    public void setBookCollection(Collection<Book> bookCollection) {
+    public void setBookCollection(Collection<EntityBook> bookCollection) {
         this.bookCollection = bookCollection;
     }
 
@@ -89,10 +90,10 @@ public class Author implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Author)) {
+        if (!(object instanceof EntityAuthor)) {
             return false;
         }
-        Author other = (Author) object;
+        EntityAuthor other = (EntityAuthor) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -101,6 +102,6 @@ public class Author implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Author[id=" + id + "]";
+        return "entity.ENtityAuthor[id=" + id + "]";
     }
 }

@@ -17,20 +17,21 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- *
+ * Entita uzivatele.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "person", catalog = "bookcase", schema = "", uniqueConstraints = {
+@Table(name = "entityUser", catalog = "bookcase", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email"})})
 @NamedQueries({
-    @NamedQuery(name = "Person.findAll", query = "SELECT u FROM Person u"),
-    @NamedQuery(name = "Person.findByName", query = "SELECT u FROM Person u WHERE u.name = :name"),
-    @NamedQuery(name = "Person.findBySurname", query = "SELECT u FROM Person u WHERE u.surname = :surname"),
-    @NamedQuery(name = "Person.findById", query = "SELECT u FROM Person u WHERE u.id = :id"),
-    @NamedQuery(name = "Person.findByEmail", query = "SELECT u FROM Person u WHERE u.email = :email"),
-    @NamedQuery(name = "Person.findByPassword", query = "SELECT u FROM Person u WHERE u.password = :password")})
-public class Person implements Serializable {
+    @NamedQuery(name = "EntityUser.findAll", query = "SELECT u FROM EntityUser u"),
+    @NamedQuery(name = "EntityUser.findByName", query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
+    @NamedQuery(name = "EntityUser.findBySurname", query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),
+    @NamedQuery(name = "EntityUser.findById", query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
+    @NamedQuery(name = "EntityUser.findByEmail", query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
+    @NamedQuery(name = "EntityUser.findByPassword", query = "SELECT u FROM EntityUser u WHERE u.password = :password")})
+public class EntityUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,23 +47,23 @@ public class Person implements Serializable {
     private String email;
     @Column(name = "password", length = 255)
     private String password;
-    @ManyToMany(mappedBy = "personCollection")
-    private Collection<Privilege> privilegeCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
-    private Collection<Reservation> reservationCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId1")
-    private Collection<Friendship> friendshipCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId2")
-    private Collection<Friendship> friendshipCollection2;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
-    private Collection<Shelf> shelfCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personId")
-    private Collection<Borrow> borrowCollection;
+    @ManyToMany(mappedBy = "userCollection")
+    private Collection<EntityGroup> groupCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<EntityReservation> reservationCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId1")
+    private Collection<EntityFriendship> friendshipCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId2")
+    private Collection<EntityFriendship> friendshipCollection2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<EntityShelf> shelfCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<EntityBorrow> borrowCollection;
 
-    public Person() {
+    public EntityUser() {
     }
 
-    public Person(Integer id) {
+    public EntityUser(Integer id) {
         this.id = id;
     }
 
@@ -106,51 +107,51 @@ public class Person implements Serializable {
         this.password = password;
     }
 
-    public Collection<Privilege> getPrivilegeCollection() {
-        return privilegeCollection;
+    public Collection<EntityGroup> getGroupCollection() {
+        return groupCollection;
     }
 
-    public void setPrivilegeCollection(Collection<Privilege> privilegeCollection) {
-        this.privilegeCollection = privilegeCollection;
+    public void setGroupCollection(Collection<EntityGroup> groupCollection) {
+        this.groupCollection = groupCollection;
     }
 
-    public Collection<Reservation> getReservationCollection() {
+    public Collection<EntityReservation> getReservationCollection() {
         return reservationCollection;
     }
 
-    public void setReservationCollection(Collection<Reservation> reservationCollection) {
+    public void setReservationCollection(Collection<EntityReservation> reservationCollection) {
         this.reservationCollection = reservationCollection;
     }
 
-    public Collection<Friendship> getFriendshipCollection() {
+    public Collection<EntityFriendship> getFriendshipCollection() {
         return friendshipCollection1;
     }
 
-    public void setFriendshipCollection(Collection<Friendship> friendshipCollection) {
+    public void setFriendshipCollection(Collection<EntityFriendship> friendshipCollection) {
         this.friendshipCollection1 = friendshipCollection;
     }
 
-    public Collection<Friendship> getFriendshipCollection1() {
+    public Collection<EntityFriendship> getFriendshipCollection1() {
         return friendshipCollection2;
     }
 
-    public void setFriendshipCollection1(Collection<Friendship> friendshipCollection1) {
+    public void setFriendshipCollection1(Collection<EntityFriendship> friendshipCollection1) {
         this.friendshipCollection2 = friendshipCollection1;
     }
 
-    public Collection<Shelf> getShelfCollection() {
+    public Collection<EntityShelf> getShelfCollection() {
         return shelfCollection;
     }
 
-    public void setShelfCollection(Collection<Shelf> shelfCollection) {
+    public void setShelfCollection(Collection<EntityShelf> shelfCollection) {
         this.shelfCollection = shelfCollection;
     }
 
-    public Collection<Borrow> getBorrowCollection() {
+    public Collection<EntityBorrow> getBorrowCollection() {
         return borrowCollection;
     }
 
-    public void setBorrowCollection(Collection<Borrow> borrowCollection) {
+    public void setBorrowCollection(Collection<EntityBorrow> borrowCollection) {
         this.borrowCollection = borrowCollection;
     }
 
@@ -164,10 +165,10 @@ public class Person implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Person)) {
+        if (!(object instanceof EntityUser)) {
             return false;
         }
-        Person other = (Person) object;
+        EntityUser other = (EntityUser) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -176,6 +177,6 @@ public class Person implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Person[id=" + id + "]";
+        return "entity.EntityUser[id=" + id + "]";
     }
 }

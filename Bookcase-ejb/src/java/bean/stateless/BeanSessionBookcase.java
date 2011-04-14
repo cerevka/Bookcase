@@ -1,8 +1,8 @@
 package bean.stateless;
 
-import entity.Author;
-import entity.Book;
-import entity.Copy;
+import entity.EntityCopy;
+import entity.EntityUser;
+import entity.EntityShelf;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -13,53 +13,55 @@ import javax.persistence.PersistenceContext;
  * @author Tomáš Čerevka
  */
 @Stateless
-public class BookSessionBean implements BookSessionBeanRemote {
+public class BeanSessionBookcase implements LocalBeanSessionBookcase {
     
    @PersistenceContext
    private EntityManager em;
 
     @Override
-    public Book getBook(int bookId) {
+    public List<EntityCopy> getBorrowedCopiesByUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Copy getCopy(int copyId) {
+    public void borrowCopy(EntityCopy copy, EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Copy> getCopies(Book book) {
+    public void returnCopy(EntityCopy copy) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Book> getAllBooks() {
+    public List<EntityCopy> getReservedCopiesByUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Copy> getAllCopies() {
+    public List<EntityCopy> getOwnedCopiesByUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Book> getAllBooksFromAuthor(Author author) {
+    public List<EntityCopy> getCopiesInShelf(EntityShelf shelf) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Copy> getAllCopiesFromAuthor(Author author) {
+    public void insertCopyInShelf(EntityCopy copy, EntityShelf shelf) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Author getAuthor(int authorId) {
+    public void removeCopyFromShlef(EntityCopy copy, EntityShelf shelf) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Author> getAllAuthors() {
+    public boolean isCopyInShelf(EntityCopy copy, EntityShelf shelf) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
 }

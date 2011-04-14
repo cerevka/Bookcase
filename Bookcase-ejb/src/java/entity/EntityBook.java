@@ -17,17 +17,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- *
+ * Entita knihy.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "book", catalog = "bookcase", schema = "")
+@Table(name = "entityBook", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Book.findAll", query = "SELECT b FROM Book b"),
-    @NamedQuery(name = "Book.findById", query = "SELECT b FROM Book b WHERE b.id = :id"),
-    @NamedQuery(name = "Book.findByTitle", query = "SELECT b FROM Book b WHERE b.title = :title"),
-    @NamedQuery(name = "Book.findByDescription", query = "SELECT b FROM Book b WHERE b.description = :description")})
-public class Book implements Serializable {
+    @NamedQuery(name = "EntityBook.findAll", query = "SELECT b FROM EntityBook b"),
+    @NamedQuery(name = "EntityBook.findById", query = "SELECT b FROM EntityBook b WHERE b.id = :id"),
+    @NamedQuery(name = "EntityBook.findByTitle", query = "SELECT b FROM EntityBook b WHERE b.title = :title"),
+    @NamedQuery(name = "EntityBook.findByDescription", query = "SELECT b FROM EntityBook b WHERE b.description = :description")})
+public class EntityBook implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,14 +42,14 @@ public class Book implements Serializable {
     private String description;
     @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Author authorId;
+    private EntityAuthor authorId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
-    private Collection<Copy> copyCollection;
+    private Collection<EntityCopy> copyCollection;
 
-    public Book() {
+    public EntityBook() {
     }
 
-    public Book(Integer id) {
+    public EntityBook(Integer id) {
         this.id = id;
     }
 
@@ -76,19 +77,19 @@ public class Book implements Serializable {
         this.description = description;
     }
 
-    public Author getAuthorId() {
+    public EntityAuthor getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(Author authorId) {
+    public void setAuthorId(EntityAuthor authorId) {
         this.authorId = authorId;
     }
 
-    public Collection<Copy> getCopyCollection() {
+    public Collection<EntityCopy> getCopyCollection() {
         return copyCollection;
     }
 
-    public void setCopyCollection(Collection<Copy> copyCollection) {
+    public void setCopyCollection(Collection<EntityCopy> copyCollection) {
         this.copyCollection = copyCollection;
     }
 
@@ -102,10 +103,10 @@ public class Book implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Book)) {
+        if (!(object instanceof EntityBook)) {
             return false;
         }
-        Book other = (Book) object;
+        EntityBook other = (EntityBook) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

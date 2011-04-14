@@ -16,16 +16,17 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- *
+ * Entita skupiny.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "privilege", catalog = "bookcase", schema = "")
+@Table(name = "entityGroup", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Privilege.findAll", query = "SELECT r FROM Privilege r"),
-    @NamedQuery(name = "Privilige.findById", query = "SELECT r FROM Privilege r WHERE r.id = :id"),
-    @NamedQuery(name = "Privilege.findByName", query = "SELECT r FROM Privilege r WHERE r.name = :name")})
-public class Privilege implements Serializable {
+    @NamedQuery(name = "EntityGroup.findAll", query = "SELECT r FROM EntityGroup r"),
+    @NamedQuery(name = "EntityGroup.findById", query = "SELECT r FROM EntityGroup r WHERE r.id = :id"),
+    @NamedQuery(name = "EntityGroup.findByName", query = "SELECT r FROM EntityGroup r WHERE r.name = :name")})
+public class EntityGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,16 +36,16 @@ public class Privilege implements Serializable {
     private Integer id;
     @Column(name = "name", length = 255)
     private String name;
-    @JoinTable(name = "personHasPrivilege", joinColumns = {
-        @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "privilegeId", referencedColumnName = "id", nullable = false)})
+    @JoinTable(name = "userInGroup", joinColumns = {
+        @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
-    private Collection<Person> personCollection;
+    private Collection<EntityUser> userCollection;
 
-    public Privilege() {
+    public EntityGroup() {
     }
 
-    public Privilege(Integer id) {
+    public EntityGroup(Integer id) {
         this.id = id;
     }
 
@@ -64,12 +65,12 @@ public class Privilege implements Serializable {
         this.name = name;
     }
 
-    public Collection<Person> getPersonCollection() {
-        return personCollection;
+    public Collection<EntityUser> getUserCollection() {
+        return userCollection;
     }
 
-    public void setPersonCollection(Collection<Person> personCollection) {
-        this.personCollection = personCollection;
+    public void setUserCollection(Collection<EntityUser> userCollection) {
+        this.userCollection = userCollection;
     }
 
     @Override
@@ -82,10 +83,10 @@ public class Privilege implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Privilege)) {
+        if (!(object instanceof EntityGroup)) {
             return false;
         }
-        Privilege other = (Privilege) object;
+        EntityGroup other = (EntityGroup) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -94,6 +95,6 @@ public class Privilege implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Privilege[id=" + id + "]";
+        return "entity.EntityGroup[id=" + id + "]";
     }
 }

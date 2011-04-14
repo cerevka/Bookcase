@@ -1,17 +1,17 @@
 package bean.stateless;
 
-import entity.Author;
-import entity.Book;
-import entity.Copy;
+import entity.EntityAuthor;
+import entity.EntityBook;
+import entity.EntityCopy;
 import java.util.List;
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 /**
  * Beana zajistujici praci s knihami.
  * @author Tomáš Čerevka
  */
-@Remote
-public interface BookSessionBeanRemote {
+@Local
+public interface LocalBeanSessionBook {
 
 
     /**
@@ -19,14 +19,14 @@ public interface BookSessionBeanRemote {
      * @param bookId Identifikator knihy.
      * @return Kniha.
      */
-    public Book getBook(int bookId);
+    public EntityBook getBook(int bookId);
 
     /**
      * Vrati svazek.
      * @param copyId Identifikator svazku.
      * @return Svazek.
      */
-    public Copy getCopy(int copyId);
+    public EntityCopy getCopy(int copyId);
 
 
     /**
@@ -34,45 +34,45 @@ public interface BookSessionBeanRemote {
      * @param book Kniha.
      * @return Seznam svazku.
      */
-    public List<Copy> getCopies(Book book);
+    public List<EntityCopy> getCopies(EntityBook book);
 
     /**
      * Vrati vsechny knihy.
      * @return Seznam knih.
      */
-    public List<Book> getAllBooks();
+    public List<EntityBook> getAllBooks();
 
     /**
      * Vrati vsechny svazky.
      * @return Seznam svazku.
      */
-    public List<Copy> getAllCopies();
+    public List<EntityCopy> getAllCopies();
 
     /**
      * Vrati vsechny knihy od daneho autora.
      * @param author Autor.
      * @return Seznam knih od daneho autora.
      */
-    public List<Book> getAllBooksFromAuthor(Author author);
+    public List<EntityBook> getAllBooksFromAuthor(EntityAuthor author);
 
     /**
      * Vrati vsechny svazky od daneho autora.
      * @param author Autor.
      * @return Seznam svazku od daneho autora.
      */
-    public List<Copy> getAllCopiesFromAuthor(Author author);
+    public List<EntityCopy> getAllCopiesFromAuthor(EntityAuthor author);
 
     /**
      * Vrati autora.
      * @param authorId Identifikator autora.
      * @return Autor.
      */
-    public Author getAuthor(int authorId);
+    public EntityAuthor getAuthor(int authorId);
 
     /**
      * Vrati vsechny autory.
      * @return Seznam autoru.
      */
-    public List<Author> getAllAuthors();
+    public List<EntityAuthor> getAllAuthors();
     
 }

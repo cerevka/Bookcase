@@ -1,7 +1,7 @@
 package bean.stateless;
 
-import entity.Person;
-import entity.Privilege;
+import entity.EntityUser;
+import entity.EntityGroup;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -12,73 +12,75 @@ import javax.persistence.PersistenceContext;
  * @author Tomáš Čerevka
  */
 @Stateless
-public class UserSessionBean implements UserSessionBeanRemote {
+public class BeanSessionUser implements LocalBeanSessionUser {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public Person getPerson(int personId) {
+    public EntityUser getUser(int userId) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void updatePerson(Person person) {
+    public void updateUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void removePerson(Person person) {
+    public void removeUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Person> getAllPerson() {
+    public List<EntityUser> getAllUsers() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Person> getFriends(Person person) {
+    public List<EntityUser> getFriends(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean areFriends(Person person1, Person person2) {
+    public boolean areFriends(EntityUser user1, EntityUser user2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void applyFriendship(Person person1, Person person2) {
+    public void applyFriendship(EntityUser user1, EntityUser user2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void confirmFriendship(Person person1, Person person2) {
+    public void confirmFriendship(EntityUser user1, EntityUser user2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void refuseFriendship(Person person1, Person person2) {
+    public void refuseFriendship(EntityUser user1, EntityUser user2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Privilege> getAllPrivileges(Person person) {
+    public List<EntityGroup> getAllGroupsByUser(EntityUser user) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void addPrivilege(Person person, Privilege privilege) {
+    public void addPrivilege(EntityUser person, EntityGroup privilege) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void removePrivilege(Person person, Privilege privilege) {
+    public void removeGroup(EntityUser user, EntityGroup group) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean hasPrivilege(Person person, Privilege privilege) {
+    public boolean isInGroup(EntityUser user, EntityGroup group) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    
 }

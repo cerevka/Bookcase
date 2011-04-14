@@ -15,17 +15,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- *
+ * Entita přátelství.
  * @author Adam Činčura
+ * @authro Tomáš Čerevka
  */
 @Entity
-@Table(name = "friendship", catalog = "bookcase", schema = "")
+@Table(name = "entityFriendship", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Friendship.findAll", query = "SELECT f FROM Friendship f"),
-    @NamedQuery(name = "Friendship.findByAuthorized", query = "SELECT f FROM Friendship f WHERE f.authorized = :authorized"),
-    @NamedQuery(name = "Friendship.findByPersonId1", query = "SELECT f FROM Friendship f WHERE f.personId1 = :personId1"),
-    @NamedQuery(name = "Friendship.findByPersonId2", query = "SELECT f FROM Friendship f WHERE f.personId2 = :personId2")})
-public class Friendship implements Serializable {
+    @NamedQuery(name = "EntityFriendship.findAll", query = "SELECT f FROM EntityFriendship f"),
+    @NamedQuery(name = "EntityFriendship.findByAuthorized", query = "SELECT f FROM EntityFriendship f WHERE f.authorized = :authorized"),
+    @NamedQuery(name = "EntityFriendship.findByUserId1", query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1"),
+    @NamedQuery(name = "EntityFriendship.findByUserId2", query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2")})
+public class EntityFriendship implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,17 +36,17 @@ public class Friendship implements Serializable {
     private Integer id;
     @Column(name = "authorized")
     private Integer authorized;
-    @JoinColumn(name = "personId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "userId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Person personId1;
-    @JoinColumn(name = "personId2", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private EntityUser userId1;
+    @JoinColumn(name = "userId2", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Person personId2;
+    private EntityUser userId2;
 
-    public Friendship() {
+    public EntityFriendship() {
     }
 
-    public Friendship(int id) {
+    public EntityFriendship(int id) {
         this.id = id;
     }
 
@@ -65,20 +66,20 @@ public class Friendship implements Serializable {
         this.authorized = authorized;
     }
 
-    public Person getPersonId1() {
-        return personId1;
+    public EntityUser getUserId1() {
+        return userId1;
     }
 
-    public void setPersonId1(Person personId) {
-        this.personId1 = personId;
+    public void setUserId1(EntityUser userId) {
+        this.userId1 = userId;
     }
 
-    public Person getPersonId2() {
-        return personId2;
+    public EntityUser getUserId2() {
+        return userId2;
     }
 
-    public void setPersonId2(Person personId) {
-        this.personId2 = personId;
+    public void setUserId2(EntityUser userId) {
+        this.userId2 = userId;
     }
 
     @Override
@@ -91,10 +92,10 @@ public class Friendship implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Friendship)) {
+        if (!(object instanceof EntityFriendship)) {
             return false;
         }
-        Friendship other = (Friendship) object;
+        EntityFriendship other = (EntityFriendship) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -103,6 +104,6 @@ public class Friendship implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Friendship[id=" + id + "]";
+        return "entity.EntityFriendship[id=" + id + "]";
     }
 }

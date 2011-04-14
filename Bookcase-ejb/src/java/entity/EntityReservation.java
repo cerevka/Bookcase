@@ -17,17 +17,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- *
+ * Entita rezervace.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "reservation", catalog = "bookcase", schema = "")
+@Table(name = "entityReservation", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
-    @NamedQuery(name = "Reservation.findByStatus", query = "SELECT r FROM Reservation r WHERE r.status = :status"),
-    @NamedQuery(name = "Reservation.findByDateTime", query = "SELECT r FROM Reservation r WHERE r.dateTime = :dateTime"),
-    @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id")})
-public class Reservation implements Serializable {
+    @NamedQuery(name = "EntityReservation.findAll", query = "SELECT r FROM EntityReservation r"),
+    @NamedQuery(name = "EntityReservation.findByStatus", query = "SELECT r FROM EntityReservation r WHERE r.status = :status"),
+    @NamedQuery(name = "EntityReservation.findByDateTime", query = "SELECT r FROM EntityReservation r WHERE r.dateTime = :dateTime"),
+    @NamedQuery(name = "EntityReservation.findById", query = "SELECT r FROM EntityReservation r WHERE r.id = :id")})
+public class EntityReservation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,19 +44,19 @@ public class Reservation implements Serializable {
     private Date dateTime;
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Copy copyId;
-    @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)
+    private EntityCopy copyId;
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Person personId;
+    private EntityUser userId;
 
-    public Reservation() {
+    public EntityReservation() {
     }
 
-    public Reservation(Integer id) {
+    public EntityReservation(Integer id) {
         this.id = id;
     }
 
-    public Reservation(Integer id, Date dateTime) {
+    public EntityReservation(Integer id, Date dateTime) {
         this.id = id;
         this.dateTime = dateTime;
     }
@@ -84,20 +85,20 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public Copy getCopyId() {
+    public EntityCopy getCopyId() {
         return copyId;
     }
 
-    public void setCopyId(Copy copyId) {
+    public void setCopyId(EntityCopy copyId) {
         this.copyId = copyId;
     }
 
-    public Person getPersonId() {
-        return personId;
+    public EntityUser getUserId() {
+        return userId;
     }
 
-    public void setPersonId(Person personId) {
-        this.personId = personId;
+    public void setUserId(EntityUser userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -110,10 +111,10 @@ public class Reservation implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Reservation)) {
+        if (!(object instanceof EntityReservation)) {
             return false;
         }
-        Reservation other = (Reservation) object;
+        EntityReservation other = (EntityReservation) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -122,6 +123,6 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Reservation[id=" + id + "]";
+        return "entity.EntityReservation[id=" + id + "]";
     }
 }

@@ -17,18 +17,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- *
+ * Entita výpůjčky.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "borrow", catalog = "bookcase", schema = "")
+@Table(name = "entityBorrow", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Borrow.findAll", query = "SELECT b FROM Borrow b"),
-    @NamedQuery(name = "Borrow.findByLimitDate", query = "SELECT b FROM Borrow b WHERE b.limitDate = :limitDate"),
-    @NamedQuery(name = "Borrow.findByToDate", query = "SELECT b FROM Borrow b WHERE b.toDate = :toDate"),
-    @NamedQuery(name = "Borrow.findByFromDate", query = "SELECT b FROM Borrow b WHERE b.fromDate = :fromDate"),
-    @NamedQuery(name = "Borrow.findById", query = "SELECT b FROM Borrow b WHERE b.id = :id")})
-public class Borrow implements Serializable {
+    @NamedQuery(name = "EntityBorrow.findAll", query = "SELECT b FROM EntityBorrow b"),
+    @NamedQuery(name = "EntityBorrow.findByLimitDate", query = "SELECT b FROM EntityBorrow b WHERE b.limitDate = :limitDate"),
+    @NamedQuery(name = "EntityBorrow.findByToDate", query = "SELECT b FROM EntityBorrow b WHERE b.toDate = :toDate"),
+    @NamedQuery(name = "EntityBorrow.findByFromDate", query = "SELECT b FROM EntityBorrow b WHERE b.fromDate = :fromDate"),
+    @NamedQuery(name = "EntityBorrow.findById", query = "SELECT b FROM EntityBorrow b WHERE b.id = :id")})
+public class EntityBorrow implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,19 +49,19 @@ public class Borrow implements Serializable {
     private Date fromDate;
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Copy copyId;
-    @JoinColumn(name = "personId", referencedColumnName = "id", nullable = false)
+    private EntityCopy copyId;
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Person personId;
+    private EntityUser userId;
 
-    public Borrow() {
+    public EntityBorrow() {
     }
 
-    public Borrow(Integer id) {
+    public EntityBorrow(Integer id) {
         this.id = id;
     }
 
-    public Borrow(Integer id, Date fromDate) {
+    public EntityBorrow(Integer id, Date fromDate) {
         this.id = id;
         this.fromDate = fromDate;
     }
@@ -97,20 +98,20 @@ public class Borrow implements Serializable {
         this.id = id;
     }
 
-    public Copy getCopyId() {
+    public EntityCopy getCopyId() {
         return copyId;
     }
 
-    public void setCopyId(Copy copyId) {
+    public void setCopyId(EntityCopy copyId) {
         this.copyId = copyId;
     }
 
-    public Person getPersonId() {
-        return personId;
+    public EntityUser getUserId() {
+        return userId;
     }
 
-    public void setPersonId(Person personId) {
-        this.personId = personId;
+    public void setUserId(EntityUser userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -123,10 +124,10 @@ public class Borrow implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Borrow)) {
+        if (!(object instanceof EntityBorrow)) {
             return false;
         }
-        Borrow other = (Borrow) object;
+        EntityBorrow other = (EntityBorrow) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -135,6 +136,6 @@ public class Borrow implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Borrow[id=" + id + "]";
+        return "entity.EntityBorrow[id=" + id + "]";
     }
 }

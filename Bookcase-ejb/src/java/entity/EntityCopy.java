@@ -22,17 +22,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- *
+ * Entita svazku.
  * @author Adam Činčura
+ * @author Tomáš Čerevka
  */
 @Entity
-@Table(name = "copy", catalog = "bookcase", schema = "")
+@Table(name = "entityCopy", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Copy.findAll", query = "SELECT c FROM Copy c"),
-    @NamedQuery(name = "Copy.findById", query = "SELECT c FROM Copy c WHERE c.id = :id"),
-    @NamedQuery(name = "Copy.findByNote", query = "SELECT c FROM Copy c WHERE c.note = :note"),
-    @NamedQuery(name = "Copy.findByPublished", query = "SELECT c FROM Copy c WHERE c.published = :published")})
-public class Copy implements Serializable {
+    @NamedQuery(name = "EntityCopy.findAll", query = "SELECT c FROM EntityCopy c"),
+    @NamedQuery(name = "EntityCopy.findById", query = "SELECT c FROM EntityCopy c WHERE c.id = :id"),
+    @NamedQuery(name = "EntityCopy.findByNote", query = "SELECT c FROM EntityCopy c WHERE c.note = :note"),
+    @NamedQuery(name = "EntityCopy.findByPublished", query = "SELECT c FROM EntityCopy c WHERE c.published = :published")})
+public class EntityCopy implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,19 +50,19 @@ public class Copy implements Serializable {
         @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
-    private Collection<Shelf> shelfCollection;
+    private Collection<EntityShelf> shelfCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
-    private Collection<Reservation> reservationCollection;
+    private Collection<EntityReservation> reservationCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
-    private Collection<Borrow> borrowCollection;
+    private Collection<EntityBorrow> borrowCollection;
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Book bookId;
+    private EntityBook bookId;
 
-    public Copy() {
+    public EntityCopy() {
     }
 
-    public Copy(Integer id) {
+    public EntityCopy(Integer id) {
         this.id = id;
     }
 
@@ -89,35 +90,35 @@ public class Copy implements Serializable {
         this.published = published;
     }
 
-    public Collection<Shelf> getShelfCollection() {
+    public Collection<EntityShelf> getShelfCollection() {
         return shelfCollection;
     }
 
-    public void setShelfCollection(Collection<Shelf> shelfCollection) {
+    public void setShelfCollection(Collection<EntityShelf> shelfCollection) {
         this.shelfCollection = shelfCollection;
     }
 
-    public Collection<Reservation> getReservationCollection() {
+    public Collection<EntityReservation> getReservationCollection() {
         return reservationCollection;
     }
 
-    public void setReservationCollection(Collection<Reservation> reservationCollection) {
+    public void setReservationCollection(Collection<EntityReservation> reservationCollection) {
         this.reservationCollection = reservationCollection;
     }
 
-    public Collection<Borrow> getBorrowCollection() {
+    public Collection<EntityBorrow> getBorrowCollection() {
         return borrowCollection;
     }
 
-    public void setBorrowCollection(Collection<Borrow> borrowCollection) {
+    public void setBorrowCollection(Collection<EntityBorrow> borrowCollection) {
         this.borrowCollection = borrowCollection;
     }
 
-    public Book getBookId() {
+    public EntityBook getBookId() {
         return bookId;
     }
 
-    public void setBookId(Book bookId) {
+    public void setBookId(EntityBook bookId) {
         this.bookId = bookId;
     }
 
@@ -131,10 +132,10 @@ public class Copy implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Copy)) {
+        if (!(object instanceof EntityCopy)) {
             return false;
         }
-        Copy other = (Copy) object;
+        EntityCopy other = (EntityCopy) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

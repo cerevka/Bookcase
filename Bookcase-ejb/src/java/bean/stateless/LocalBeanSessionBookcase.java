@@ -1,74 +1,73 @@
 package bean.stateless;
 
-import entity.Book;
-import entity.Copy;
-import entity.Person;
-import entity.Shelf;
+import entity.EntityCopy;
+import entity.EntityUser;
+import entity.EntityShelf;
 import java.util.List;
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 /**
  * Beana zajistujici praci s rezervacemi a vypujckami.
  * @author Tomáš Čerevka
  */
-@Remote
-public interface BookcaseSessionBeanRemote {
+@Local
+public interface LocalBeanSessionBookcase {
 
         /**
      * Vrati svazky, ktere ma pujcene uzivatel.
-     * @param person Uzivatel.
+     * @param user Uzivatel.
      * @return Pujcene svazky.
      */
-    public List<Copy> getBorrowedCopiesByPerson(Person person);
+    public List<EntityCopy> getBorrowedCopiesByUser(EntityUser user);
 
     /**
      * Pujci svazek osobe.
      * @param copy Svazek.
-     * @param person Osoba.
+     * @param user Osoba.
      */
-    public void borrowCopy(Book copy, Person person);
+    public void borrowCopy(EntityCopy copy, EntityUser user);
 
     /**
      * Vrati svazek.
      * @param copy Svazek.
      */
-    public void returnCopy(Copy copy);
+    public void returnCopy(EntityCopy copy);
 
 
     /**
      * Vrati svazky rezervovane uzivatelem.
-     * @param person Uzivatel.
+     * @param user Uzivatel.
      * @return Seznam svazku.
      */
-    public List<Copy> getReservedCopiesByPerson(Person person);
+    public List<EntityCopy> getReservedCopiesByUser(EntityUser user);
 
     /**
      * Vrati svazky vlastnene uzivatelem.
      * @param person Uzivatel.
      * @return Vlastnene svazky.
      */
-    public List<Copy> getOwnedCopiesByPerson(Person person);
+    public List<EntityCopy> getOwnedCopiesByUser(EntityUser user);
 
     /**
      * Vrati svazky v dane policce.
      * @param shelf Policka.
      * @return Seznam svazku v policce.
      */
-    public List<Copy> getCopiesInShelf(Shelf shelf);
+    public List<EntityCopy> getCopiesInShelf(EntityShelf shelf);
 
     /**
      * Umisti svazek do policky.
      * @param copy Svazek.
      * @param shelf Policka.
      */
-    public void insertCopyInShelf(Copy copy, Shelf shelf);
+    public void insertCopyInShelf(EntityCopy copy, EntityShelf shelf);
 
     /**
      * Odstrani svazek z policky.
      * @param copy Svazek.
      * @param shelf Policka.
      */
-    public void removeCopyFromShlef(Copy copy, Shelf shelf);
+    public void removeCopyFromShlef(EntityCopy copy, EntityShelf shelf);
 
     /**
      * Rozhodne o pritomnosti svazku v policce.
@@ -76,6 +75,6 @@ public interface BookcaseSessionBeanRemote {
      * @param shelf Policka.
      * @return Potvrzeni/zamitnuti pritomnosti v policce.
      */
-    public boolean isCopyInShelf(Copy copy, Shelf shelf);
+    public boolean isCopyInShelf(EntityCopy copy, EntityShelf shelf);
     
 }
