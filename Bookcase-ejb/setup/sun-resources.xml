@@ -12,4 +12,9 @@
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="mysql://bookcase" object-type="user" pool-name="mysql_bookcase_bookcasePool"/>
     <jdbc-resource enabled="true" jndi-name="mysql/bookcase" object-type="user" pool-name="mysql_bookcase_bookcasePool"/>
+    <admin-object-resource enabled="true" jndi-name="jms/bookcaseMail"  res-type="javax.jms.Queue"  res-adapter="jmsra">
+        <property name="Name" value="PhysicalQueue"/>
+    </admin-object-resource>
+    <connector-connection-pool name="jms/bookcaseMailFactoryPool"  connection-definition-name="javax.jms.QueueConnectionFactory"  resource-adapter-name="jmsra"/>
+    <connector-resource enabled="true" jndi-name="jms/bookcaseMailFactory" pool-name="jms/bookcaseMailFactoryPool"  />
 </resources>
