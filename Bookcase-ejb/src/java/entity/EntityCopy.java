@@ -29,32 +29,48 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "entityCopy", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityCopy.findAll", query = "SELECT c FROM EntityCopy c"),
-    @NamedQuery(name = "EntityCopy.findById", query = "SELECT c FROM EntityCopy c WHERE c.id = :id"),
-    @NamedQuery(name = "EntityCopy.findByNote", query = "SELECT c FROM EntityCopy c WHERE c.note = :note"),
-    @NamedQuery(name = "EntityCopy.findByPublished", query = "SELECT c FROM EntityCopy c WHERE c.published = :published")})
+    @NamedQuery(name = EntityCopy.FIND_ALL, query = "SELECT c FROM EntityCopy c"),
+    @NamedQuery(name = EntityCopy.FIND_BY_ID, query = "SELECT c FROM EntityCopy c WHERE c.id = :id"),
+    @NamedQuery(name = EntityCopy.FIND_BY_NOTE, query = "SELECT c FROM EntityCopy c WHERE c.note = :note"),
+    @NamedQuery(name = EntityCopy.FIND_BY_PUBLISHED, query = "SELECT c FROM EntityCopy c WHERE c.published = :published")
+})
 public class EntityCopy implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityCopy.findAll";
+    
+    public static final String FIND_BY_ID = "EntityCopy.findById";
+    
+    public static final String FIND_BY_NOTE = "EntityCopy.findByNote";
+    
+    public static final String FIND_BY_PUBLISHED = "EntityCopy.findByPublished";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "note", length = 1024)
     private String note;
+
     @Column(name = "published")
     @Temporal(TemporalType.DATE)
     private Date published;
+
     @JoinTable(name = "bookInShelf", joinColumns = {
         @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
     private Collection<EntityShelf> shelfCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
     private Collection<EntityReservation> reservationCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
     private Collection<EntityBorrow> borrowCollection;
+
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityBook bookId;

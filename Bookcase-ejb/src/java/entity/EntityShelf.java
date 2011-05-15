@@ -23,21 +23,32 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "entityShelf", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityShelf.findAll", query = "SELECT s FROM EntityShelf s"),
-    @NamedQuery(name = "EntityShelf.findById", query = "SELECT s FROM EntityShelf s WHERE s.id = :id"),
-    @NamedQuery(name = "EntityShelf.findByName", query = "SELECT s FROM EntityShelf s WHERE s.name = :name")})
+    @NamedQuery(name = EntityShelf.FIND_ALL, query = "SELECT s FROM EntityShelf s"),
+    @NamedQuery(name = EntityShelf.FIND_BY_ID, query = "SELECT s FROM EntityShelf s WHERE s.id = :id"),
+    @NamedQuery(name = EntityShelf.FIND_BY_NAME, query = "SELECT s FROM EntityShelf s WHERE s.name = :name")
+})
 public class EntityShelf implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityShelf.findAll";
+    
+    public static final String FIND_BY_ID = "EntityShelf.findById";
+    
+    public static final String FIND_BY_NAME = "EntityShelf.findByName";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "name", length = 255)
     private String name;
+
     @ManyToMany(mappedBy = "shelfCollection")
     private Collection<EntityCopy> copyCollection;
+
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityUser userId;

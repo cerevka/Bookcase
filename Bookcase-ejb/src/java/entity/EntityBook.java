@@ -24,25 +24,39 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "entityBook", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityBook.findAll", query = "SELECT b FROM EntityBook b"),
-    @NamedQuery(name = "EntityBook.findById", query = "SELECT b FROM EntityBook b WHERE b.id = :id"),
-    @NamedQuery(name = "EntityBook.findByTitle", query = "SELECT b FROM EntityBook b WHERE b.title = :title"),
-    @NamedQuery(name = "EntityBook.findByDescription", query = "SELECT b FROM EntityBook b WHERE b.description = :description")})
+    @NamedQuery(name = EntityBook.FIND_ALL, query = "SELECT b FROM EntityBook b"),
+    @NamedQuery(name = EntityBook.FIND_BY_ID, query = "SELECT b FROM EntityBook b WHERE b.id = :id"),
+    @NamedQuery(name = EntityBook.FIND_BY_TITLE, query = "SELECT b FROM EntityBook b WHERE b.title = :title"),
+    @NamedQuery(name = EntityBook.FIND_BY_DESCRIPTION, query = "SELECT b FROM EntityBook b WHERE b.description = :description")
+})
 public class EntityBook implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityBook.findAll";
+    
+    public static final String FIND_BY_ID = "EntityBook.findById";
+    
+    public static final String FIND_BY_TITLE = "EntityBook.findByTitle";
+    
+    public static final String FIND_BY_DESCRIPTION = "EntityBook.findByDescription";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "title", length = 255)
     private String title;
+
     @Column(name = "description", length = 1024)
     private String description;
+
     @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityAuthor authorId;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
     private Collection<EntityCopy> copyCollection;
 

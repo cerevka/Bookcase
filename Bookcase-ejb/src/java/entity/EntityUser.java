@@ -25,38 +25,62 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "entityUser", catalog = "bookcase", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email"})})
 @NamedQueries({
-    @NamedQuery(name = "EntityUser.findAll", query = "SELECT u FROM EntityUser u"),
-    @NamedQuery(name = "EntityUser.findByName", query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
-    @NamedQuery(name = "EntityUser.findBySurname", query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),
-    @NamedQuery(name = "EntityUser.findById", query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
-    @NamedQuery(name = "EntityUser.findByEmail", query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
-    @NamedQuery(name = "EntityUser.findByPassword", query = "SELECT u FROM EntityUser u WHERE u.password = :password")})
+    @NamedQuery(name = EntityUser.FIND_ALL, query = "SELECT u FROM EntityUser u"),
+    @NamedQuery(name = EntityUser.FIND_BY_ID, query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
+    @NamedQuery(name = EntityUser.FIND_BY_NAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
+    @NamedQuery(name = EntityUser.FIND_BY_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),    
+    @NamedQuery(name = EntityUser.FIND_BY_EMAIL, query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
+    @NamedQuery(name = EntityUser.FIND_BY_PASSWORD, query = "SELECT u FROM EntityUser u WHERE u.password = :password")
+})
 public class EntityUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityUser.findAll";
+    
+    public static final String FIND_BY_ID = "EntityUser.findById";
+    
+    public static final String FIND_BY_NAME = "EntityUser.findByName";
+    
+    public static final String FIND_BY_SURNAME = "EntityUser.findBySurname";
+    
+    public static final String FIND_BY_EMAIL = "EntityUser.findByEmail";
+    
+    public static final String FIND_BY_PASSWORD = "EntityUser.findByPassword";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "name", length = 255)
     private String name;
+
     @Column(name = "surname", length = 255)
     private String surname;
+
     @Column(name = "email", length = 255)
     private String email;
+
     @Column(name = "password", length = 255)
     private String password;
+
     @ManyToMany(mappedBy = "userCollection")
     private Collection<EntityGroup> groupCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Collection<EntityReservation> reservationCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId1")
     private Collection<EntityFriendship> friendshipCollection1;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId2")
     private Collection<EntityFriendship> friendshipCollection2;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Collection<EntityShelf> shelfCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Collection<EntityBorrow> borrowCollection;
 

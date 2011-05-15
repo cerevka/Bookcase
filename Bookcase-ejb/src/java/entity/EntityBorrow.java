@@ -24,32 +24,49 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "entityBorrow", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityBorrow.findAll", query = "SELECT b FROM EntityBorrow b"),
-    @NamedQuery(name = "EntityBorrow.findByLimitDate", query = "SELECT b FROM EntityBorrow b WHERE b.limitDate = :limitDate"),
-    @NamedQuery(name = "EntityBorrow.findByToDate", query = "SELECT b FROM EntityBorrow b WHERE b.toDate = :toDate"),
-    @NamedQuery(name = "EntityBorrow.findByFromDate", query = "SELECT b FROM EntityBorrow b WHERE b.fromDate = :fromDate"),
-    @NamedQuery(name = "EntityBorrow.findById", query = "SELECT b FROM EntityBorrow b WHERE b.id = :id")})
+    @NamedQuery(name = EntityBorrow.FIND_ALL, query = "SELECT b FROM EntityBorrow b"),
+    @NamedQuery(name = EntityBorrow.FIND_BY_ID, query = "SELECT b FROM EntityBorrow b WHERE b.id = :id"),
+    @NamedQuery(name = EntityBorrow.FIND_BY_LIMIT_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.limitDate = :limitDate"),
+    @NamedQuery(name = EntityBorrow.FIND_BY_TO_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.toDate = :toDate"),
+    @NamedQuery(name = EntityBorrow.FIND_BY_FROM_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.fromDate = :fromDate")
+})
 public class EntityBorrow implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String FIND_ALL = "EntityBorrow.findAll";
+
+    public static final String FIND_BY_ID = "EntityBorrow.findById";
+
+    public static final String FIND_BY_LIMIT_DATE = "EntityBorrow.findByLimitData";
+
+    public static final String FIND_BY_TO_DATE = "EntityBorrow.findByToDate";
+
+    public static final String FIND_BY_FROM_DATE = "EntityBorrow.findByFromDate";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "limitDate")
     @Temporal(TemporalType.DATE)
     private Date limitDate;
+
     @Column(name = "toDate")
     @Temporal(TemporalType.DATE)
     private Date toDate;
+
     @Basic(optional = false)
     @Column(name = "fromDate", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fromDate;
+
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityCopy copyId;
+
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityUser userId;

@@ -3,7 +3,6 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,23 +21,36 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "entityFriendship", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityFriendship.findAll", query = "SELECT f FROM EntityFriendship f"),
-    @NamedQuery(name = "EntityFriendship.findByAuthorized", query = "SELECT f FROM EntityFriendship f WHERE f.authorized = :authorized"),
-    @NamedQuery(name = "EntityFriendship.findByUserId1", query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1"),
-    @NamedQuery(name = "EntityFriendship.findByUserId2", query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2")})
+    @NamedQuery(name = EntityFriendship.FIND_ALL, query = "SELECT f FROM EntityFriendship f"),
+    @NamedQuery(name = EntityFriendship.FIND_BY_AUTHORIZED, query = "SELECT f FROM EntityFriendship f WHERE f.authorized = :authorized"),
+    @NamedQuery(name = EntityFriendship.FIND_BY_USER1, query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1"),
+    @NamedQuery(name = EntityFriendship.FIND_BY_USER2, query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2")
+})
 public class EntityFriendship implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityFriendship.findAll";
+    
+    public static final String FIND_BY_AUTHORIZED = "EntityFriendship.findByAuthorized";
+    
+    public static final String FIND_BY_USER1 = "EntityFriendship.findByUserId1";
+    
+    public static final String FIND_BY_USER2 = "EntityFriendship.findByUserId2";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "authorized")
     private Integer authorized;
+
     @JoinColumn(name = "userId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private EntityUser userId1;
+
     @JoinColumn(name = "userId2", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private EntityUser userId2;

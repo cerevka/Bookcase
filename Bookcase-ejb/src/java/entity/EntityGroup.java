@@ -23,19 +23,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "entityGroup", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityGroup.findAll", query = "SELECT r FROM EntityGroup r"),
-    @NamedQuery(name = "EntityGroup.findById", query = "SELECT r FROM EntityGroup r WHERE r.id = :id"),
-    @NamedQuery(name = "EntityGroup.findByName", query = "SELECT r FROM EntityGroup r WHERE r.name = :name")})
+    @NamedQuery(name = EntityGroup.FIND_ALL, query = "SELECT r FROM EntityGroup r"),
+    @NamedQuery(name = EntityGroup.FIND_BY_ID, query = "SELECT r FROM EntityGroup r WHERE r.id = :id"),
+    @NamedQuery(name = EntityGroup.FIND_BY_NAME, query = "SELECT r FROM EntityGroup r WHERE r.name = :name")
+})
 public class EntityGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityGroup.findAll";
+    
+    public static final String FIND_BY_ID = "EntityGroup.findById";
+    
+    public static final String FIND_BY_NAME = "EntityGroup.findByName";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "name", length = 255)
     private String name;
+
     @JoinTable(name = "userInGroup", joinColumns = {
         @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)})

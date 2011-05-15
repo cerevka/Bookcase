@@ -24,27 +24,41 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "entityReservation", catalog = "bookcase", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EntityReservation.findAll", query = "SELECT r FROM EntityReservation r"),
-    @NamedQuery(name = "EntityReservation.findByStatus", query = "SELECT r FROM EntityReservation r WHERE r.status = :status"),
-    @NamedQuery(name = "EntityReservation.findByDateTime", query = "SELECT r FROM EntityReservation r WHERE r.dateTime = :dateTime"),
-    @NamedQuery(name = "EntityReservation.findById", query = "SELECT r FROM EntityReservation r WHERE r.id = :id")})
+    @NamedQuery(name = EntityReservation.FIND_ALL, query = "SELECT r FROM EntityReservation r"),
+    @NamedQuery(name = EntityReservation.FIND_BY_ID, query = "SELECT r FROM EntityReservation r WHERE r.id = :id"),
+    @NamedQuery(name = EntityReservation.FIND_BY_STATUS, query = "SELECT r FROM EntityReservation r WHERE r.status = :status"),
+    @NamedQuery(name = EntityReservation.FIND_BY_DATETIME, query = "SELECT r FROM EntityReservation r WHERE r.dateTime = :dateTime")    
+})
 public class EntityReservation implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final String FIND_ALL = "EntityReservation.findAll";
+    
+    public static final String FIND_BY_ID = "EntityReservation.findById";
+    
+    public static final String FIND_BY_STATUS = "EntityReservation.findByStatus";
+    
+    public static final String FIND_BY_DATETIME = "EntityReservation.findByDateTime";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+
     @Column(name = "status", length = 255)
     private String status;
+
     @Basic(optional = false)
     @Column(name = "dateTime", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateTime;
+
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityCopy copyId;
+
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityUser userId;
