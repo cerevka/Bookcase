@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package beans.statefull;
+package bean.statefull;
 
 import entity.EntityCopy;
 import java.util.Collection;

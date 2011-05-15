@@ -1,4 +1,4 @@
-package beans.messageDriven;
+package bean.messageDriven;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -13,9 +13,9 @@ import javax.jms.MessageListener;
         @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
     })
-public class BeanMessageMail implements MessageListener {
+public class BeanMessageDrivenMail implements MessageListener {
     
-    public BeanMessageMail() {
+    public BeanMessageDrivenMail() {
     }
 
     @Override
