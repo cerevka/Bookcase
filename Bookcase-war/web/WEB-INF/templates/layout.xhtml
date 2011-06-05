@@ -2,42 +2,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      lang="#{language.language}">
 
-    <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link href="./resources/css/blueprint/screen.css" type="text/css" rel="stylesheet" media="screen, projection" />
-        <link href="./resources/css/blueprint/print.css" rel="stylesheet"  type="text/css" media="print" /> 
-        <!--[if lt IE 8]>
-          <link href="./resources/css/blueprint/ie.css" rel="stylesheet" type="text/css" media="screen, projection" />
-        <![endif]-->
-        <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />        
-        <title>#{title} | #{bundle['application.title']}</title>
-    </h:head>
+    <f:view locale="#{language.locale}">
 
-    <h:body>
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <link href="./resources/css/blueprint/screen.css" type="text/css" rel="stylesheet" media="screen, projection" />
+            <link href="./resources/css/blueprint/print.css" rel="stylesheet"  type="text/css" media="print" /> 
+            <!--[if lt IE 8]>
+              <link href="./resources/css/blueprint/ie.css" rel="stylesheet" type="text/css" media="screen, projection" />
+            <![endif]-->
+            <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />        
+            <title>#{title} | #{bundle['title']}</title>
+        </h:head>
 
-        <div class="container">
+        <h:body>
 
-            <div id="header">
-                <ui:insert name="top">Top</ui:insert>
-            </div>
-            
-            <div>
-                <div id="left">
-                    <ui:insert name="left">Left</ui:insert>
+            <div class="container">
+
+                <div id="header">
+                    <ui:insert name="top">
+                        <h1>Bookcase</h1>
+                    </ui:insert>
                 </div>
-                <div id="content" class="left_content">
-                    <ui:insert name="content">Content</ui:insert>
+
+                <div id="body">
+                    <div id="left">
+                        <ui:insert name="left">
+                            <ui:include src="/WEB-INF/templates/menus/menu.xhtml" />                        
+                        </ui:insert>
+                    </div>
+                    <div id="content" class="left_content">
+                        <ui:insert name="content">Content</ui:insert>
+                    </div>
                 </div>
-            </div>
-            
-            <div id="footer">
-                <ui:insert name="footer">Bottom</ui:insert>
+
+                <div id="footer">
+                    <ui:insert name="footer">
+                        <h:form id="languageForm">
+                            <h:commandButton id="czech" image="/resources/images/flag_cz.png" action="#{language.doChange('cs')}" value="#{bundle['language.cs']}" />
+                            <h:commandButton id="english" image="/resources/images/flag_gb.png" action="#{language.doChange('en')}" value="#{bundle['language.en']}" />
+                        </h:form>
+                    </ui:insert>
+                </div>
+
             </div>
 
-        </div>
+        </h:body>
 
-    </h:body>
+    </f:view>
 
 </html>

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <body>
+        <ui:composition template="./WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['title.login']}" />
+
+            <ui:define name="content">
+                <h:form id="loginForm">
+                    <div>
+                        <span class="span-2"><h:outputLabel for="email" value="#{bundle['label.email']}:" /></span>
+                        <span><h:inputText id="email" value="#{user.email}" required="true" requiredMessage="#{bundle['message.required.email']}" /></span>
+                        <h:message styleClass="error" for="email" />
+                    </div>
+                    <div>
+                        <span class="span-2"><h:outputLabel for="password" value="#{bundle['label.password']}:" /></span>
+                        <span><h:inputSecret id="password" value="#{user.password}" required="true" requiredMessage="#{bundle['message.required.password']}" /></span>
+                        <h:message styleClass="error" for="password" />
+                    </div>
+                    <div>
+                        <h:commandButton id="submit" action="#{user.doLogin}" value="#{bundle['action.login']}" />
+                        <td colspan="2" class="textCenter"><h:message styleClass="error" for="submit" /></td>
+                    </div>                    
+                </h:form>
+            </ui:define>        
+
+        </ui:composition>
+    </body>
+</html>

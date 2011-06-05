@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition>
+        <h:form>
+            <ul>
+                <li><h:link outcome="index" value="#{bundle['menu.index']}" /></li>
+                <li><h:link outcome="login" value="#{bundle['menu.login']}" /></li>
+                <li><h:commandLink action="#{user.doLogout()}" value="#{bundle['menu.logout']}" /></li>
+            </ul>
+        </h:form>
+    </ui:composition>
+</html>
+
