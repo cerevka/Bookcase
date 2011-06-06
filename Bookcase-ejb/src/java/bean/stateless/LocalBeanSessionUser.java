@@ -18,6 +18,13 @@ public interface LocalBeanSessionUser {
      * @return Uzivatel.
      */
     public EntityUser getUser(int userId);
+    
+    /**
+     * Vrati uzivatele s danym e-mailem.
+     * @param email E-mail uzivatele.
+     * @return  Uzivatel.
+     */
+    public EntityUser getUserByEmail(String email);
 
     /**
      * Updatuje uzivatele.
@@ -100,6 +107,6 @@ public interface LocalBeanSessionUser {
      * @param group Role.
      * @return Potvrzeni/zamitnuti role.
      */
-    public boolean isInGroup(EntityUser user, EntityGroup group);
+    public boolean isInGroup(EntityUser user, EntityGroup group);    
     
 }

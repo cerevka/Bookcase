@@ -1,15 +1,23 @@
 package bean.managed.sessionScoped;
 
+import bean.stateless.LocalBeanSessionUser;
+import entity.EntityUser;
+import java.awt.List;
+import java.io.Serializable;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Path;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -17,11 +25,27 @@ import javax.ws.rs.Path;
  */
 @ManagedBean(name = "user")
 @SessionScoped
-public class BeanManagedUser {
+public class BeanManagedUser implements Serializable {    
 
     public static final Logger logger = Logger.getLogger(BeanManagedUser.class.getName());
+    
+    @EJB
+    private LocalBeanSessionUser beanSessionUser;
+
+    /**
+     * Pouze pro ucely prihlasovani.
+     */
     private String email;
+
+    /**
+     * Pouze pro ucely prihlasovani.
+     */
     private String password;
+    
+    /**
+     * Aktualne prihlaseny uzivatel.
+     */
+    private EntityUser user;
 
     /**
      * Vytvori novou beanu.
@@ -43,7 +67,15 @@ public class BeanManagedUser {
 
     public void setPassword(String password) {
         this.password = password;
-    }   
+    }
+
+    public EntityUser getUser() {
+        return user;
+    }
+
+    public void setUser(EntityUser user) {
+        this.user = user;
+    }  
 
     /**
      * Prihlasi uzivatele.
@@ -54,15 +86,16 @@ public class BeanManagedUser {
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         try {
             request.login(email, password);
+            user = beanSessionUser.getUserByEmail(email);
             email = password = null;
             return "index";
         } catch (ServletException ex) {
             email = password = null;
             ResourceBundle bundle = ctx.getApplication().getResourceBundle(ctx, "bundle");
             ctx.addMessage("loginForm:submit", new FacesMessage(bundle.getString("message.error.login")));
-            return null;            
+            return null;
         }
-        
+
     }
 
     /**
@@ -70,6 +103,9 @@ public class BeanManagedUser {
      * @return Vysledek akce.
      */
     public String doLogout() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.invalidate();
+        user = null;
         return "logout";
     }
 
@@ -80,16 +116,30 @@ public class BeanManagedUser {
     public Boolean isLogged() {
         return getRole() != null;
     }
+    
+    public Boolean isUser() {
+        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("user");        
+    }
+    
+    public Boolean isAdmin() {
+        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("admin");        
+    }
 
     /**
      * Vrati v jake roli je uzivatel prihlasen.
      * @return Role uzivatele.
      */
     public String getRole() {
-        Principal principal = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
-        if (principal == null) {
+        Collection<String> roles = new ArrayList<String>();
+        if (isUser() == true) {
+            roles.add("user");
+        }
+        if (isAdmin() == true) {
+            roles.add("admin");
+        }
+        if (roles.isEmpty() == true) {
             return null;
         }
-        return principal.getName();
-    }
+        return roles.toString();
+    } 
 }

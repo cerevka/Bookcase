@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -20,6 +21,13 @@ public class BeanSessionUser implements LocalBeanSessionUser {
     @Override
     public EntityUser getUser(int userId) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @Override
+    public EntityUser getUserByEmail(String email) {
+        Query query = em.createNamedQuery(EntityUser.FIND_BY_EMAIL);
+        query.setParameter("email", email);
+        return (EntityUser) query.getSingleResult();
     }
 
     @Override

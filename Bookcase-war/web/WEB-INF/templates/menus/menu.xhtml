@@ -5,10 +5,15 @@
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <ui:composition>
         <h:form>
-            <ul>
+            <ul>                
+                <h:panelGroup rendered="#{!user.isLogged()}">
+                    <li><h:link outcome="login" value="#{bundle['menu.login']}" /></li>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{user.isLogged()}">
+                    <li><h:outputText value="#{user.user.name} #{user.user.surname} (#{user.user.email}) #{user.getRole()}" /></li>
+                    <li><h:commandLink action="#{user.doLogout()}" value="#{bundle['menu.logout']}"  /></li>
+                </h:panelGroup>
                 <li><h:link outcome="index" value="#{bundle['menu.index']}" /></li>
-                <li><h:link outcome="login" value="#{bundle['menu.login']}" /></li>
-                <li><h:commandLink action="#{user.doLogout()}" value="#{bundle['menu.logout']}" /></li>
             </ul>
         </h:form>
     </ui:composition>

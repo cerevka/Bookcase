@@ -47,8 +47,8 @@ public class EntityGroup implements Serializable {
     private String name;
 
     @JoinTable(name = "userInGroup", joinColumns = {
-        @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)})
+        @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
     private Collection<EntityUser> userCollection;
 
