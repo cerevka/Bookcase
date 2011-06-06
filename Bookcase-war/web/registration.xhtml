@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/templates/layout.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="registerForm">
+                        <h1><h:outputText value="#{bundle['heading.registration']}"/></h1>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
+                            <h:inputText id="name" value="#{user.user.name}" title="#{bundle['label.name.first']}" required="true" requiredMessage="#{bundle['message.required.name.first']}" />
+                            <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
+                            <h:inputText id="surname" value="#{user.user.surname}" title="#{bundle['label.name.last']}" required="true" requiredMessage="#{bundle['message.required.name.last']}" />                            
+                            <h:outputLabel value="#{bundle['label.email']}:" for="email" />
+                            <h:inputText id="email" value="#{user.user.email}" title="Email" required="true" requiredMessage="#{bundle['message.required.email']}" />
+                            <h:outputLabel value="#{bundle['label.password']}:" for="password" />
+                            <h:inputSecret id="password" value="#{user.user.password}" title="#{bundle['label.password']}" required="true" requiredMessage="#{bundle['message.required.password']}" />                            
+                        </h:panelGrid>
+                        <h:commandButton id="submit" action="${user.doRegister()}" value="#{bundle['action.register']}" />
+                    </h:form>
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

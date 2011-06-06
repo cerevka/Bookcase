@@ -17,7 +17,13 @@
 #left {    
     float: left;
     width: 150px;
-    background-color: #ece3a5; 
+    
+}
+
+#left ul.menu {
+    background-color: #ece3a5;
+    width: 100%;
+    
 }
 
 #content {    
