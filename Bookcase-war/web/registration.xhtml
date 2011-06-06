@@ -9,21 +9,37 @@
 
         <ui:composition template="./WEB-INF/templates/layout.xhtml">
 
+            <ui:param name="title" value="#{bundle['title.registration']}" />
+
             <ui:define name="content">
                 <f:view>
                     <h:form id="registerForm">
+
                         <h1><h:outputText value="#{bundle['heading.registration']}"/></h1>
-                        <h:panelGrid columns="2">
+
+                        <h:panelGrid columns="3">
+
                             <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
                             <h:inputText id="name" value="#{user.user.name}" title="#{bundle['label.name.first']}" required="true" requiredMessage="#{bundle['message.required.name.first']}" />
+                            <h:message styleClass="error" for="name" />
+                            
                             <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
                             <h:inputText id="surname" value="#{user.user.surname}" title="#{bundle['label.name.last']}" required="true" requiredMessage="#{bundle['message.required.name.last']}" />                            
+                            <h:message styleClass="error" for="surname" />
+                            
                             <h:outputLabel value="#{bundle['label.email']}:" for="email" />
-                            <h:inputText id="email" value="#{user.user.email}" title="Email" required="true" requiredMessage="#{bundle['message.required.email']}" />
+                            <h:inputText id="email" value="#{user.user.email}" title="Email" required="true" requiredMessage="#{bundle['message.required.email']}">
+                                <f:validator validatorId="emailValidator" />
+                            </h:inputText>
+                            <h:message styleClass="error" for="email" />
+                            
                             <h:outputLabel value="#{bundle['label.password']}:" for="password" />
                             <h:inputSecret id="password" value="#{user.user.password}" title="#{bundle['label.password']}" required="true" requiredMessage="#{bundle['message.required.password']}" />                            
+                            <h:message styleClass="error" for="password" />
                         </h:panelGrid>
+
                         <h:commandButton id="submit" action="${user.doRegister()}" value="#{bundle['action.register']}" />
+
                     </h:form>
                 </f:view>
             </ui:define>

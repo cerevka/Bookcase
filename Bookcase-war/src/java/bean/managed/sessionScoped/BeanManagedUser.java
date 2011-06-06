@@ -2,13 +2,10 @@ package bean.managed.sessionScoped;
 
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityUser;
-import java.awt.List;
 import java.io.Serializable;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -45,13 +42,9 @@ public class BeanManagedUser implements Serializable {
     /**
      * Aktualne prihlaseny uzivatel.
      */
-    private EntityUser user;
+    
+    private EntityUser user = new EntityUser();
 
-    /**
-     * Vytvori novou beanu.
-     */
-    public BeanManagedUser() {
-    }
 
     public String getEmail() {
         return "";
@@ -105,8 +98,17 @@ public class BeanManagedUser implements Serializable {
     public String doLogout() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.invalidate();
-        user = null;
+        user = new EntityUser();
         return "logout";
+    }
+    
+    /**
+     * Registruje noveho uzivatele.
+     * @return Vysledek akce.
+     */
+    public String doRegister() {
+        
+        return "";
     }
 
     /**
