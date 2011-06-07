@@ -15,7 +15,7 @@ import javax.faces.validator.ValidatorException;
  * @author Tomáš Čerevka
  */
 @FacesValidator(value = "emailValidator")
-public class emailValidator implements Validator {
+public class EmailValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
