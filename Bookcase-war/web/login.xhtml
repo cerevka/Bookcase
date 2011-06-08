@@ -9,6 +9,10 @@
             <ui:param name="title" value="#{bundle['title.login']}" />
 
             <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.login']}"/></h1>
+                
+                <h:messages infoClass="success"  />
+                
                 <h:form id="loginForm">
                     <div>
                         <span class="span-2"><h:outputLabel for="email" value="#{bundle['label.email']}:" /></span>

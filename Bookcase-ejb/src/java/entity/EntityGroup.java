@@ -3,6 +3,7 @@ package entity;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,11 +31,11 @@ import javax.persistence.Table;
 public class EntityGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityGroup.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityGroup.findById";
-    
+
     public static final String FIND_BY_NAME = "EntityGroup.findByName";
 
     @Id
@@ -49,7 +50,7 @@ public class EntityGroup implements Serializable {
     @JoinTable(name = "userInGroup", joinColumns = {
         @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private Collection<EntityUser> userCollection;
 
     public EntityGroup() {

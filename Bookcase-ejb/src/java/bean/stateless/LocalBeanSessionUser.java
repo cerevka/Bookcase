@@ -2,6 +2,7 @@ package bean.stateless;
 
 import entity.EntityUser;
 import entity.EntityGroup;
+import exception.ExceptionUserAlreadyExists;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -25,12 +26,18 @@ public interface LocalBeanSessionUser {
      * @return  Uzivatel.
      */
     public EntityUser getUserByEmail(String email);
+    
+    /**
+     * Registruje noveho uzivatele.
+     * @param user Registrovany uzivatel.
+     */
+    public void registerNewUser(entity.EntityUser user) throws ExceptionUserAlreadyExists;
 
     /**
      * Updatuje uzivatele.
      * @param user Osoba.
      */
-    public void updateUser(EntityUser user);
+    public void persistUser(EntityUser user);
 
     /**
      * Odstrani uzivatele.
@@ -92,14 +99,14 @@ public interface LocalBeanSessionUser {
      * @param person Uzivatel.
      * @param privilege Skupina.
      */
-    public void addPrivilege(EntityUser person, EntityGroup privilege);
+    public void addUserInGroup(EntityUser person, EntityGroup privilege);
 
     /**
      * Odebere uzivatele ze skupiny.
      * @param user Uzivatel.
      * @param group Role.
      */
-    public void removeGroup(EntityUser user, EntityGroup group);
+    public void removeUserFromGroup(EntityUser user, EntityGroup group);
 
     /**
      * Rozhodne, zda je uzivatel v dane skupine.
@@ -107,6 +114,13 @@ public interface LocalBeanSessionUser {
      * @param group Role.
      * @return Potvrzeni/zamitnuti role.
      */
-    public boolean isInGroup(EntityUser user, EntityGroup group);    
+    public boolean isUserInGroup(EntityUser user, EntityGroup group);
+
+    /**
+     * Vrati skupiny s danym jmenem.
+     * @param group Nazev skupiny.
+     * @return Objekt skupiny.
+     */
+    public EntityGroup getGroupByName(String group);
     
 }

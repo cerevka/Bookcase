@@ -8,7 +8,7 @@
         <property name="User" value="bookcase"/>
         <property name="Password" value="bookcase"/>
         <property name="URL" value="jdbc:mysql://localhost:3306/bookcase"/>
-        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>        
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="mysql/bookcase" object-type="user" pool-name="mysql_bookcase_bookcasePool"/>
 </resources>

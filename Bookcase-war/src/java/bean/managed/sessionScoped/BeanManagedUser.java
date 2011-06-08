@@ -2,10 +2,12 @@ package bean.managed.sessionScoped;
 
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityUser;
+import exception.ExceptionUserAlreadyExists;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -22,10 +24,10 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean(name = "user")
 @SessionScoped
-public class BeanManagedUser implements Serializable {    
+public class BeanManagedUser implements Serializable {
 
     public static final Logger logger = Logger.getLogger(BeanManagedUser.class.getName());
-    
+
     @EJB
     private LocalBeanSessionUser beanSessionUser;
 
@@ -35,16 +37,14 @@ public class BeanManagedUser implements Serializable {
     private String email;
 
     /**
-     * Pouze pro ucely prihlasovani.
+     * Pouze pro ucely prihlasovani a registrace.
      */
     private String password;
-    
+
     /**
      * Aktualne prihlaseny uzivatel.
      */
-    
     private EntityUser user = new EntityUser();
-
 
     public String getEmail() {
         return "";
@@ -68,7 +68,7 @@ public class BeanManagedUser implements Serializable {
 
     public void setUser(EntityUser user) {
         this.user = user;
-    }  
+    }
 
     /**
      * Prihlasi uzivatele.
@@ -101,14 +101,41 @@ public class BeanManagedUser implements Serializable {
         user = new EntityUser();
         return "logout";
     }
-    
+
     /**
      * Registruje noveho uzivatele.
      * @return Vysledek akce.
      */
     public String doRegister() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = context.getApplication().getResourceBundle(context, "bundle");
         
-        return "";
+        // Overeni, ze se shoduji hesla.
+        if (!user.getPassword().equals(password)) {
+            FacesMessage message = new FacesMessage(bundle.getString("message.error.passwordsDoNotMatch"));
+            context.addMessage("registrationForm:controlPassword", message);
+            password = "";
+            user.setPassword("");
+            logger.log(Level.WARNING, "E-mails do not match.");
+            return null;
+        }
+        
+        // Vytvareni uzivatele.
+        try {
+            beanSessionUser.registerNewUser(user);
+        } catch (ExceptionUserAlreadyExists ex) {
+            FacesMessage message = new FacesMessage(bundle.getString("message.error.userAlreadyExists"));
+            context.addMessage("registrationForm:email", message);
+            password = "";
+            user.setPassword("");
+            logger.log(Level.SEVERE, "User with this e-mail already exists.", ex);
+        }
+        
+        // Registrace je dokoncena.
+        user = new EntityUser(); 
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.registrationComplete"), "");                
+        context.addMessage(null, message);
+        return "login";
     }
 
     /**
@@ -118,13 +145,13 @@ public class BeanManagedUser implements Serializable {
     public Boolean isLogged() {
         return getRole() != null;
     }
-    
+
     public Boolean isUser() {
-        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("user");        
+        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("user");
     }
-    
+
     public Boolean isAdmin() {
-        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("admin");        
+        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("admin");
     }
 
     /**
@@ -143,5 +170,5 @@ public class BeanManagedUser implements Serializable {
             return null;
         }
         return roles.toString();
-    } 
+    }
 }
