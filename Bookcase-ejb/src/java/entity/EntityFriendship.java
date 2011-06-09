@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Table(name = "entityFriendship", catalog = "bookcase", schema = "")
 @NamedQueries({
     @NamedQuery(name = EntityFriendship.FIND_ALL, query = "SELECT f FROM EntityFriendship f"),
-    @NamedQuery(name = EntityFriendship.FIND_BY_STATE, query = "SELECT f FROM EntityFriendship f WHERE f.state = :state"),
+    @NamedQuery(name = EntityFriendship.FIND_BY_STATE, query = "SELECT f FROM EntityFriendship f WHERE f.status = :status"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER1, query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER2, query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2")
 })
