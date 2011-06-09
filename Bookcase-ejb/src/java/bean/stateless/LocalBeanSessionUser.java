@@ -3,6 +3,7 @@ package bean.stateless;
 import entity.EntityUser;
 import entity.EntityGroup;
 import exception.ExceptionUserAlreadyExists;
+import exception.ExceptionUserDoesNotExist;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -30,6 +31,7 @@ public interface LocalBeanSessionUser {
     /**
      * Registruje noveho uzivatele.
      * @param user Registrovany uzivatel.
+     * @throws ExceptionUserAlreadyExists Pokud uzivatel s danym e-mailem jiz existuje.
      */
     public void registerNewUser(entity.EntityUser user) throws ExceptionUserAlreadyExists;
 
@@ -130,4 +132,12 @@ public interface LocalBeanSessionUser {
      * @param body Text zpravy.
      */
     public void sendMail(String recipient, String subject, String body);
+
+    /**
+     * Nastavi uzivateli nove heslo a odesle mu ho e-mailem.
+     * @param email E-mail uzivatele.    
+     * @return Vygenerovane heslo.
+     * @throws ExceptionUserDoesNotExist Pokud uzivatel s danym e-mailem neexistuje. 
+     */
+    public String resetPassword(String email) throws ExceptionUserDoesNotExist;
 }

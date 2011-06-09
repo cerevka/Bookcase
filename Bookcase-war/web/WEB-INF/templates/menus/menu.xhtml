@@ -9,6 +9,7 @@
                 <h:panelGroup rendered="#{!user.isLogged()}">
                     <li><h:link outcome="login" value="#{bundle['menu.login']}" /></li>
                     <li><h:link outcome="registration" value="#{bundle['menu.registration']}" /></li>
+                    <li><h:link outcome="resetPassword" value="#{bundle['menu.resetPassword']}" /></li>
                 </h:panelGroup>
                 <h:panelGroup rendered="#{user.isLogged()}">
                     <li><h:outputText value="#{user.user.name} #{user.user.surname}" /></li>

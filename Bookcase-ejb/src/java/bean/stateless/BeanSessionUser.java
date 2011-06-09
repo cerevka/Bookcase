@@ -3,9 +3,11 @@ package bean.stateless;
 import entity.EntityUser;
 import entity.EntityGroup;
 import exception.ExceptionUserAlreadyExists;
+import exception.ExceptionUserDoesNotExist;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -19,6 +21,7 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -79,6 +82,37 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         // Uzivateli se priradi role "user".               
         EntityGroup userGroup = getGroupByName("user");
         addUserInGroup(user, userGroup);
+    }
+
+    @Override
+    public String resetPassword(String email) throws ExceptionUserDoesNotExist {
+        try {
+            // Sahne se pro uzivatele do databaze.
+            EntityUser user = getUserByEmail(email);
+            String newPassword = generatePassword(8);
+            user.setPassword(newPassword);
+            em.persist(user);  
+            return newPassword;
+        } catch (NoResultException exception) {
+            // Uzivatel v databazi neni.
+            throw new ExceptionUserDoesNotExist(email);
+        }
+    }
+    
+    /**
+     * Vygeneruje nahodne heslo o zadane delce.
+     * @param lenght Delka noveho hesla.
+     * @return Vygenerovane heslo.
+     */
+    private String generatePassword(int lenght) {
+        String charset = "!0123456789abcdefghijklmnopqrstuvwxyz";
+        Random random = new Random(System.currentTimeMillis());
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < lenght; ++i) {
+            int position = random.nextInt(charset.length());
+            stringBuffer.append(charset.charAt(position));
+        }
+        return stringBuffer.toString();
     }
 
     @Override
@@ -156,8 +190,7 @@ public class BeanSessionUser implements LocalBeanSessionUser {
     public boolean isUserInGroup(EntityUser user, EntityGroup group) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-     
+
     @Override
     public void sendMail(String recipient, String subject, String body) {
         try {

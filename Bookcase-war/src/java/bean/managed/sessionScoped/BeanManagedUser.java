@@ -3,6 +3,7 @@ package bean.managed.sessionScoped;
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
+import exception.ExceptionUserDoesNotExist;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class BeanManagedUser implements Serializable {
     public static final Logger logger = Logger.getLogger(BeanManagedUser.class.getName());
 
     @EJB
-    private LocalBeanSessionUser beanSessionUser;   
+    private LocalBeanSessionUser beanSessionUser; 
     
 
     /**
@@ -87,7 +88,7 @@ public class BeanManagedUser implements Serializable {
         } catch (ServletException ex) {
             email = password = null;
             ResourceBundle bundle = ctx.getApplication().getResourceBundle(ctx, "bundle");
-            ctx.addMessage("loginForm:submit", new FacesMessage(bundle.getString("message.error.login")));
+            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("message.error.login"), ""));
             return null;
         }
 
@@ -144,6 +145,44 @@ public class BeanManagedUser implements Serializable {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.registrationComplete"), "");                
         context.addMessage(null, message);
         return "login";
+    }
+    
+    /**
+     * Resetuje heslo uzivatele s danym e-mailem a zašle mu ho.
+     * @return Vysledek akce.
+     */
+    public String doResetPassword() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = context.getApplication().getResourceBundle(context, "bundle");
+        try {
+            // Zmena hesla.
+            String newPassword = beanSessionUser.resetPassword(email);
+            user = beanSessionUser.getUserByEmail(email);
+            
+            // Nove heslo se odesle na e-mail.
+            String newPasswordBodyPattern = bundle.getString("email.newPassword.body");
+            String newPasswordBody = MessageFormat.format(newPasswordBodyPattern, user.getName(), user.getEmail(), newPassword);
+            beanSessionUser.sendMail(user.getEmail(), bundle.getString("email.newPassword.subject"), newPasswordBody);
+            
+            // Zobrazi se hlaska o odeslani hesla.
+            String messagePatter = bundle.getString("message.success.newPasswordWasSent");
+            String message = MessageFormat.format(messagePatter, user.getEmail());
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
+            context.addMessage(null, facesMessage);
+            
+            // Vycisti se uzivatel.
+            user = new EntityUser();  
+            return "login";
+        } catch (ExceptionUserDoesNotExist exception) {
+            // Uzivatel s danym e-mailem neexistuje.
+            String pattern = bundle.getString("message.error.userDoesNotExist");
+            String message = MessageFormat.format(pattern, email);
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, "");
+            context.addMessage(null, facesMessage);
+            user = new EntityUser();
+            logger.log(Level.SEVERE, "User with this e-mail does not exist.", exception);
+            return null;
+        }       
     }
 
     /**
