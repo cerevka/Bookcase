@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +24,7 @@ import javax.persistence.Table;
 @Table(name = "entityFriendship", catalog = "bookcase", schema = "")
 @NamedQueries({
     @NamedQuery(name = EntityFriendship.FIND_ALL, query = "SELECT f FROM EntityFriendship f"),
-    @NamedQuery(name = EntityFriendship.FIND_BY_AUTHORIZED, query = "SELECT f FROM EntityFriendship f WHERE f.authorized = :authorized"),
+    @NamedQuery(name = EntityFriendship.FIND_BY_STATE, query = "SELECT f FROM EntityFriendship f WHERE f.state = :state"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER1, query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER2, query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2")
 })
@@ -32,11 +34,18 @@ public class EntityFriendship implements Serializable {
     
     public static final String FIND_ALL = "EntityFriendship.findAll";
     
-    public static final String FIND_BY_AUTHORIZED = "EntityFriendship.findByAuthorized";
+    public static final String FIND_BY_STATE = "EntityFriendship.findByState";
     
     public static final String FIND_BY_USER1 = "EntityFriendship.findByUserId1";
     
     public static final String FIND_BY_USER2 = "EntityFriendship.findByUserId2";
+
+    public static enum FriendshipState {AUTHORIZED, REJECTED, UNAUTHORIZED}
+
+   
+
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,8 +53,8 @@ public class EntityFriendship implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "authorized")
-    private Integer authorized;
+    @Column(name = "state")
+    private FriendshipState state;
 
     @JoinColumn(name = "userId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -62,6 +71,7 @@ public class EntityFriendship implements Serializable {
         this.id = id;
     }
 
+    @Id
     public int getId() {
         return id;
     }
@@ -69,13 +79,13 @@ public class EntityFriendship implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-
-    public Integer getAuthorized() {
-        return authorized;
+     @Enumerated(EnumType.STRING)
+    public FriendshipState getAuthorized() {
+        return state;
     }
 
-    public void setAuthorized(Integer authorized) {
-        this.authorized = authorized;
+    public void setAuthorized(FriendshipState state) {
+        this.state = state;
     }
 
     public EntityUser getUserId1() {
@@ -119,3 +129,4 @@ public class EntityFriendship implements Serializable {
         return "entity.EntityFriendship[id=" + id + "]";
     }
 }
+
