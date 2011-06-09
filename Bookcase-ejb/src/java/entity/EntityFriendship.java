@@ -42,11 +42,6 @@ public class EntityFriendship implements Serializable {
 
     public static enum FriendshipState {AUTHORIZED, REJECTED, UNAUTHORIZED}
 
-   
-
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -54,6 +49,7 @@ public class EntityFriendship implements Serializable {
     private Integer id;
 
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private FriendshipState state;
 
     @JoinColumn(name = "userId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
@@ -71,7 +67,6 @@ public class EntityFriendship implements Serializable {
         this.id = id;
     }
 
-    @Id
     public int getId() {
         return id;
     }
@@ -79,12 +74,12 @@ public class EntityFriendship implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-     @Enumerated(EnumType.STRING)
-    public FriendshipState getAuthorized() {
+    
+    public FriendshipState getState() {
         return state;
     }
 
-    public void setAuthorized(FriendshipState state) {
+    public void setState(FriendshipState state) {
         this.state = state;
     }
 
