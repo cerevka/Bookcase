@@ -4,6 +4,7 @@ import bean.stateless.LocalBeanSessionUser;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -29,7 +30,8 @@ public class BeanManagedUser implements Serializable {
     public static final Logger logger = Logger.getLogger(BeanManagedUser.class.getName());
 
     @EJB
-    private LocalBeanSessionUser beanSessionUser;
+    private LocalBeanSessionUser beanSessionUser;   
+    
 
     /**
      * Pouze pro ucely prihlasovani.
@@ -130,6 +132,12 @@ public class BeanManagedUser implements Serializable {
             user.setPassword("");
             logger.log(Level.SEVERE, "User with this e-mail already exists.", ex);
         }
+        
+        // Odesle se e-mail.        
+        String registrationBodyPattern = bundle.getString("email.registration.body");
+        String registrationBody = MessageFormat.format(registrationBodyPattern, user.getName(), user.getEmail());
+        
+        beanSessionUser.sendMail(user.getEmail(), bundle.getString("email.registration.subject"), registrationBody);
         
         // Registrace je dokoncena.
         user = new EntityUser(); 

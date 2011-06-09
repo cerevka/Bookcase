@@ -6,8 +6,18 @@ import exception.ExceptionUserAlreadyExists;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,8 +30,16 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class BeanSessionUser implements LocalBeanSessionUser {
 
+    private static final Logger logger = Logger.getLogger(BeanSessionUser.class.getName());
+
     @PersistenceContext
     private EntityManager em;
+
+    @Resource(lookup = "jms/bookcaseMail")
+    private Destination mailQueue;
+
+    @Resource(lookup = "jms/bookcaseMailFactory")
+    private ConnectionFactory connectionMailFactory;
 
     @Override
     public EntityUser getUser(int userId) {
@@ -137,5 +155,29 @@ public class BeanSessionUser implements LocalBeanSessionUser {
     @Override
     public boolean isUserInGroup(EntityUser user, EntityGroup group) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+     
+    @Override
+    public void sendMail(String recipient, String subject, String body) {
+        try {
+            // Pripravi se spojeni.
+            Connection connection = connectionMailFactory.createConnection();
+            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(mailQueue);
+
+            // Sestavi se zprava.
+            Message message = session.createMessage();
+            message.setStringProperty("recipient", recipient);
+            message.setStringProperty("subject", subject);
+            message.setStringProperty("body", body);
+
+            // Zprava se posle do fronty.
+            producer.send(message);
+            session.close();
+            connection.close();
+        } catch (JMSException exception) {
+            logger.log(Level.SEVERE, "Error when putting a message into queue: JMS exception", exception);
+        }
     }
 }

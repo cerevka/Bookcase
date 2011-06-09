@@ -19,14 +19,14 @@ public interface LocalBeanSessionUser {
      * @return Uzivatel.
      */
     public EntityUser getUser(int userId);
-    
+
     /**
      * Vrati uzivatele s danym e-mailem.
      * @param email E-mail uzivatele.
      * @return  Uzivatel.
      */
     public EntityUser getUserByEmail(String email);
-    
+
     /**
      * Registruje noveho uzivatele.
      * @param user Registrovany uzivatel.
@@ -122,5 +122,12 @@ public interface LocalBeanSessionUser {
      * @return Objekt skupiny.
      */
     public EntityGroup getGroupByName(String group);
-    
+
+    /**
+     * Umisti e-mail do fronty.
+     * @param recipient Adresa prijemce.
+     * @param subject Predmet zpravy.
+     * @param body Text zpravy.
+     */
+    public void sendMail(String recipient, String subject, String body);
 }

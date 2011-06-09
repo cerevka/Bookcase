@@ -48,9 +48,9 @@ public class EntityFriendship implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "state")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private FriendshipState state;
+    private FriendshipState status;
 
     @JoinColumn(name = "userId1", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -76,11 +76,11 @@ public class EntityFriendship implements Serializable {
     }
     
     public FriendshipState getState() {
-        return state;
+        return status;
     }
 
     public void setState(FriendshipState state) {
-        this.state = state;
+        this.status = state;
     }
 
     public EntityUser getUserId1() {
