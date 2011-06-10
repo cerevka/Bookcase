@@ -28,7 +28,7 @@ public class BeanMessageDrivenMail implements MessageListener {
 
     public static final Logger logger = Logger.getLogger(BeanMessageDrivenMail.class.getName());
 
-    @Resource(name = "mail/bookcase")
+    @Resource(lookup = "mail/bookcase")
     private javax.mail.Session mailSession;
 
     public BeanMessageDrivenMail() {

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+            
+            <ui:param name="title" value="#{bundle['title.book.add']}" />            
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.book.add']}" /></h1>
+                
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+                
+                <f:view>
+                    <h:form>                       
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="Id:" for="id" />
+                            <h:inputText id="id" value="#{book.book.id}" title="Id" required="true" requiredMessage="The Id field is required."/>
+                            <h:outputLabel value="Title:" for="title" />
+                            <h:inputText id="title" value="#{book.book.title}" title="Title" />
+                            <h:outputLabel value="Description:" for="description" />
+                            <h:inputText id="description" value="#{book.book.description}" title="Description" />
+                            <h:outputLabel value="AuthorId:" for="authorId" />
+                            <h:selectOneMenu id="authorId" value="#{book.book.authorId}" title="AuthorId" required="true" requiredMessage="The AuthorId field is required.">
+                                <!-- TODO: update below reference to list of available items-->
+                                <f:selectItems value="#{fixme}"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                    </h:form>
+                </f:view>
+
+                
+                
+            </ui:define>
+
+           
+
+        </ui:composition>
+
+    </body>
+</html>

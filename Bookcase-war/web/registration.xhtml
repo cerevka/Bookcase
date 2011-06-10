@@ -14,9 +14,11 @@
             <ui:define name="content">              
                 <h1><h:outputText value="#{bundle['heading.registration']}"/></h1>
                 
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+                
                 <h:form id="registrationForm">                        
 
-                    <h:panelGrid columns="3">
+                    <h:panelGrid columns="3" columnClasses="firstColumn, secondColumn, thirdColumn">
 
                         <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
                         <h:inputText id="name" value="#{user.user.name}" title="#{bundle['label.name.first']}" required="true" requiredMessage="#{bundle['message.required.name.first']}" />

@@ -10,26 +10,29 @@
 
             <ui:define name="content">
                 <h1><h:outputText value="#{bundle['heading.login']}"/></h1>
-                
+
                 <h:messages infoClass="success" errorClass="error" globalOnly="true"  />
                 
                 <h:form id="loginForm">
-                    <div>
-                        <span class="span-2"><h:outputLabel for="email" value="#{bundle['label.email']}:" /></span>
-                        <span><h:inputText id="email" value="#{user.email}" required="true" requiredMessage="#{bundle['message.required.email']}" /></span>
+                    
+                    <h:panelGrid columns="3" columnClasses="firstColumn, secondColumn, thirdColumn">
+
+                        <h:outputLabel for="email" value="#{bundle['label.email']}:" />
+                        <h:inputText id="email" value="#{user.email}" required="true" requiredMessage="#{bundle['message.required.email']}" />
                         <h:message styleClass="error" for="email" />
-                    </div>
-                    <div>
-                        <span class="span-2"><h:outputLabel for="password" value="#{bundle['label.password']}:" /></span>
-                        <span><h:inputSecret id="password" value="#{user.password}" required="true" requiredMessage="#{bundle['message.required.password']}" /></span>
+
+                        <h:outputLabel for="password" value="#{bundle['label.password']}:" />
+                        <h:inputSecret id="password" value="#{user.password}" required="true" requiredMessage="#{bundle['message.required.password']}" />
                         <h:message styleClass="error" for="password" />
-                    </div>
-                    <div>
-                        <h:commandButton id="submit" action="#{user.doLogin}" value="#{bundle['action.login']}" />
-                        <td colspan="2" class="textCenter"><h:message styleClass="error" for="submit" /></td>
-                    </div>  
-                    <li><h:link outcome="resetPassword" value="#{bundle['menu.resetPassword']}" /></li>
+
+                    </h:panelGrid>
+                    
+                    <h:commandButton id="submit" action="#{user.doLogin}" value="#{bundle['action.login']}" />
+                    <td colspan="2" class="textCenter"><h:message styleClass="error" for="submit" /></td>
+                    
                 </h:form>
+                <br />    
+                <h:link outcome="resetPassword" value="#{bundle['menu.resetPassword']}" />
             </ui:define>        
 
         </ui:composition>

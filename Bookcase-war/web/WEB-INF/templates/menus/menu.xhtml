@@ -5,11 +5,12 @@
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <ui:composition>
         <h:form>
+            <h1><h:outputText value="#{bundle['heading.menu.user']}" /></h1>
             <ul class="menu">                
                 <h:panelGroup rendered="#{!user.isLogged()}">
-                    <li><h:link outcome="login" value="#{bundle['menu.login']}" /></li>
-                    <li><h:link outcome="registration" value="#{bundle['menu.registration']}" /></li>
-                    <li><h:link outcome="resetPassword" value="#{bundle['menu.resetPassword']}" /></li>
+                    <li><h:link outcome="/login" value="#{bundle['menu.login']}" /></li>
+                    <li><h:link outcome="/registration" value="#{bundle['menu.registration']}" /></li>
+                    <li><h:link outcome="/resetPassword" value="#{bundle['menu.resetPassword']}" /></li>
                 </h:panelGroup>
                 <h:panelGroup rendered="#{user.isLogged()}">
                     <li><h:outputText value="#{user.user.name} #{user.user.surname}" /></li>
@@ -19,8 +20,13 @@
                 </h:panelGroup>
 
             </ul>
+            <h1><h:outputText value="#{bundle['heading.menu.navigation']}" /></h1>
             <ul class="menu">
-                <li><h:link outcome="index" value="#{bundle['menu.index']}" /></li>
+                <li><h:link outcome="/index" value="#{bundle['menu.index']}" /></li>
+                <li><h2><h:outputText value="#{bundle['heading.menu.bookcase']}" /></h2></li>
+                <ul>
+                    <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
+                </ul>
             </ul>
         </h:form>
     </ui:composition>

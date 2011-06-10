@@ -1,42 +1,128 @@
+body {
+    background-color: #696969
+}
+
+h1 {
+    color: #0066CC;
+    font-weight: bold;    
+}
+
+h2 {
+    color: #0066CC;
+    font-weight: bold;
+}
+
 #header {    
-    width: 100%;
-    height: 100px;
+    width: 890px;
+    height: 50px;
     clear: both;
-    background-color: #036fab;       
+    background-color: #373832; 
+    padding: 30px 30px;
+}
+
+.error {
+    background: none;
+    border: none;
+    font-size: 16px;
+}
+
+.success {
+    background: none;
+    border: none;
+    font-size: 16px;
 }
 
 #header h1 {
     font-size: 60px;
-    color: white;
+    color: whitesmoke;
 }
 
 #body {
-    width: 100%;   
+    width: 950px;
+    height: 100%;
+    background-color: #E9E9E9;
+    float: left;
 }
 
 #left {    
     float: left;
     width: 150px;
-    
+    padding: 20px 10px 10px 10px;
 }
 
-#left ul.menu {
-    background-color: #ece3a5;
-    width: 100%;
-    
+#left h1 {
+    font-size: 24px;
+    margin: 0px;
+}
+
+#left h2 {
+    font-size: 20px;
+    margin: 0px;
+}
+
+
+
+#left ul.menu {   
+    width: 130px;
+    padding: 10px;
+    list-style-type: none;
+    font-size: 18px;
+}
+
+#left ul.menu ul {       
+    list-style-type: none;
+    margin: 0px;
 }
 
 #content {    
     float: right;
-    width: 780px;
+    width: 760px;
     min-height: 400px;
-    background-color: #dddddd;  
-    padding: 10px;
+    background-color: white;  
+    padding: 15px 10px 10px 10px;
+}
+
+#content h1 {
+    border-bottom: 2px solid #E5ECF9; 
 }
 
 #footer {  
-    width: 100%;
+    width: 930px;
     height: 50px;
     clear: both;
-    background-color: #c2dfef;
+    background-color: #373832;
+    padding: 0px 10px;    
 }
+
+#footer div#copyright {
+    float: right;
+    font-size: 16px;
+    color: white;
+    margin-top: -25px;
+}
+
+#footer form#languageForm {
+    width: 100px;
+}
+
+div#footer input {
+    margin: 7px 10px 0px 0px;    
+}
+
+table tr td {
+    padding: 2px;    
+}
+
+table tr td.firstColumn {
+    width: 150px;
+    padding-left: 5px;
+}
+
+table tr td.secondColumn {
+    width: 200px;
+}
+
+table tr td.thirdColumn {
+    width: auto;
+}
+

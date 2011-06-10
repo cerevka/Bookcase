@@ -10,12 +10,12 @@
 
         <h:head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <link href="./resources/css/blueprint/screen.css" type="text/css" rel="stylesheet" media="screen, projection" />
-            <link href="./resources/css/blueprint/print.css" rel="stylesheet"  type="text/css" media="print" /> 
+            <link href="#{facesContext.externalContext.requestContextPath}/resources/css/blueprint/screen.css" type="text/css" rel="stylesheet" media="screen, projection" />
+            <link href="#{facesContext.externalContext.requestContextPath}/resources/css/blueprint/print.css" rel="stylesheet"  type="text/css" media="print" /> 
             <!--[if lt IE 8]>
-              <link href="./resources/css/blueprint/ie.css" rel="stylesheet" type="text/css" media="screen, projection" />
+              <link href="#{facesContext.externalContext.requestContextPath}/resources/css/blueprint/ie.css" rel="stylesheet" type="text/css" media="screen, projection" />
             <![endif]-->
-            <link href="./resources/css/default.css" rel="stylesheet" type="text/css" />        
+            <link href="#{facesContext.externalContext.requestContextPath}/resources/css/default.css" rel="stylesheet" type="text/css" />        
             <title>#{title} | #{bundle['title']}</title>
         </h:head>
 
@@ -46,6 +46,7 @@
                             <h:commandButton id="czech" image="/resources/images/flag_cz.png" action="#{language.doChange('cs')}" value="#{bundle['language.cs']}" />
                             <h:commandButton id="english" image="/resources/images/flag_gb.png" action="#{language.doChange('en')}" value="#{bundle['language.en']}" />
                         </h:form>
+                        <div id="copyright">#{bundle['copyright']}</div>
                     </ui:insert>
                 </div>
 

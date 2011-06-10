@@ -84,7 +84,7 @@ public class BeanManagedUser implements Serializable {
             request.login(email, password);
             user = beanSessionUser.getUserByEmail(email);
             email = password = null;
-            return "index";
+            return "/index";
         } catch (ServletException ex) {
             email = password = null;
             ResourceBundle bundle = ctx.getApplication().getResourceBundle(ctx, "bundle");
@@ -102,7 +102,7 @@ public class BeanManagedUser implements Serializable {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.invalidate();
         user = new EntityUser();
-        return "logout";
+        return "/logout";
     }
 
     /**
@@ -144,7 +144,7 @@ public class BeanManagedUser implements Serializable {
         user = new EntityUser(); 
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.registrationComplete"), "");                
         context.addMessage(null, message);
-        return "login";
+        return "/login";
     }
     
     /**
@@ -172,7 +172,7 @@ public class BeanManagedUser implements Serializable {
             
             // Vycisti se uzivatel.
             user = new EntityUser();  
-            return "login";
+            return "/login";
         } catch (ExceptionUserDoesNotExist exception) {
             // Uzivatel s danym e-mailem neexistuje.
             String pattern = bundle.getString("message.error.userDoesNotExist");
