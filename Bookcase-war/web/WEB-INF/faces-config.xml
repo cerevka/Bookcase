@@ -22,7 +22,7 @@
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
-            <from-outcome>logout</from-outcome>
+            <from-outcome>/logout</from-outcome>
             <to-view-id>/logout.xhtml</to-view-id>
             <redirect />
         </navigation-case>

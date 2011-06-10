@@ -45,5 +45,10 @@ public interface LocalBeanSessionBasket {
       * @return
       */
      public boolean isIn(EntityCopy entity);
+
+     /**
+      * Vsechny knihy v kosiku pujci uzivateli.
+      */
+    public void borrow();
     
 }

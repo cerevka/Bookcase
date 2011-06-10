@@ -81,5 +81,10 @@ public interface LocalBeanSessionBook {
      * @param author Autor knihy.
      */
     public void addBook(EntityBook book, EntityAuthor author);
+
+    /**
+     * Vrati vsechny svazky z dane policky pro prihlaseneho uzivatele..
+     */
+    public List<entity.EntityCopy> getCopiesInSelf(String shelfName);
     
 }

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['title.basket']}" />
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.basket']}" /></h1>
+                
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+                
+                <f:view>
+                    <h:form>                        
+                        <h:dataTable value="#{user.copiesInBasket}" var="copy">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle['label.title']}"/>
+                                </f:facet>
+                                <h:outputText value="#{copy.bookId.title}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle['label.author']}"/>
+                                </f:facet>
+                                <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle['label.description']}"/>
+                                </f:facet>
+                                <h:outputText value="#{copy.bookId.description}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle['label.action']}"/>
+                                </f:facet>
+                                <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(copy)}" />
+                            </h:column>
+                        </h:dataTable>
+                        <h:commandButton value="#{bundle['action.borrow']}" action="#{user.doBorrowBasket()}" />
+                    </h:form>
+                </f:view>
+
+                
+            </ui:define>
+
+            
+
+        </ui:composition>
+
+    </body>
+</html>

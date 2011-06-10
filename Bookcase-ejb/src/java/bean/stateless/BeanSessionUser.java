@@ -2,6 +2,7 @@ package bean.stateless;
 
 import entity.EntityUser;
 import entity.EntityGroup;
+import entity.EntityShelf;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
 import java.util.ArrayList;
@@ -82,6 +83,20 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         // Uzivateli se priradi role "user".               
         EntityGroup userGroup = getGroupByName("user");
         addUserInGroup(user, userGroup);
+        
+        // Uzivateli se vytvori defaultni policka.
+        EntityShelf shelf = new EntityShelf();
+        shelf.setUserId(user);
+        shelf.setName("default");
+        
+        Collection<EntityShelf> shelfsOfUser = user.getShelfCollection();
+        if (shelfsOfUser == null) {
+            shelfsOfUser = new ArrayList<EntityShelf>();
+        }
+        shelfsOfUser.add(shelf);
+        
+        em.persist(shelf);
+        em.persist(user);
     }
 
     @Override

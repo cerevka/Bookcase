@@ -1,6 +1,8 @@
 package bean.managed.sessionScoped;
 
+import bean.statefull.LocalBeanSessionBasket;
 import bean.stateless.LocalBeanSessionUser;
+import entity.EntityCopy;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
@@ -11,6 +13,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -31,8 +34,10 @@ public class BeanManagedUser implements Serializable {
     public static final Logger logger = Logger.getLogger(BeanManagedUser.class.getName());
 
     @EJB
-    private LocalBeanSessionUser beanSessionUser; 
-    
+    private LocalBeanSessionUser beanSessionUser;
+
+    @EJB
+    private LocalBeanSessionBasket beanSessionBasket;
 
     /**
      * Pouze pro ucely prihlasovani.
@@ -112,7 +117,7 @@ public class BeanManagedUser implements Serializable {
     public String doRegister() {
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceBundle bundle = context.getApplication().getResourceBundle(context, "bundle");
-        
+
         // Overeni, ze se shoduji hesla.
         if (!user.getPassword().equals(password)) {
             FacesMessage message = new FacesMessage(bundle.getString("message.error.passwordsDoNotMatch"));
@@ -122,7 +127,7 @@ public class BeanManagedUser implements Serializable {
             logger.log(Level.WARNING, "E-mails do not match.");
             return null;
         }
-        
+
         // Vytvareni uzivatele.
         try {
             beanSessionUser.registerNewUser(user);
@@ -133,20 +138,20 @@ public class BeanManagedUser implements Serializable {
             user.setPassword("");
             logger.log(Level.SEVERE, "User with this e-mail already exists.", ex);
         }
-        
+
         // Odesle se e-mail.        
         String registrationBodyPattern = bundle.getString("email.registration.body");
         String registrationBody = MessageFormat.format(registrationBodyPattern, user.getName(), user.getEmail());
-        
+
         beanSessionUser.sendMail(user.getEmail(), bundle.getString("email.registration.subject"), registrationBody);
-        
+
         // Registrace je dokoncena.
-        user = new EntityUser(); 
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.registrationComplete"), "");                
+        user = new EntityUser();
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.registrationComplete"), "");
         context.addMessage(null, message);
         return "/login";
     }
-    
+
     /**
      * Resetuje heslo uzivatele s danym e-mailem a zašle mu ho.
      * @return Vysledek akce.
@@ -158,20 +163,20 @@ public class BeanManagedUser implements Serializable {
             // Zmena hesla.
             String newPassword = beanSessionUser.resetPassword(email);
             user = beanSessionUser.getUserByEmail(email);
-            
+
             // Nove heslo se odesle na e-mail.
             String newPasswordBodyPattern = bundle.getString("email.newPassword.body");
             String newPasswordBody = MessageFormat.format(newPasswordBodyPattern, user.getName(), user.getEmail(), newPassword);
             beanSessionUser.sendMail(user.getEmail(), bundle.getString("email.newPassword.subject"), newPasswordBody);
-            
+
             // Zobrazi se hlaska o odeslani hesla.
             String messagePatter = bundle.getString("message.success.newPasswordWasSent");
             String message = MessageFormat.format(messagePatter, user.getEmail());
             FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
             context.addMessage(null, facesMessage);
-            
+
             // Vycisti se uzivatel.
-            user = new EntityUser();  
+            user = new EntityUser();
             return "/login";
         } catch (ExceptionUserDoesNotExist exception) {
             // Uzivatel s danym e-mailem neexistuje.
@@ -182,7 +187,7 @@ public class BeanManagedUser implements Serializable {
             user = new EntityUser();
             logger.log(Level.SEVERE, "User with this e-mail does not exist.", exception);
             return null;
-        }       
+        }
     }
 
     /**
@@ -218,4 +223,40 @@ public class BeanManagedUser implements Serializable {
         }
         return roles.toString();
     }
-}
+
+    @RolesAllowed({"user", "admin"})
+    public void addToBasket(EntityCopy copy) {
+        beanSessionBasket.addCopy(copy);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
+        String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
+        facesContext.addMessage(null, facesMessage);
+    }
+
+    @RolesAllowed({"user", "admin"})
+    public Collection<EntityCopy> getCopiesInBasket() {
+        return beanSessionBasket.getContent();
+    }
+    
+    @RolesAllowed({"user", "admin"})
+    public void removeFromBasket(EntityCopy copy) {
+        beanSessionBasket.removeCopy(copy);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String bookRemovedPatter = bundle.getString("message.success.bookRemovedFromBasket");
+        String bookRemovedMessage = MessageFormat.format(bookRemovedPatter, copy.getBookId().getTitle());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookRemovedMessage, "");
+        facesContext.addMessage(null, facesMessage);
+    }
+    
+    @RolesAllowed({"user", "admin"})
+    public void doBorrowBasket() {
+        beanSessionBasket.borrow();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");        
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
+        facesContext.addMessage(null, facesMessage);
+    }
+ }

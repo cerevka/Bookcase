@@ -25,7 +25,8 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = EntityShelf.FIND_ALL, query = "SELECT s FROM EntityShelf s"),
     @NamedQuery(name = EntityShelf.FIND_BY_ID, query = "SELECT s FROM EntityShelf s WHERE s.id = :id"),
-    @NamedQuery(name = EntityShelf.FIND_BY_NAME, query = "SELECT s FROM EntityShelf s WHERE s.name = :name")
+    @NamedQuery(name = EntityShelf.FIND_BY_NAME, query = "SELECT s FROM EntityShelf s WHERE s.name = :name"),
+    @NamedQuery(name = EntityShelf.FIND_BY_USER_AND_NAME, query= "SELECT s FROM EntityShelf s WHERE s.userId = :user AND s.name = :name")       
 })
 public class EntityShelf implements Serializable {
 
@@ -36,6 +37,8 @@ public class EntityShelf implements Serializable {
     public static final String FIND_BY_ID = "EntityShelf.findById";
     
     public static final String FIND_BY_NAME = "EntityShelf.findByName";
+    
+    public static final String FIND_BY_USER_AND_NAME = "EntityShelf.findByUserAndName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

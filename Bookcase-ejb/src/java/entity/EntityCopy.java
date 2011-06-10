@@ -60,8 +60,8 @@ public class EntityCopy implements Serializable {
     private Date published;
 
     @JoinTable(name = "bookInShelf", joinColumns = {
-        @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)})
+        @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)})
     @ManyToMany
     private Collection<EntityShelf> shelfCollection;
 
