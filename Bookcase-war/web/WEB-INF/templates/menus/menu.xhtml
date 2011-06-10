@@ -23,10 +23,12 @@
             <h1><h:outputText value="#{bundle['heading.menu.navigation']}" /></h1>
             <ul class="menu">
                 <li><h:link outcome="/index" value="#{bundle['menu.index']}" /></li>
-                <li><h2><h:outputText value="#{bundle['heading.menu.bookcase']}" /></h2></li>
-                <ul>
-                    <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
-                </ul>
+                <h:panelGroup rendered="#{user.isLogged()}">
+                    <li><h2><h:outputText value="#{bundle['heading.menu.bookcase']}" /></h2></li>
+                    <ul>                    
+                        <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
+                    </ul>
+                </h:panelGroup>
             </ul>
         </h:form>
     </ui:composition>

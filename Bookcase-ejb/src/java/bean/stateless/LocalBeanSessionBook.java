@@ -74,5 +74,12 @@ public interface LocalBeanSessionBook {
      * @return Seznam autoru.
      */
     public List<EntityAuthor> getAllAuthors();
+
+    /**
+     * Prida novou knihu do databaze.
+     * @param book Pridavana kniha.
+     * @param author Autor knihy.
+     */
+    public void addBook(EntityBook book, EntityAuthor author);
     
 }

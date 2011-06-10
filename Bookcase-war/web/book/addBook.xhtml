@@ -8,37 +8,53 @@
     <body>
 
         <ui:composition template="./../WEB-INF/templates/layout.xhtml">
-            
+
             <ui:param name="title" value="#{bundle['title.book.add']}" />            
 
             <ui:define name="content">
                 <h1><h:outputText value="#{bundle['heading.book.add']}" /></h1>
-                
+
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
-                
-                <f:view>
-                    <h:form>                       
-                        <h:panelGrid columns="2">
-                            <h:outputLabel value="Id:" for="id" />
-                            <h:inputText id="id" value="#{book.book.id}" title="Id" required="true" requiredMessage="The Id field is required."/>
-                            <h:outputLabel value="Title:" for="title" />
-                            <h:inputText id="title" value="#{book.book.title}" title="Title" />
-                            <h:outputLabel value="Description:" for="description" />
-                            <h:inputText id="description" value="#{book.book.description}" title="Description" />
-                            <h:outputLabel value="AuthorId:" for="authorId" />
-                            <h:selectOneMenu id="authorId" value="#{book.book.authorId}" title="AuthorId" required="true" requiredMessage="The AuthorId field is required.">
-                                <!-- TODO: update below reference to list of available items-->
-                                <f:selectItems value="#{fixme}"/>
-                            </h:selectOneMenu>
-                        </h:panelGrid>
-                    </h:form>
-                </f:view>
 
-                
-                
+                <h:form id="addBookForm">    
+                    <h2><h:outputText value="#{bundle['heading.author']}" /></h2>
+                    <p><h:outputText value="#{bundle['info.whenAddNewAuthor']}" /></p>
+                    
+                    <h:panelGrid columns="3" columnClasses="firstColumn, secondColumn, thirdColumn">
+                        
+                        <h:outputLabel value="#{bundle['label.author']}:" for="author" />
+                        <h:selectOneMenu id="author" value="#{book.author}" title="#{bundle['label.author']}" >
+                            <f:selectItem noSelectionOption="true" itemLabel="#{bundle['label.newAuthor']}" />
+                            <f:selectItems value="#{book.allAuthors}" var="author" itemLabel="#{author.name} #{author.surname}" />                           
+                        </h:selectOneMenu>
+                        <h:message for="author" errorClass="error" />                        
+                        
+                        <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
+                        <h:inputText id="name" value="#{book.authorName}" title="#{bundle['label.name.first']}" />
+                        <h:message for="name" errorClass="error" />
+                        
+                        <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
+                        <h:inputText id="surname" value="#{book.authorSurname}" title="#{bundle['label.name.last']}" />
+                        <h:message for="surname" errorClass="error" />
+                        
+                    </h:panelGrid>
+
+                    <h2><h:outputText value="#{bundle['heading.title']}" /></h2>
+                    <h:panelGrid columns="3" columnClasses="firstColumn, secondColumn, thirdColumn">                           
+                        <h:outputLabel value="#{bundle['label.title']}:" for="title" />
+                        <h:inputText id="title" value="#{book.book.title}" title="#{bundle['label.title']}" required="true" requiredMessage="#{bundle['message.required.title']}" />
+                        <h:message for="title" errorClass="error" />
+                        
+                        <h:outputLabel value="#{bundle['label.description']}:" for="description" />
+                        <h:inputText id="description" value="#{book.book.description}" title="#{bundle['label.description']}" required="true" requiredMessage="#{bundle['message.required.description']}" />  
+                        <h:message for="description" errorClass="error" />
+                    </h:panelGrid>
+                    
+                    <h:commandButton action="#{book.addNewBook()}" value="#{bundle['action.add.book']}" />
+                    
+                </h:form>
+
             </ui:define>
-
-           
 
         </ui:composition>
 
