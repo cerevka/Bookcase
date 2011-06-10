@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{url}
+\linespread{1.3}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Nastaveni hlavicky a paticky.
+\lhead{X33EJA - Enterprise Java}
+\rhead{Tomáš Čerevka, Adam Činčura}
+\lfoot{\today}
+\rfoot{\thepage}
+
+\begin{document}
+
+\noindent
+\begin{Huge}Bookcase - checkpoint 3\end{Huge}
+
+\section{Popis aplikace}
+
+Cílem aplikace Bookcase bylo vytvořit rozhraní, které umožní uživatelům evidovat své osobní knihovničky, sdílet je s vybranými přáteli a hlavně udržovat přehledně informace o tom, kdo má který svazek půjčen a kdy by ho měl vrátit.
+
+Aplikace sice není realizována v plném rozsahu, nicméně její hlavní funkcionalita je zprovozněna a zbytek by se realizoval velmi podobnými postupy. Konkrétně v aplikaci funguje:
+
+\begin{itemize}
+	\item Registrace uživatelů.
+	\item Přihlašování a odhlašování uživatelů.
+	\item Posílání e-mailů.
+	\item Vložení nové knihy do databáze:
+		\begin{itemize}
+			\item s již existujícím autorem.
+			\item s vytvořením nového autora.
+		\end{itemize}
+	\item Procházení knih, které uživatel vlastní.
+	\item Procházení vše knih v databázi.
+	\item Umístění knihy do košíku.
+	\item Odebrání knihy z košíku.
+	\item Zapůjčení všech knih v košíku.
+	\item Celé rozhraní aplikace je multijazyčné.
+\end{itemize} 
+
+\section{Architektura a technologie}
+
+Pro vývoj jsme používali aplikační server Glassfish 3.1, Netbeans 7.0 a MySQL 5.5.12 na operačním systému Fedora 15 a Windows.
+
+Aplikace se skládá z jednoho EJB modulu, který obsahuje stateless a stateful (košík) session beans, jednu message driven bean, která zajišťuje odesílání e-mailů přes SMTPS gmailu, dále z webového modulu, který využivá hlavně technologie JSF 2.0 a při stylování pomáhal CSS framework Blueprint CSS. Oba dva tyto moduly jsou zastřešeny pod jednou enterprise aplikací.
+
+\section{Zhodnocení}
+
+Osobně jsem v Enteprise Javě EE 6 pracoval již dříve (na své bakalářské práci), nicméně tam se jednalo o navazující projekt. Díky této semestrální práci jsem si vyzkoušel vytvoření projektu na "zelené louce".
+
+Velmi se mi líbí práce s objektově-relačním mapováním a zpracováním logiky. Naopak se mi nelíbí způsob navigace mezi stránkami a volání akcí přes commandLink či commandButton, které využívají ke své práci JavaScript. Navíc url adresy se netváří příliš "seo-friendly". Doufám, že tento nedostatek dokáže vyřešit doplněk pro JSF jménem PrettyFaces, který bych rád vyzkoušel.
+
+Na druhou stranu mi tato technologie zatím připadá stále poněkud těžkopádná. Měli jsme nemalé problémy zprovoznit Glassfish na dvou strojích i přesto, že jsme ho zcela identicky nakonfigurovali a nasadili na něj stejný EAR. Těžko říci, jestli to bylo rozdíly mezi Linuxovou a Windows verzí.
+
+\section{Instalace}
+
+Projekt je hostován na \url{https://github.com/cerevka/Bookcase}, kde jsou k dizpozici zdrojové kody a instrukce k nastavení projektu (\url{https://github.com/cerevka/Bookcase/wiki/Bookcase}).
+
+Projekt lze také nainstalovant přiloženým skriptem pro Shell, který je schopný čistě nainstalovaný Glassfish nastavit od A do Z a nadeployovat na něj přiložený EAR. Pouze je třeba připravit v databázi view pro logování a uživatelské skupiny.
+
+\end{document}
