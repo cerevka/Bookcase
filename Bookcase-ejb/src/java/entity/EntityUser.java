@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,24 +30,24 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = EntityUser.FIND_ALL, query = "SELECT u FROM EntityUser u"),
     @NamedQuery(name = EntityUser.FIND_BY_ID, query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
     @NamedQuery(name = EntityUser.FIND_BY_NAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
-    @NamedQuery(name = EntityUser.FIND_BY_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),    
+    @NamedQuery(name = EntityUser.FIND_BY_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),
     @NamedQuery(name = EntityUser.FIND_BY_EMAIL, query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
     @NamedQuery(name = EntityUser.FIND_BY_PASSWORD, query = "SELECT u FROM EntityUser u WHERE u.password = :password")
 })
 public class EntityUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityUser.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityUser.findById";
-    
+
     public static final String FIND_BY_NAME = "EntityUser.findByName";
-    
+
     public static final String FIND_BY_SURNAME = "EntityUser.findBySurname";
-    
+
     public static final String FIND_BY_EMAIL = "EntityUser.findByEmail";
-    
+
     public static final String FIND_BY_PASSWORD = "EntityUser.findByPassword";
 
     @Id
@@ -67,22 +69,25 @@ public class EntityUser implements Serializable {
     private String password;
 
     @ManyToMany(mappedBy = "userCollection")
-    private Collection<EntityGroup> groupCollection;
+    private Collection<EntityGroup> groupCollection = new ArrayList<EntityGroup>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Collection<EntityReservation> reservationCollection;
+    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityReservation> reservationCollection = new ArrayList<EntityReservation>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId1")
-    private Collection<EntityFriendship> friendshipCollection1;
+    @OneToMany(mappedBy = "userId1", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityFriendship> friendshipCollection1 = new ArrayList<EntityFriendship>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId2")
-    private Collection<EntityFriendship> friendshipCollection2;
+    @OneToMany(mappedBy = "userId2", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityFriendship> friendshipCollection2 = new ArrayList<EntityFriendship>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Collection<EntityShelf> shelfCollection;
+    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Collection<EntityBorrow> borrowCollection;
+    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityBorrow> borrowCollection = new ArrayList<EntityBorrow>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
 
     public EntityUser() {
     }
@@ -178,6 +183,23 @@ public class EntityUser implements Serializable {
     public void setBorrowCollection(Collection<EntityBorrow> borrowCollection) {
         this.borrowCollection = borrowCollection;
     }
+
+    public Collection<EntityFriendship> getFriendshipCollection2() {
+        return friendshipCollection2;
+    }
+
+    public void setFriendshipCollection2(Collection<EntityFriendship> friendshipCollection2) {
+        this.friendshipCollection2 = friendshipCollection2;
+    }
+
+    public Collection<EntityOwnership> getOwnershipCollection() {
+        return ownershipCollection;
+    }
+
+    public void setOwnershipCollection(Collection<EntityOwnership> ownershipCollection) {
+        this.ownershipCollection = ownershipCollection;
+    }
+    
 
     @Override
     public int hashCode() {

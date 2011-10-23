@@ -1,7 +1,9 @@
 package bean.managed.sessionScoped;
 
 import bean.statefull.LocalBeanSessionBasket;
+import bean.stateless.LocalBeanSessionBook;
 import bean.stateless.LocalBeanSessionUser;
+import entity.EntityBook;
 import entity.EntityCopy;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
@@ -38,6 +40,9 @@ public class BeanManagedUser implements Serializable {
 
     @EJB
     private LocalBeanSessionBasket beanSessionBasket;
+    
+    @EJB
+    private LocalBeanSessionBook beanSessionBook;
 
     /**
      * Pouze pro ucely prihlasovani.
@@ -225,12 +230,13 @@ public class BeanManagedUser implements Serializable {
     }
 
     @RolesAllowed({"user", "admin"})
-    public void addToBasket(EntityCopy copy) {
-        beanSessionBasket.addCopy(copy);
+    public void addToOwnership(EntityBook book) {
+//        beanSessionBasket.addCopy(copy);
+        beanSessionBook.setBookCopyToUserOwnership(book, getUser());
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
-        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
-        String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
+        String bookAddedPattern = bundle.getString("message.success.ownershipSet");
+        String bookAddedMessage = MessageFormat.format(bookAddedPattern, book.getTitle());
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
         facesContext.addMessage(null, facesMessage);
     }

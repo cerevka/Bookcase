@@ -42,7 +42,7 @@ public class EntityGroup implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "name", length = 255)
     private String name;
@@ -56,15 +56,15 @@ public class EntityGroup implements Serializable {
     public EntityGroup() {
     }
 
-    public EntityGroup(Integer id) {
+    public EntityGroup(Long id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

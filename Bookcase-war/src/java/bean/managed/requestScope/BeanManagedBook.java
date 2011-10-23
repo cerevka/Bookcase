@@ -1,15 +1,15 @@
 package bean.managed.requestScope;
 
 import bean.managed.sessionScoped.BeanManagedUser;
-import bean.statefull.LocalBeanSessionBasket;
 import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
-import entity.EntityShelf;
+import entity.EntityOwnership;
+import entity.EntityUser;
+import entity.EnumReadState;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
@@ -120,6 +120,24 @@ public class BeanManagedBook {
 
         return null;
     }
+    
+    /**
+     * Vrati kolekci svazku, ktere vlastni aktualne prihlaseny uzivatel.
+     * @return Kolekce svazku.
+     */
+    public Collection<EntityCopy> getCopiesOwnedByUser() {
+        return getCopiesOwnerByUser(beanManagedUser.getUser());
+        
+    }
+    
+    /**
+     * Vrati kolekci svazku vlastnene uzivatelem.
+     * @param user Uzivatel, ktery ma vlastnit svazky.
+     * @return Kolekce svazku, ktere uzivatel vlastni.
+     */
+    public Collection<EntityCopy> getCopiesOwnerByUser(EntityUser user) {
+        return beanSessionBook.getCopiesOwnedByUser(user);
+    }
 
     /**
      * Vrati knizky v policce "default" (zjednoduseni).
@@ -132,11 +150,36 @@ public class BeanManagedBook {
     public Collection<EntityCopy> getAllCopies() {
         return beanSessionBook.getAllCopies();
     }
+    
+    public Collection<EntityBook> getAllBooks() {
+        return beanSessionBook.getAllBooks();
+    }
 
+    /**
+     * Rozhodne o vlastnictvi svazku aktualnim prihlasenym uzivatelem.
+     * @param copy Svazek, o nemz se rozhoduje.
+     * @return TRUE prihlaseny uzivatel svazek vlastni, jinak FALSE
+     */
     public boolean isBookOwnedByUser(EntityCopy copy) {
-        List<EntityShelf> shelfs = (List<EntityShelf>) copy.getShelfCollection();
-        // Staci libovolna policka - svazek patri prave jednomu uzivateli.
-        EntityShelf shelf = shelfs.get(0);
-        return !shelf.getUserId().equals(beanManagedUser.getUser());
+        return isBookOwnedByUser(beanManagedUser.getUser(), copy);       
+    }
+    
+    /**
+     * Rozhodne o vlastnictvi svazku.
+     * @param user Uzivatel, kteremu ma svazek patrit.
+     * @param copy Svazek, o nemz se rozhoduje.
+     * @return TRUE uzivatel svazek vlastni, jinak FALS.
+     */
+    public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
+        return beanSessionBook.isOwner(user, copy);
+    }
+    
+    public EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
+        for (EntityOwnership ownership : copy.getOwnershipCollection()) {
+            if (ownership.getUser().equals(beanManagedUser.getUser())) {
+                return ownership.getReadState();
+            }
+        }
+        return EnumReadState.UNREAD;
     }
 }

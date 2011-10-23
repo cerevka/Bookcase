@@ -18,7 +18,7 @@
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
 
-                <h:dataTable value="#{book.copiesInShelfs}" var="copy">  
+                <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.title']}"/>
@@ -37,7 +37,12 @@
                         </f:facet>
                         <h:outputText value="#{copy.bookId.description}" />    
                     </h:column>
-                    
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{bundle['label.description']}"/>
+                        </f:facet>
+                        <h:outputText value="#{book.getReadstatusOfUserForCopy(copy)}" />    
+                    </h:column>
                 </h:dataTable>
 
 

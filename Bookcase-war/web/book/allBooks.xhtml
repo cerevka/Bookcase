@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <body>
 
@@ -18,30 +19,30 @@
 
 
                 <h:form>                    
-                    <h:dataTable value="#{book.allCopies}" var="copy">                        
+                    <h:dataTable value="#{book.allBooks}" var="bookEntity">                        
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.title']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.title}"/>
+                            <h:outputText value="#{bookEntity.title}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}" />
+                            <h:outputText value="#{copy.bookId.authorCollection[0].name} #{copy.bookId.authorCollection[0].surname}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.description']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.description}"/>
+                            <h:outputText value="#{bookEntity.description}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
-                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{book.isBookOwnedByUser(copy)}" />
+                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(bookEntity)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
                         </h:column>
                     </h:dataTable>
                 </h:form>

@@ -4,8 +4,10 @@ import bean.statefull.LocalBeanSessionBasket;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
+import entity.EntityOwnership;
 import entity.EntityShelf;
 import entity.EntityUser;
+import entity.EnumReadState;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -80,29 +83,22 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(book);
         em.persist(copy); 
         
-        // Ziska se policka uzivatele.
+        // Ziska se uzivatel.
         Principal principal = sessionContext.getCallerPrincipal();
         EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
-        Query query = em.createNamedQuery(EntityShelf.FIND_BY_USER_AND_NAME);
-        query.setParameter("user", user);
-        query.setParameter("name", "default");
-        EntityShelf shelf = (EntityShelf) query.getSingleResult();
+         
+        // Nastavi se vlastnictvi svazku.
+        EntityOwnership ownership = new EntityOwnership();
+        ownership.setUser(user);
+        ownership.setCopy(copy);
+        ownership.setOwnership(true);
+        ownership.setReadState(EnumReadState.UNREAD);
+        user.getOwnershipCollection().add(ownership);
+        copy.getOwnershipCollection().add(ownership);
         
-        // Vlozi se svazek do policky.
-        Collection<EntityShelf> shelvesOfCopies = copy.getShelfCollection();
-        if (shelvesOfCopies == null) {
-            shelvesOfCopies = new ArrayList<EntityShelf>();
-        }
-        shelvesOfCopies.add(shelf);
-        
-        Collection<EntityCopy> copiesOfShelf = shelf.getCopyCollection();
-        if (copiesOfShelf == null) {
-            copiesOfShelf = new ArrayList<EntityCopy>();
-        }
-        copiesOfShelf.add(copy);
-        
+        em.persist(ownership);
         em.persist(copy);
-        em.persist(shelf);        
+        em.flush();
     }
 
     @Override
@@ -117,7 +113,24 @@ public class BeanSessionBook implements LocalBeanSessionBook {
 
     @Override
     public List<EntityBook> getAllBooks() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Query query = em.createNamedQuery(EntityBook.FIND_ALL);
+        return query.getResultList();
+    }
+    
+    @Override
+    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user) {
+        TypedQuery<EntityCopy> query = (TypedQuery<EntityCopy>) em.createNamedQuery(EntityCopy.FIND_BY_OWNER);
+        query.setParameter("user", user);
+        return (Collection<EntityCopy>) query.getResultList();
+    }
+    
+    @Override
+    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user) {
+        EntityCopy copy = new EntityCopy(book);
+        EntityOwnership ownership = new EntityOwnership(copy, user, true);
+        em.persist(copy);
+        em.persist(ownership);
+        em.flush();
     }
     
     @Override
@@ -161,6 +174,22 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     public List<EntityAuthor> getAllAuthors() {
         TypedQuery<EntityAuthor> query = (TypedQuery<EntityAuthor>) em.createNamedQuery(EntityAuthor.FIND_ALL);
         return query.getResultList();
+    }
+    
+    @Override
+    public Boolean isOwner(EntityUser user, EntityCopy copy) {
+        // Najde se vztah mezi uzivatelem a svazkem.
+        TypedQuery<EntityOwnership> query = (TypedQuery<EntityOwnership>) em.createNamedQuery(EntityOwnership.FIND_BY_USER_AND_COPY);
+        query.setParameter("user", user);
+        query.setParameter("copy", copy);
+        try {
+            EntityOwnership ownership = (EntityOwnership) query.getSingleResult();
+        } catch (NoResultException exception) {
+            // Pokud neexistuje mezi uzivatelem a svazkem vlastnictvi, tak ji nevlastni.
+            return false;
+        }        
+        // Existuje-li vlastnictvi, pak ji vlastni.
+        return true; 
     }
     
 }
