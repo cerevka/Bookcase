@@ -3,6 +3,8 @@ package bean.stateless;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
+import entity.EntityUser;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -86,5 +88,18 @@ public interface LocalBeanSessionBook {
      * Vrati vsechny svazky z dane policky pro prihlaseneho uzivatele..
      */
     public List<entity.EntityCopy> getCopiesInSelf(String shelfName);
+
+    /**
+     * Rozhodne, zda uzivatel vlastni danou knihu.
+     * @return TRUE pokud vlastni, FALSE pokud nevlastni.
+     */
+    public Boolean isOwner(EntityUser user, EntityCopy copy);
+
+    /**
+     * Vrati kolekci svazku, ktere vlastni uzivatel.
+     * @param user Uzivatel, jemuz svazky maji patrit.
+     * @return Kolekce knih vlastnenych uzivatelem.
+     */
+    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
     
 }

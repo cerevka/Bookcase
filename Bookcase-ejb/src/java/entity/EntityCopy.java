@@ -33,7 +33,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = EntityCopy.FIND_ALL, query = "SELECT c FROM EntityCopy c"),
     @NamedQuery(name = EntityCopy.FIND_BY_ID, query = "SELECT c FROM EntityCopy c WHERE c.id = :id"),
     @NamedQuery(name = EntityCopy.FIND_BY_NOTE, query = "SELECT c FROM EntityCopy c WHERE c.note = :note"),
-    @NamedQuery(name = EntityCopy.FIND_BY_PUBLISHED, query = "SELECT c FROM EntityCopy c WHERE c.published = :published")
+    @NamedQuery(name = EntityCopy.FIND_BY_PUBLISHED, query = "SELECT c FROM EntityCopy c WHERE c.published = :published"),    
+    @NamedQuery(name = EntityCopy.FIND_BY_OWNER, query= "SELECT o.copy FROM EntityOwnership o WHERE o.user = :user")
 })
 public class EntityCopy implements Serializable {
 
@@ -46,6 +47,8 @@ public class EntityCopy implements Serializable {
     public static final String FIND_BY_NOTE = "EntityCopy.findByNote";
 
     public static final String FIND_BY_PUBLISHED = "EntityCopy.findByPublished";
+    
+    public static final String FIND_BY_OWNER = "EntityCopy.findByOwner";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +70,7 @@ public class EntityCopy implements Serializable {
     inverseJoinColumns = {
         @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)
     })
-    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "copyId")
@@ -79,6 +82,9 @@ public class EntityCopy implements Serializable {
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private EntityBook bookId;
+
+    @OneToMany(mappedBy = "copy", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
 
     public EntityCopy() {
     }
@@ -143,6 +149,14 @@ public class EntityCopy implements Serializable {
         this.bookId = bookId;
     }
 
+    public Collection<EntityOwnership> getOwnershipCollection() {
+        return ownershipCollection;
+    }
+
+    public void setOwnershipCollection(Collection<EntityOwnership> ownershipCollection) {
+        this.ownershipCollection = ownershipCollection;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

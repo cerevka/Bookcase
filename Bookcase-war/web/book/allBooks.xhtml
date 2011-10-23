@@ -41,7 +41,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
-                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{book.isBookOwnedByUser(copy)}" />
+                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
                         </h:column>
                     </h:dataTable>
                 </h:form>

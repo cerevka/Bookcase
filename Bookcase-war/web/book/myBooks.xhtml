@@ -18,7 +18,7 @@
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
 
-                <h:dataTable value="#{book.copiesInShelfs}" var="copy">  
+                <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.title']}"/>
