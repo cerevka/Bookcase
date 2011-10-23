@@ -1,6 +1,5 @@
 package bean.stateless;
 
-import bean.statefull.LocalBeanSessionBasket;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
@@ -46,37 +45,23 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     @Override    
     public void addBook(EntityBook book, EntityAuthor author) {
         // Autor se umisti do databaze.
-        if (author.getId() != null) {
-           author = getAuthor(author.getId());
+        if (author.getId() != null) {          
+           author = em.merge(author);
+           em.refresh(author);
         } else {
-            em.persist(author);
-            em.flush();
+            em.persist(author);            
         }
         
-        // Knize se priradi autor.
-        book.setAuthorId(author);
-        
-        // Autorovi se priradi kniha.
-        Collection<EntityBook> booksOfAutor = author.getBookCollection();
-        if (booksOfAutor == null) {
-            booksOfAutor = new ArrayList<EntityBook>();
-        }
-        booksOfAutor.add(book);
-        
+        // Propoji se autor s knihou.
+        book.getAuthorCollection().add(author);       
+        author.getBookCollection().add(book);        
         em.persist(book);
-        em.persist(author);   
-        em.flush();
+        em.persist(author);         
         
         // Vytvori se novy svazek od knihy.
         EntityCopy copy = new EntityCopy();
-        copy.setBookId(book);
-        
-        Collection<EntityCopy> copiesOfBook = book.getCopyCollection();
-        if (copiesOfBook == null) {
-            copiesOfBook = new ArrayList<EntityCopy>();
-        }
-        copiesOfBook.add(copy);
-        
+        copy.setBookId(book);        
+        book.getCopyCollection().add(copy);        
         em.persist(book);
         em.persist(copy); 
         
@@ -88,21 +73,13 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         query.setParameter("name", "default");
         EntityShelf shelf = (EntityShelf) query.getSingleResult();
         
-        // Vlozi se svazek do policky.
-        Collection<EntityShelf> shelvesOfCopies = copy.getShelfCollection();
-        if (shelvesOfCopies == null) {
-            shelvesOfCopies = new ArrayList<EntityShelf>();
-        }
-        shelvesOfCopies.add(shelf);
-        
-        Collection<EntityCopy> copiesOfShelf = shelf.getCopyCollection();
-        if (copiesOfShelf == null) {
-            copiesOfShelf = new ArrayList<EntityCopy>();
-        }
-        copiesOfShelf.add(copy);
+        // Vlozi se svazek do policky.        
+        copy.getShelfCollection().add(shelf); 
+        shelf.getCopyCollection().add(copy);        
         
         em.persist(copy);
-        em.persist(shelf);        
+        em.persist(shelf);  
+        em.flush();
     }
 
     @Override

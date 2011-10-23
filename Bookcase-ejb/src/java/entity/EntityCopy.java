@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -37,13 +38,13 @@ import javax.persistence.TemporalType;
 public class EntityCopy implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityCopy.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityCopy.findById";
-    
+
     public static final String FIND_BY_NOTE = "EntityCopy.findByNote";
-    
+
     public static final String FIND_BY_PUBLISHED = "EntityCopy.findByPublished";
 
     @Id
@@ -59,20 +60,24 @@ public class EntityCopy implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date published;
 
-    @JoinTable(name = "bookInShelf", joinColumns = {
-        @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany
-    private Collection<EntityShelf> shelfCollection;
+    @JoinTable(name = "bookInShelf",
+    joinColumns = {
+        @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
+    },
+    inverseJoinColumns = {
+        @JoinColumn(name = "shelfId", referencedColumnName = "id", nullable = false)
+    })
+    @ManyToMany(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
-    private Collection<EntityReservation> reservationCollection;
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "copyId")
+    private Collection<EntityReservation> reservationCollection = new ArrayList<EntityReservation>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
-    private Collection<EntityBorrow> borrowCollection;
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "copyId")
+    private Collection<EntityBorrow> borrowCollection = new ArrayList<EntityBorrow>();
 
     @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private EntityBook bookId;
 
     public EntityCopy() {

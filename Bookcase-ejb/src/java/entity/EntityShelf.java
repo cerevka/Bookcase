@@ -1,8 +1,10 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,18 +28,18 @@ import javax.persistence.Table;
     @NamedQuery(name = EntityShelf.FIND_ALL, query = "SELECT s FROM EntityShelf s"),
     @NamedQuery(name = EntityShelf.FIND_BY_ID, query = "SELECT s FROM EntityShelf s WHERE s.id = :id"),
     @NamedQuery(name = EntityShelf.FIND_BY_NAME, query = "SELECT s FROM EntityShelf s WHERE s.name = :name"),
-    @NamedQuery(name = EntityShelf.FIND_BY_USER_AND_NAME, query= "SELECT s FROM EntityShelf s WHERE s.userId = :user AND s.name = :name")       
+    @NamedQuery(name = EntityShelf.FIND_BY_USER_AND_NAME, query = "SELECT s FROM EntityShelf s WHERE s.userId = :user AND s.name = :name")
 })
 public class EntityShelf implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityShelf.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityShelf.findById";
-    
+
     public static final String FIND_BY_NAME = "EntityShelf.findByName";
-    
+
     public static final String FIND_BY_USER_AND_NAME = "EntityShelf.findByUserAndName";
 
     @Id
@@ -49,11 +51,11 @@ public class EntityShelf implements Serializable {
     @Column(name = "name", length = 255)
     private String name;
 
-    @ManyToMany(mappedBy = "shelfCollection")
-    private Collection<EntityCopy> copyCollection;
+    @ManyToMany(mappedBy = "shelfCollection", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
 
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private EntityUser userId;
 
     public EntityShelf() {

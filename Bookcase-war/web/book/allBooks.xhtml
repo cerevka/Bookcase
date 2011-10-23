@@ -29,7 +29,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}" />
+                            <h:outputText value="#{copy.bookId.authorCollection[0].name} #{copy.bookId.authorCollection[0].surname}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">
