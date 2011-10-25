@@ -76,5 +76,10 @@ public interface LocalBeanSessionBookcase {
      * @return Potvrzeni/zamitnuti pritomnosti v policce.
      */
     public boolean isCopyInShelf(EntityCopy copy, EntityShelf shelf);
+
+    /**
+     * Inicializuje databazi.
+     */
+    public void initDatabase();
     
 }

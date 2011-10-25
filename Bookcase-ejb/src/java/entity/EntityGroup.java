@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -51,7 +52,7 @@ public class EntityGroup implements Serializable {
         @JoinColumn(name = "groupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)})
     @ManyToMany(cascade = CascadeType.ALL)
-    private Collection<EntityUser> userCollection;
+    private Collection<EntityUser> userCollection = new ArrayList<EntityUser>();
 
     public EntityGroup() {
     }
