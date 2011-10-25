@@ -252,6 +252,16 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         em.persist(f);
         em.flush();
     }
+    
+    @Override
+    public List<EntityFriendship> getUsersRequests(EntityUser user) {
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_NEG_STATE);
+        query.setParameter("userId1", user);
+        query.setParameter("status", EntityFriendship.FriendshipState.AUTHORIZED);
+        return query.getResultList();
+    }
+
+    
 
     @Override
     public void refuseFriendship(EntityUser user1, EntityUser user2) {
@@ -347,5 +357,6 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         return query.getResultList();
     }
 
+   
    
 }

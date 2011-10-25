@@ -1,5 +1,6 @@
 package bean.stateless;
 
+import entity.EntityFriendship;
 import entity.EntityUser;
 import entity.EntityGroup;
 import exception.ExceptionUserAlreadyExists;
@@ -105,6 +106,13 @@ public interface LocalBeanSessionUser {
      */
     public List<EntityUser> getFriendshipRequests(EntityUser user);
     
+    
+     /**
+     * Vrati nepotvrzene zadosti o pratelstvi poslane danym uzivatelem
+     * @param user uzivatel.
+     * @return zadosti
+     */
+    public List<EntityFriendship> getUsersRequests(EntityUser user);
     
     /**
      * Potvrdi pratelstvi mezi dvema uzivateli.
