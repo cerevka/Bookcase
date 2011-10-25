@@ -3,6 +3,7 @@ package bean.managed.requestScope;
 
 import bean.managed.sessionScoped.BeanManagedUser;
 import bean.stateless.LocalBeanSessionUser;
+import entity.EntityFriendship;
 import entity.EntityUser;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -50,6 +51,11 @@ public class BeanManagedFriendship {
     public Collection<EntityUser> requests(){
         return beanSessionUser.getFriendshipRequests(beanManagedUser.getUser());
     }
+    
+    @RolesAllowed({"user", "admin"})
+    public Collection<EntityFriendship> myRequests(){
+        return beanSessionUser.getUsersRequests(beanManagedUser.getUser());
+    }  
     
      @RolesAllowed({"user", "admin"})
      public void acept(EntityUser user){
