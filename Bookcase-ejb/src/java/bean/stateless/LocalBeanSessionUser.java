@@ -27,7 +27,29 @@ public interface LocalBeanSessionUser {
      * @return  Uzivatel.
      */
     public EntityUser getUserByEmail(String email);
-
+    
+    /**
+     * Vyhledá uživatele podle jména 
+     * @param firstName křestní jméno   
+     * @return Uzivatele
+     */
+    public List<EntityUser> getUserByName(String firstName);    
+    
+    /**
+     * Vyhledá uživatele podle jména 
+     * @param firstName křestní jméno   
+     * @param surname příjmení
+     * @return Uzivatele
+     */
+    public List<EntityUser> getUserByNameAndSurname(String firstName, String surname);
+    
+    /**
+     * Vyhledá uživatele podle příjmení
+     * @param surName příjmní  
+     * @return Uzivatele
+     */
+    public List<EntityUser> getUserBySurname(String surName);
+    
     /**
      * Registruje noveho uzivatele.
      * @param user Registrovany uzivatel.
@@ -75,6 +97,15 @@ public interface LocalBeanSessionUser {
      */
     public void applyFriendship(EntityUser user1, EntityUser user2);
 
+    
+     /**
+     * Vrati uzivatele zadajici daneho uzivatele o pratelstvi.
+     * @param user uzivatel.
+     * @return uzivatele
+     */
+    public List<EntityUser> getFriendshipRequests(EntityUser user);
+    
+    
     /**
      * Potvrdi pratelstvi mezi dvema uzivateli.
      * @param user1 Prvni uzivatel.

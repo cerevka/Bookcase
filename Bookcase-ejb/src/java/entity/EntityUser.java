@@ -3,7 +3,6 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +29,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = EntityUser.FIND_ALL, query = "SELECT u FROM EntityUser u"),
     @NamedQuery(name = EntityUser.FIND_BY_ID, query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
     @NamedQuery(name = EntityUser.FIND_BY_NAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
+    @NamedQuery(name = EntityUser.FIND_BY_NAME_AND_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name AND u.surname = :surname"),
     @NamedQuery(name = EntityUser.FIND_BY_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),
     @NamedQuery(name = EntityUser.FIND_BY_EMAIL, query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
     @NamedQuery(name = EntityUser.FIND_BY_PASSWORD, query = "SELECT u FROM EntityUser u WHERE u.password = :password")
@@ -45,6 +45,8 @@ public class EntityUser implements Serializable {
     public static final String FIND_BY_NAME = "EntityUser.findByName";
 
     public static final String FIND_BY_SURNAME = "EntityUser.findBySurname";
+    
+    public static final String FIND_BY_NAME_AND_SURNAME = "EntityUser.findByNameAndSurname";
 
     public static final String FIND_BY_EMAIL = "EntityUser.findByEmail";
 
@@ -152,20 +154,14 @@ public class EntityUser implements Serializable {
         this.reservationCollection = reservationCollection;
     }
 
-    public Collection<EntityFriendship> getFriendshipCollection() {
+
+
+    public Collection<EntityFriendship> getFriendshipCollection1() {
         return friendshipCollection1;
     }
 
-    public void setFriendshipCollection(Collection<EntityFriendship> friendshipCollection) {
-        this.friendshipCollection1 = friendshipCollection;
-    }
-
-    public Collection<EntityFriendship> getFriendshipCollection1() {
-        return friendshipCollection2;
-    }
-
     public void setFriendshipCollection1(Collection<EntityFriendship> friendshipCollection1) {
-        this.friendshipCollection2 = friendshipCollection1;
+        this.friendshipCollection1 = friendshipCollection1;
     }
 
     public Collection<EntityShelf> getShelfCollection() {

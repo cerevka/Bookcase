@@ -4,10 +4,13 @@
     <Scope Scope="Project">
         <Node id="login.xhtml" x="400" y="150" zoom="true"/>
         <Node id="index.xhtml" x="32" y="53" zoom="true"/>
-        <Node id="book/addBook.xhtml" x="369" y="299" zoom="true"/>
+        <Node id="book/basket.xhtml" x="400" y="300" zoom="true"/>
         <Node id="*" x="179" y="385" zoom="false"/>
+        <Node id="book/addBook.xhtml" x="369" y="299" zoom="true"/>
         <Node id="logout.xhtml" x="150" y="222" zoom="true"/>
+        <Node id="user/find.xhtml" x="400" y="450" zoom="true"/>
         <Node id="registration.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="book/allBooks.xhtml" x="150" y="450" zoom="true"/>
         <Node id="resetPassword.xhtml" x="690" y="363" zoom="false"/>
         <Node id="book/myBooks.xhtml" x="900" y="150" zoom="true"/>
     </Scope>
