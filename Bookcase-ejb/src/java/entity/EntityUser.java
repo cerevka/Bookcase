@@ -3,6 +3,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,7 +30,10 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = EntityUser.FIND_ALL, query = "SELECT u FROM EntityUser u"),
     @NamedQuery(name = EntityUser.FIND_BY_ID, query = "SELECT u FROM EntityUser u WHERE u.id = :id"),
     @NamedQuery(name = EntityUser.FIND_BY_NAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name"),
+<<<<<<< HEAD
     @NamedQuery(name = EntityUser.FIND_BY_NAME_AND_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.name = :name AND u.surname = :surname"),
+=======
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
     @NamedQuery(name = EntityUser.FIND_BY_SURNAME, query = "SELECT u FROM EntityUser u WHERE u.surname = :surname"),
     @NamedQuery(name = EntityUser.FIND_BY_EMAIL, query = "SELECT u FROM EntityUser u WHERE u.email = :email"),
     @NamedQuery(name = EntityUser.FIND_BY_PASSWORD, query = "SELECT u FROM EntityUser u WHERE u.password = :password")
@@ -45,8 +49,11 @@ public class EntityUser implements Serializable {
     public static final String FIND_BY_NAME = "EntityUser.findByName";
 
     public static final String FIND_BY_SURNAME = "EntityUser.findBySurname";
+<<<<<<< HEAD
     
     public static final String FIND_BY_NAME_AND_SURNAME = "EntityUser.findByNameAndSurname";
+=======
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
 
     public static final String FIND_BY_EMAIL = "EntityUser.findByEmail";
 

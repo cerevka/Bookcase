@@ -5,9 +5,13 @@ import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
+<<<<<<< HEAD
 import entity.EntityOwnership;
 import entity.EntityUser;
 import entity.EnumReadState;
+=======
+import entity.EntityUser;
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -172,6 +176,7 @@ public class BeanManagedBook {
      */
     public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
         return beanSessionBook.isOwner(user, copy);
+<<<<<<< HEAD
     }
     
     public EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
@@ -181,5 +186,7 @@ public class BeanManagedBook {
             }
         }
         return EnumReadState.UNREAD;
+=======
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
     }
 }

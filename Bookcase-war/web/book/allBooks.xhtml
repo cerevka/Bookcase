@@ -42,7 +42,11 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
+<<<<<<< HEAD
                             <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(bookEntity)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
+=======
+                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
                         </h:column>
                     </h:dataTable>
                 </h:form>

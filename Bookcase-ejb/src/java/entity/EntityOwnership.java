@@ -62,6 +62,7 @@ public class EntityOwnership implements Serializable {
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityCopy copy;
+<<<<<<< HEAD
     
     public EntityOwnership() {}
 
@@ -71,6 +72,8 @@ public class EntityOwnership implements Serializable {
         this.ownership = ownership;
         this.readState = EnumReadState.UNREAD;
     }
+=======
+>>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
 
     public Long getId() {
         return id;
