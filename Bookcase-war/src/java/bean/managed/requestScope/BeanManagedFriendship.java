@@ -5,6 +5,7 @@ import bean.managed.sessionScoped.BeanManagedUser;
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityUser;
 import java.util.Collection;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -53,20 +54,25 @@ public class BeanManagedFriendship {
      @RolesAllowed({"user", "admin"})
      public void acept(EntityUser user){
          beanSessionUser.confirmFriendship(user, beanManagedUser.getUser());
+          
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String message = bundle.getString("message.friendship.accepted");
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
+        facesContext.addMessage(null, facesMessage);
      }
     
       @RolesAllowed({"user", "admin"})
-     public void reject(EntityUser user){
-          //message
-         beanSessionUser.refuseFriendship(user, beanManagedUser.getUser());
+     public void reject(EntityUser user){       
+         beanSessionUser.refuseFriendship(user, beanManagedUser.getUser());         
+          
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String message = bundle.getString("message.sfriendship.rejected");
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
+        facesContext.addMessage(null, facesMessage);
      }
-     
-    
-    public void addFriend(EntityUser user) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Zadost odeslana.", "");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        beanSessionUser.applyFriendship(beanManagedUser.getUser(), user);
-    }
+         
     
     
 }
