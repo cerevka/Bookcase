@@ -19,12 +19,12 @@
 
 
                 <h:form>                    
-                    <h:dataTable value="#{book.allBooks}" var="bookEntity">                        
+                    <h:dataTable value="#{book.allCopies}" var="copy">                        
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.title']}"/>
                             </f:facet>
-                            <h:outputText value="#{bookEntity.title}"/>
+                            <h:outputText value="#{copy.bookId.title}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
@@ -36,17 +36,15 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.description']}"/>
                             </f:facet>
-                            <h:outputText value="#{bookEntity.description}"/>
+                            <h:outputText value="#{copy.bookId.description}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
-<<<<<<< HEAD
-                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(bookEntity)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
-=======
+
+                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(copy.bookId)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
                             <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
->>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
                         </h:column>
                     </h:dataTable>
                 </h:form>

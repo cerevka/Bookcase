@@ -101,10 +101,7 @@ public interface LocalBeanSessionBook {
      * @return Kolekce knih vlastnenych uzivatelem.
      */
     public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
-<<<<<<< HEAD
     
     public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
-=======
->>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
     
 }

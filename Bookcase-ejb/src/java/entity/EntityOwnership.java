@@ -26,7 +26,7 @@ import javax.persistence.Table;
     @NamedQuery(name = EntityOwnership.FIND_BY_ID, query = "SELECT o FROM EntityOwnership o WHERE o.id = :id"),
     @NamedQuery(name = EntityOwnership.FIND_BY_USER, query = "SELECT o FROM EntityOwnership o WHERE o.user = :user"),
     @NamedQuery(name = EntityOwnership.FIND_BY_COPY, query = "SELECT o FROM EntityOwnership o WHERE o.copy = :copy"),
-    @NamedQuery(name = EntityOwnership.FIND_BY_USER_AND_COPY, query= "SELECT o FROM EntityOwnership o WHERE o.user = :user AND o.copy = :copy")
+    @NamedQuery(name = EntityOwnership.FIND_BY_USER_AND_COPY, query = "SELECT o FROM EntityOwnership o WHERE o.user = :user AND o.copy = :copy")
 })
 public class EntityOwnership implements Serializable {
 
@@ -39,7 +39,7 @@ public class EntityOwnership implements Serializable {
     public static final String FIND_BY_USER = "EntityOwnership.findByUser";
 
     public static final String FIND_BY_COPY = "EntityOwnership.findByCopy";
-    
+
     public static final String FIND_BY_USER_AND_COPY = "EntityOwnership.findByUserAndCopy";
 
     @Id
@@ -62,9 +62,9 @@ public class EntityOwnership implements Serializable {
     @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityCopy copy;
-<<<<<<< HEAD
-    
-    public EntityOwnership() {}
+
+    public EntityOwnership() {
+    }
 
     public EntityOwnership(EntityCopy copy, EntityUser user, boolean ownership) {
         this.copy = copy;
@@ -72,8 +72,6 @@ public class EntityOwnership implements Serializable {
         this.ownership = ownership;
         this.readState = EnumReadState.UNREAD;
     }
-=======
->>>>>>> 6bec427... Upraven datovy model, fix #28, pripraveny dekompozicni vztahy pro stav knihy #33.
 
     public Long getId() {
         return id;

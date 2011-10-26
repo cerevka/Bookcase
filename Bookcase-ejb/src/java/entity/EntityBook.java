@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -9,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -53,12 +53,17 @@ public class EntityBook implements Serializable {
     @Column(name = "description", length = 1024)
     private String description;
 
+    /*
     @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityAuthor authorId;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookId")
-    private Collection<EntityCopy> copyCollection;
+    */
+    
+    @ManyToMany(mappedBy = "bookCollection", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();
+    
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "bookId")
+    private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
 
     public EntityBook() {
     }
@@ -91,12 +96,12 @@ public class EntityBook implements Serializable {
         this.description = description;
     }
 
-    public EntityAuthor getAuthorId() {
-        return authorId;
+    public Collection<EntityAuthor> getAuthorCollection() {
+        return authorCollection;
     }
 
-    public void setAuthorId(EntityAuthor authorId) {
-        this.authorId = authorId;
+    public void setAuthorCollection(Collection<EntityAuthor> authorCollection) {
+        this.authorCollection = authorCollection;
     }
 
     public Collection<EntityCopy> getCopyCollection() {

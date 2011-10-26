@@ -41,7 +41,7 @@ public class BeanManagedUser implements Serializable {
 
     @EJB
     private LocalBeanSessionBasket beanSessionBasket;
-    
+
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
@@ -88,7 +88,7 @@ public class BeanManagedUser implements Serializable {
      * Prihlasi uzivatele.
      * @return Vysledek akce.
      */
-    public String doLogin() {       
+    public String doLogin() {
         FacesContext ctx = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         try {
@@ -243,10 +243,21 @@ public class BeanManagedUser implements Serializable {
     }
 
     @RolesAllowed({"user", "admin"})
+    public void addToBasket(EntityCopy copy) {
+        beanSessionBasket.addCopy(copy);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
+        String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
+        facesContext.addMessage(null, facesMessage);
+    }
+
+    @RolesAllowed({"user", "admin"})
     public Collection<EntityCopy> getCopiesInBasket() {
         return beanSessionBasket.getContent();
     }
-    
+
     @RolesAllowed({"user", "admin"})
     public void removeFromBasket(EntityCopy copy) {
         beanSessionBasket.removeCopy(copy);
@@ -257,14 +268,13 @@ public class BeanManagedUser implements Serializable {
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookRemovedMessage, "");
         facesContext.addMessage(null, facesMessage);
     }
-    
+
     @RolesAllowed({"user", "admin"})
     public void doBorrowBasket() {
         beanSessionBasket.borrow();
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");        
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
         facesContext.addMessage(null, facesMessage);
     }
-   
- }
+}
