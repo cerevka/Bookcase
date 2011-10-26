@@ -5,19 +5,21 @@ body {
 h1 {
     color: #0066CC;
     font-weight: bold;    
+    font-size: 20px;
 }
 
 h2 {
     color: #0066CC;
     font-weight: bold;
+    font-size: 18px;
 }
 
-#header {    
-    width: 890px;
-    height: 50px;
+#header {
+    width: 920px;
+    height: 70px;
     clear: both;
-    background-color: #373832; 
-    padding: 30px 30px;
+    background-color: #373832;
+    padding: 20px 20px 5px 10px;
 }
 
 .error {
@@ -33,7 +35,24 @@ h2 {
 }
 
 #header h1 {
-    font-size: 60px;
+    font-size: 48px;
+    color: whiteSmoke;
+    float: left;
+    margin: 5px 0px 0px 0px;
+}
+
+#header form {
+    float: right;    
+}
+
+#header ul.userMenu a {
+    color: whitesmoke;
+}
+
+#header ul.userMenu {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
     color: whitesmoke;
 }
 
@@ -47,11 +66,12 @@ h2 {
 #left {    
     float: left;
     width: 150px;
-    padding: 20px 10px 10px 10px;
+
+    padding: 15px 10px 10px 10px;
 }
 
 #left h1 {
-    font-size: 24px;
+    font-size: 20px;
     margin: 0px;
 }
 
@@ -66,7 +86,8 @@ h2 {
     width: 130px;
     padding: 10px;
     list-style-type: none;
-    font-size: 18px;
+
+    font-size: 16px;
 }
 
 #left ul.menu ul {       

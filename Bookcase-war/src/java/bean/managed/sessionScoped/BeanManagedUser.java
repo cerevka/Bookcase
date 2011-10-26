@@ -277,4 +277,9 @@ public class BeanManagedUser implements Serializable {
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
         facesContext.addMessage(null, facesMessage);
     }
+    
+    @RolesAllowed({"user", "admin"})
+    public boolean isInBasket(EntityCopy copy) {
+        return beanSessionBasket.isIn(copy);
+    }
 }

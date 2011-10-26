@@ -44,7 +44,9 @@
                             </f:facet>
 
                             <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(copy.bookId)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
-                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
+                            <h:outputText value="   " />
+                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy) and !user.isInBasket(copy)}" />
+                            <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(copy)}" rendered="#{user.isInBasket(copy)}" />
                         </h:column>
                     </h:dataTable>
                 </h:form>
