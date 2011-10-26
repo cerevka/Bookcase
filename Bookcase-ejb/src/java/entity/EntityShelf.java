@@ -47,10 +47,7 @@ public class EntityShelf implements Serializable {
     private Integer id;
 
     @Column(name = "name", length = 255)
-    private String name;
-
-    @ManyToMany(mappedBy = "shelfCollection")
-    private Collection<EntityCopy> copyCollection;
+    private String name;  
 
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -77,14 +74,6 @@ public class EntityShelf implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Collection<EntityCopy> getCopyCollection() {
-        return copyCollection;
-    }
-
-    public void setCopyCollection(Collection<EntityCopy> copyCollection) {
-        this.copyCollection = copyCollection;
     }
 
     public EntityUser getUserId() {

@@ -32,13 +32,13 @@ import javax.persistence.Table;
 public class EntityBook implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityBook.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityBook.findById";
-    
+
     public static final String FIND_BY_TITLE = "EntityBook.findByTitle";
-    
+
     public static final String FIND_BY_DESCRIPTION = "EntityBook.findByDescription";
 
     @Id
@@ -53,29 +53,13 @@ public class EntityBook implements Serializable {
     @Column(name = "description", length = 1024)
     private String description;
 
-    /*
-    @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private EntityAuthor authorId;
-    */
-    
     @ManyToMany(mappedBy = "bookCollection", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();
+    private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();   
+
     
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "bookId")
-    private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
+    @OneToMany(mappedBy = "book", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityRelease> releasesCollection = new ArrayList<EntityRelease>();
     
-    @OneToMany(mappedBy = "bookId",cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityEvaluation> evaluationCollection = new ArrayList<EntityEvaluation>();
-
-    public Collection<EntityEvaluation> getEvaluationCollection() {
-        return evaluationCollection;
-    }
-
-    public void setEvaluationCollection(Collection<EntityEvaluation> evaluationCollection) {
-        this.evaluationCollection = evaluationCollection;
-    }
-
     public EntityBook() {
     }
 
@@ -115,14 +99,14 @@ public class EntityBook implements Serializable {
         this.authorCollection = authorCollection;
     }
 
-    public Collection<EntityCopy> getCopyCollection() {
-        return copyCollection;
+    public Collection<EntityRelease> getReleasesCollection() {
+        return releasesCollection;
     }
 
-    public void setCopyCollection(Collection<EntityCopy> copyCollection) {
-        this.copyCollection = copyCollection;
+    public void setReleasesCollection(Collection<EntityRelease> releasesCollection) {
+        this.releasesCollection = releasesCollection;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

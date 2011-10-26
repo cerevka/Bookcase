@@ -59,12 +59,6 @@ public interface LocalBeanSessionUser {
     public void registerNewUser(entity.EntityUser user) throws ExceptionUserAlreadyExists;
 
     /**
-     * Updatuje uzivatele.
-     * @param user Osoba.
-     */
-    public void persistUser(EntityUser user);
-
-    /**
      * Odstrani uzivatele.
      * @param user Uzivatel.
      */

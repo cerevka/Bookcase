@@ -147,3 +147,12 @@ table tr td.thirdColumn {
     width: auto;
 }
 
+div#homepageAlert {
+    background-color: #FF7373;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 150px;
+}
+

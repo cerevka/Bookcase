@@ -4,9 +4,7 @@ import bean.managed.sessionScoped.BeanManagedUser;
 import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
-import entity.EntityOwnership;
-import entity.EnumReadState;
+import entity.EntityPrint;
 import entity.EntityUser;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -18,7 +16,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -26,7 +23,7 @@ import javax.faces.context.FacesContext;
  * @author Tomáš Čerevka
  */
 @ManagedBean(name = "book")
-@ViewScoped
+@RequestScoped
 public class BeanManagedBook {
 
     private static final Logger logger = Logger.getLogger(BeanManagedBook.class.getName());
@@ -35,8 +32,6 @@ public class BeanManagedBook {
 
     private EntityAuthor author = new EntityAuthor();
 
-    private int bookId;
-    
     private String authorName;
 
     private String authorSurname;
@@ -51,14 +46,6 @@ public class BeanManagedBook {
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
-    
-    public int getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
     public EntityBook getBook() {
         return book;
     }
@@ -136,30 +123,22 @@ public class BeanManagedBook {
      * Vrati kolekci svazku, ktere vlastni aktualne prihlaseny uzivatel.
      * @return Kolekce svazku.
      */
-    public Collection<EntityCopy> getCopiesOwnedByUser() {
-        return getCopiesOwnerByUser(beanManagedUser.getUser());
+    public Collection<EntityPrint> getPrintsOwnedByUser() {
+        return getPrintsOwnerByUser(beanManagedUser.getUser());
         
     }
     
     /**
-     * Vrati kolekci svazku vlastnene uzivatelem.
-     * @param user Uzivatel, ktery ma vlastnit svazky.
-     * @return Kolekce svazku, ktere uzivatel vlastni.
+     * Vrati kolekci vytisku vlastnenych uzivatelem.
+     * @param user Uzivatel, ktery ma vlastnit vytisky.
+     * @return Kolekce vytisku, ktere uzivatel vlastni.
      */
-    public Collection<EntityCopy> getCopiesOwnerByUser(EntityUser user) {
-        return beanSessionBook.getCopiesOwnedByUser(user);
+    public Collection<EntityPrint> getPrintsOwnerByUser(EntityUser user) {
+        return beanSessionBook.getPrintsOwnedByUser(user);
     }
 
-    /**
-     * Vrati knizky v policce "default" (zjednoduseni).
-     * @return Kolekce svazku.
-     */
-    public Collection<EntityCopy> getCopiesInShelfs() {
-        return beanSessionBook.getCopiesInSelf("default");
-    }
-
-    public Collection<EntityCopy> getAllCopies() {
-        return beanSessionBook.getAllCopies();
+    public Collection<EntityPrint> getAllPrints() {
+        return beanSessionBook.getAllPrints();
     }
     
     public Collection<EntityBook> getAllBooks() {
@@ -167,33 +146,22 @@ public class BeanManagedBook {
     }
 
     /**
-     * Rozhodne o vlastnictvi svazku aktualnim prihlasenym uzivatelem.
-     * @param copy Svazek, o nemz se rozhoduje.
+     * Rozhodne o vlastnictvi vytisku aktualnim prihlasenym uzivatelem.
+     * @param print Svazek, o nemz se rozhoduje.
      * @return TRUE prihlaseny uzivatel svazek vlastni, jinak FALSE
      */
-    public boolean isBookOwnedByUser(EntityCopy copy) {
-        return isBookOwnedByUser(beanManagedUser.getUser(), copy);       
+    public boolean isPrintOwnedByUser(EntityPrint print) {
+        return isPrintOwnedByUser(beanManagedUser.getUser(), print);       
     }
     
     /**
      * Rozhodne o vlastnictvi svazku.
      * @param user Uzivatel, kteremu ma svazek patrit.
-     * @param copy Svazek, o nemz se rozhoduje.
+     * @param print Svazek, o nemz se rozhoduje.
      * @return TRUE uzivatel svazek vlastni, jinak FALS.
      */
-    public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
-        return beanSessionBook.isOwner(user, copy);
+    public boolean isPrintOwnedByUser(EntityUser user, EntityPrint print) {
+        return beanSessionBook.isOwner(user, print);
     }
-    
-    public EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
-        for (EntityOwnership ownership : copy.getOwnershipCollection()) {
-            if (ownership.getUser().equals(beanManagedUser.getUser())) {
-                return ownership.getReadState();
-            }
-        }
-        return EnumReadState.UNREAD;
-    }
-    
-   
     
 }

@@ -2,8 +2,7 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
-import entity.EntityEvaluation;
+import entity.EntityPrint;
 import entity.EntityUser;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.ejb.Local;
 /**
  * Beana zajistujici praci s knihami.
  * @author Tomáš Čerevka
- * @author Adam Činčura
  */
 @Local
 public interface LocalBeanSessionBook {
@@ -26,47 +24,12 @@ public interface LocalBeanSessionBook {
     public EntityBook getBook(int bookId);
 
     /**
-     * Vrati svazek.
-     * @param copyId Identifikator svazku.
-     * @return Svazek.
-     */
-    public EntityCopy getCopy(int copyId);
-
-
-    /**
-     * Vrati svazky knihy.
-     * @param book Kniha.
-     * @return Seznam svazku.
-     */
-    public List<EntityCopy> getCopies(EntityBook book);
-
-    /**
      * Vrati vsechny knihy.
      * @return Seznam knih.
      */
     public List<EntityBook> getAllBooks();
 
-    /**
-     * Vrati vsechny svazky.
-     * @return Seznam svazku.
-     */
-    public List<EntityCopy> getAllCopies();
-
-    /**
-     * Vrati vsechny knihy od daneho autora.
-     * @param author Autor.
-     * @return Seznam knih od daneho autora.
-     */
-    public List<EntityBook> getAllBooksFromAuthor(EntityAuthor author);
-
-    /**
-     * Vrati vsechny svazky od daneho autora.
-     * @param author Autor.
-     * @return Seznam svazku od daneho autora.
-     */
-    public List<EntityCopy> getAllCopiesFromAuthor(EntityAuthor author);
-
-    /**
+     /**
      * Vrati autora.
      * @param authorId Identifikator autora.
      * @return Autor.
@@ -87,45 +50,22 @@ public interface LocalBeanSessionBook {
     public void addBook(EntityBook book, EntityAuthor author);
 
     /**
-     * Vrati vsechny svazky z dane policky pro prihlaseneho uzivatele..
-     */
-    public List<entity.EntityCopy> getCopiesInSelf(String shelfName);
-
-    /**
      * Rozhodne, zda uzivatel vlastni danou knihu.
      * @return TRUE pokud vlastni, FALSE pokud nevlastni.
      */
-    public Boolean isOwner(EntityUser user, EntityCopy copy);
+    public Boolean isOwner(EntityUser user, EntityPrint print);    
 
     /**
      * Vrati kolekci svazku, ktere vlastni uzivatel.
-     * @param user Uzivatel, jemuz svazky maji patrit.
-     * @return Kolekce knih vlastnenych uzivatelem.
+     * @param user Majitel svazku.
+     * @return Kolekce svazku, ktere vlastni uzivatel.
      */
-    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
-    
-    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
-    
-    
-     /**
-     * Vrati kolekci knih odpovidajicho nazvu
-     * @param String nazev
-     * @return Kolekce knih odpovidajicich nazvem
-     */
-    public List<EntityBook> getBooksByTittle(String name);
-    
+    public Collection<entity.EntityPrint> getPrintsOwnedByUser(EntityUser user);
+
     /**
-     * prida hodnoceni ke knize
-     * @param book hodnocena kniha, user hodnotici u6ivatel, value vyse hodnoceni
+     * Vrati vsechny vytisky.
+     * @return Vsechny vytisky.
      */
-    public void evaluateBook(EntityBook book, EntityUser user, int value);
+    public List<EntityPrint> getAllPrints();
     
-    
-    /**
-     * vrati vsechna hodnoceni knihy
-     * 
-     * @param book knihy jejiz hodnoceni chci
-     * @return list hodnoceni
-     */
-    public List<EntityEvaluation> getEvaluationsByBook(EntityBook book);
 }
