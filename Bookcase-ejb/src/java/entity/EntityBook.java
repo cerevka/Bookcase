@@ -60,6 +60,9 @@ public class EntityBook implements Serializable {
     @OneToMany(mappedBy = "book", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityRelease> releasesCollection = new ArrayList<EntityRelease>();
     
+    @OneToMany(mappedBy = "bookId",cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityEvaluation> evaluationCollection = new ArrayList<EntityEvaluation>();
+    
     public EntityBook() {
     }
 
@@ -105,6 +108,14 @@ public class EntityBook implements Serializable {
 
     public void setReleasesCollection(Collection<EntityRelease> releasesCollection) {
         this.releasesCollection = releasesCollection;
+    }
+    
+     public Collection<EntityEvaluation> getEvaluationCollection() {
+        return evaluationCollection;
+    }
+
+    public void setEvaluationCollection(Collection<EntityEvaluation> evaluationCollection) {
+        this.evaluationCollection = evaluationCollection;
     }
     
     @Override

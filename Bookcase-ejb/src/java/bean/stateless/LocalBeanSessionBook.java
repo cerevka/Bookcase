@@ -2,6 +2,7 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
+import entity.EntityEvaluation;
 import entity.EntityPrint;
 import entity.EntityUser;
 import java.util.Collection;
@@ -62,10 +63,32 @@ public interface LocalBeanSessionBook {
      */
     public Collection<entity.EntityPrint> getPrintsOwnedByUser(EntityUser user);
 
+      /**
+     * Vrati kolekci knih odpovidajicho nazvu
+     * @param String nazev
+     * @return Kolekce knih odpovidajicich nazvem
+     */
+    public List<EntityBook> getBooksByTittle(String name);
+    
     /**
      * Vrati vsechny vytisky.
      * @return Vsechny vytisky.
      */
     public List<EntityPrint> getAllPrints();
+    
+     /**
+     * prida hodnoceni ke knize
+     * @param book hodnocena kniha, user hodnotici u6ivatel, value vyse hodnoceni
+     */
+    public void evaluateBook(EntityBook book, EntityUser user, int value);
+    
+    
+    /**
+     * vrati vsechna hodnoceni knihy
+     * 
+     * @param book knihy jejiz hodnoceni chci
+     * @return list hodnoceni
+     */
+    public List<EntityEvaluation> getEvaluationsByBook(EntityBook book);
     
 }
