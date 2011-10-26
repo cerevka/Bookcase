@@ -54,11 +54,12 @@ public class EntityBook implements Serializable {
     private String description;
 
     @ManyToMany(mappedBy = "bookCollection", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();
+    private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();   
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "bookId")
-    private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
-
+    
+    @OneToMany(mappedBy = "book", cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityRelease> releasesCollection = new ArrayList<EntityRelease>();
+    
     public EntityBook() {
     }
 
@@ -98,14 +99,14 @@ public class EntityBook implements Serializable {
         this.authorCollection = authorCollection;
     }
 
-    public Collection<EntityCopy> getCopyCollection() {
-        return copyCollection;
+    public Collection<EntityRelease> getReleasesCollection() {
+        return releasesCollection;
     }
 
-    public void setCopyCollection(Collection<EntityCopy> copyCollection) {
-        this.copyCollection = copyCollection;
+    public void setReleasesCollection(Collection<EntityRelease> releasesCollection) {
+        this.releasesCollection = releasesCollection;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

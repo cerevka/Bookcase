@@ -2,7 +2,7 @@ package bean.statefull;
 
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityBorrow;
-import entity.EntityCopy;
+import entity.EntityPrint;
 import entity.EntityUser;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -36,25 +36,25 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
     @PersistenceContext
     private EntityManager em;
 
-    private Collection<EntityCopy> content = content = new ArrayList<EntityCopy>();
+    private Collection<EntityPrint> content = new ArrayList<EntityPrint>();
 
     @Override
-    public Collection<EntityCopy> getContent() {
+    public Collection<EntityPrint> getContent() {
         logger.log(Level.INFO, "getContent");
-        for (EntityCopy copy : content) {
-            logger.log(Level.INFO, copy.getBookId().getTitle());
+        for (EntityPrint print : content) {
+            logger.log(Level.INFO, print.getRelease().getBook().getTitle());
         }
         return content;
     }
 
     @Override
-    public void addCopy(EntityCopy copy) {
-        content.add(copy);
+    public void addPrint(EntityPrint print) {
+        content.add(print);
     }
 
     @Override
-    public void removeCopy(EntityCopy copy) {
-        content.remove(copy);
+    public void removePrint(EntityPrint print) {
+        content.remove(print);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
     }
 
     @Override
-    public boolean isIn(EntityCopy entity) {
-        return content.contains(entity);
+    public boolean isIn(EntityPrint print) {
+        return content.contains(print);
     }
 
     @Override  
@@ -73,32 +73,25 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
         Principal principal = sessionContext.getCallerPrincipal();
         EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
 
-        // Pujci se jednotlive knizky.
-        for (EntityCopy copy : content) {
-            copy = em.find(EntityCopy.class, copy.getId());
+        // Pujci se jednotlive vytisky.
+        for (EntityPrint print : content) {
+            print = em.find(EntityPrint.class, print.getId());
             EntityBorrow borrow = new EntityBorrow();
-            borrow.setCopyId(copy);
-            borrow.setUserId(user);
-            borrow.setFromDate(new Date());
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, 1);
-            borrow.setLimitDate(calendar.getTime());
+            borrow.setPrint(print);
+            borrow.setUser(user);
+            borrow.setReservationDate(new Date());
+            //Calendar calendar = Calendar.getInstance();
+            //calendar.add(Calendar.MONTH, 1);
+            //borrow.setLimitDate(calendar.getTime());
+            borrow.setStatus(EntityBorrow.EnumBorrowStatus.RESERVED);
 
-            Collection<EntityBorrow> borrowsOfUser = user.getBorrowCollection();
-            if (borrowsOfUser == null) {
-                borrowsOfUser = new ArrayList<EntityBorrow>();
-            }
-            borrowsOfUser.add(borrow);
-
-            Collection<EntityBorrow> borrowsOfCopy = copy.getBorrowCollection();
-            if (borrowsOfCopy == null) {
-                borrowsOfCopy = new ArrayList<EntityBorrow>();
-            }
-            borrowsOfCopy.add(borrow);
+            user.getBorrowCollection().add(borrow);
+            print.getBorrowsCollection().add(borrow);
 
             em.persist(borrow);
             em.persist(user);
-            em.persist(copy);
+            em.persist(print);
+            em.flush();
         }
         clean();
     }

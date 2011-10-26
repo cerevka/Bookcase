@@ -6,8 +6,6 @@ import entity.EntityGroup;
 import entity.EntityShelf;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
-import java.security.Principal;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -131,11 +129,6 @@ public class BeanSessionUser implements LocalBeanSessionUser {
             stringBuffer.append(charset.charAt(position));
         }
         return stringBuffer.toString();
-    }
-
-    @Override
-    public void persistUser(EntityUser user) {
-        em.persist(user);
     }
 
     @Override

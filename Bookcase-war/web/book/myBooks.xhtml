@@ -18,30 +18,30 @@
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
 
-                <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
+                <h:dataTable value="#{book.printsOwnedByUser}" var="print">  
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.title']}"/>
                         </f:facet>
-                        <h:outputText value="#{copy.bookId.title}"/>
+                        <h:outputText value="#{print.release.book.title}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.author']}"/>
                         </f:facet>
-                        <h:outputText value="#{copy.bookId.authorCollection[0].name} #{copy.bookId.authorCollection[0].surname}"/>
+                        <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.description']}"/>
                         </f:facet>
-                        <h:outputText value="#{copy.bookId.description}" />    
+                        <h:outputText value="#{print.release.book.description}" />    
                     </h:column>
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="#{bundle['label.description']}"/>
                         </f:facet>
-                        <h:outputText value="#{book.getReadstatusOfUserForCopy(copy)}" />    
+                        <h:outputText value="#{print.readStatus}" />    
                     </h:column>
                 </h:dataTable>
 

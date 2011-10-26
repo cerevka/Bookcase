@@ -19,34 +19,34 @@
 
 
                 <h:form>                    
-                    <h:dataTable value="#{book.allCopies}" var="copy">                        
+                    <h:dataTable value="#{book.allPrints}" var="print">                        
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.title']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.title}"/>
+                            <h:outputText value="#{print.release.book.title}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.authorCollection[0].name} #{copy.bookId.authorCollection[0].surname}" />
+                            <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.description']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.description}"/>
+                            <h:outputText value="#{print.release.book.description}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
 
-                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(copy.bookId)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
+                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(copy.bookId)}" rendered="#{!book.isPrintOwnedByUser(print)}" />
                             <h:outputText value="   " />
-                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy) and !user.isInBasket(copy)}" />
-                            <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(copy)}" rendered="#{user.isInBasket(copy)}" />
+                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(print)}" rendered="#{!book.isPrintOwnedByUser(print) and !user.isInBasket(print)}" />
+                            <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(print)}" rendered="#{user.isInBasket(print)}" />
                         </h:column>
                     </h:dataTable>
                 </h:form>

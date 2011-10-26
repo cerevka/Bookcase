@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,10 +27,7 @@ import javax.persistence.TemporalType;
 @Table(name = "entityBorrow", catalog = "bookcase", schema = "")
 @NamedQueries({
     @NamedQuery(name = EntityBorrow.FIND_ALL, query = "SELECT b FROM EntityBorrow b"),
-    @NamedQuery(name = EntityBorrow.FIND_BY_ID, query = "SELECT b FROM EntityBorrow b WHERE b.id = :id"),
-    @NamedQuery(name = EntityBorrow.FIND_BY_LIMIT_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.limitDate = :limitDate"),
-    @NamedQuery(name = EntityBorrow.FIND_BY_TO_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.toDate = :toDate"),
-    @NamedQuery(name = EntityBorrow.FIND_BY_FROM_DATE, query = "SELECT b FROM EntityBorrow b WHERE b.fromDate = :fromDate")
+    @NamedQuery(name = EntityBorrow.FIND_BY_ID, query = "SELECT b FROM EntityBorrow b WHERE b.id = :id")   
 })
 public class EntityBorrow implements Serializable {
 
@@ -37,12 +36,12 @@ public class EntityBorrow implements Serializable {
     public static final String FIND_ALL = "EntityBorrow.findAll";
 
     public static final String FIND_BY_ID = "EntityBorrow.findById";
+    
 
-    public static final String FIND_BY_LIMIT_DATE = "EntityBorrow.findByLimitData";
+    public static enum EnumBorrowStatus {
 
-    public static final String FIND_BY_TO_DATE = "EntityBorrow.findByToDate";
-
-    public static final String FIND_BY_FROM_DATE = "EntityBorrow.findByFromDate";
+        RESERVED, REJECTED, BORROWED, RETURNED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,61 +49,44 @@ public class EntityBorrow implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "reservationDate", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date reservationDate;
+
+    @Column(name = "rejectionDate")
+    @Temporal(TemporalType.DATE)
+    private Date rejectionDate;
+
     @Column(name = "limitDate")
     @Temporal(TemporalType.DATE)
     private Date limitDate;
 
-    @Column(name = "toDate")
+    @Column(name = "returnDate")
     @Temporal(TemporalType.DATE)
-    private Date toDate;
+    private Date returnDate;
 
     @Basic(optional = false)
-    @Column(name = "fromDate", nullable = false)
+    @Column(name = "borrowDate")
     @Temporal(TemporalType.DATE)
-    private Date fromDate;
-
-    @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private EntityCopy copyId;
+    private Date borrowDate;
 
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private EntityUser userId;
+    private EntityUser user;
+
+    @JoinColumn(name = "printId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private EntityPrint print;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EnumBorrowStatus status;
 
     public EntityBorrow() {
     }
 
     public EntityBorrow(Integer id) {
         this.id = id;
-    }
-
-    public EntityBorrow(Integer id, Date fromDate) {
-        this.id = id;
-        this.fromDate = fromDate;
-    }
-
-    public Date getLimitDate() {
-        return limitDate;
-    }
-
-    public void setLimitDate(Date limitDate) {
-        this.limitDate = limitDate;
-    }
-
-    public Date getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
-
-    public Date getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
     }
 
     public Integer getId() {
@@ -115,20 +97,68 @@ public class EntityBorrow implements Serializable {
         this.id = id;
     }
 
-    public EntityCopy getCopyId() {
-        return copyId;
+    public Date getLimitDate() {
+        return limitDate;
     }
 
-    public void setCopyId(EntityCopy copyId) {
-        this.copyId = copyId;
+    public void setLimitDate(Date limitDate) {
+        this.limitDate = limitDate;
     }
 
-    public EntityUser getUserId() {
-        return userId;
+    public Date getBorrowDate() {
+        return borrowDate;
     }
 
-    public void setUserId(EntityUser userId) {
-        this.userId = userId;
+    public void setBorrowDate(Date borrowDate) {
+        this.borrowDate = borrowDate;
+    }
+
+    public Date getRejectionDate() {
+        return rejectionDate;
+    }
+
+    public void setRejectionDate(Date rejectionDate) {
+        this.rejectionDate = rejectionDate;
+    }
+
+    public Date getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(Date reservationDate) {
+        this.reservationDate = reservationDate;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public EnumBorrowStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EnumBorrowStatus status) {
+        this.status = status;
+    }
+
+    public EntityPrint getPrint() {
+        return print;
+    }
+
+    public void setPrint(EntityPrint print) {
+        this.print = print;
+    }
+
+    public EntityUser getUser() {
+        return user;
+    }
+
+    public void setUser(EntityUser user) {
+        this.user = user;
     }
 
     @Override

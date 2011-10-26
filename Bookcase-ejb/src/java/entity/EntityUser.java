@@ -3,7 +3,6 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -74,9 +73,6 @@ public class EntityUser implements Serializable {
     @ManyToMany(mappedBy = "userCollection")
     private Collection<EntityGroup> groupCollection = new ArrayList<EntityGroup>();
 
-    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityReservation> reservationCollection = new ArrayList<EntityReservation>();
-
     @OneToMany(mappedBy = "userId1", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityFriendship> friendshipCollection1 = new ArrayList<EntityFriendship>();
 
@@ -86,12 +82,14 @@ public class EntityUser implements Serializable {
     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
-    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityBorrow> borrowCollection = new ArrayList<EntityBorrow>();
 
+    
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
-
+    private Collection<EntityPrint> printsCollection = new ArrayList<EntityPrint>();
+   
+    
     public EntityUser() {
     }
 
@@ -147,14 +145,6 @@ public class EntityUser implements Serializable {
         this.groupCollection = groupCollection;
     }
 
-    public Collection<EntityReservation> getReservationCollection() {
-        return reservationCollection;
-    }
-
-    public void setReservationCollection(Collection<EntityReservation> reservationCollection) {
-        this.reservationCollection = reservationCollection;
-    }
-
     public Collection<EntityFriendship> getFriendshipCollection1() {
         return friendshipCollection1;
     }
@@ -187,14 +177,14 @@ public class EntityUser implements Serializable {
         this.friendshipCollection2 = friendshipCollection2;
     }
 
-    public Collection<EntityOwnership> getOwnershipCollection() {
-        return ownershipCollection;
+    public Collection<EntityPrint> getPrintsCollection() {
+        return printsCollection;
     }
 
-    public void setOwnershipCollection(Collection<EntityOwnership> ownershipCollection) {
-        this.ownershipCollection = ownershipCollection;
+    public void setPrintsCollection(Collection<EntityPrint> printsCollection) {
+        this.printsCollection = printsCollection;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

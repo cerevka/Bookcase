@@ -2,9 +2,8 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
-import entity.EntityOwnership;
-import entity.EntityShelf;
+import entity.EntityPrint;
+import entity.EntityRelease;
 import entity.EntityUser;
 import java.security.Principal;
 import java.util.Collection;
@@ -14,7 +13,6 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -58,29 +56,31 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(book);
         em.persist(author);
 
-        // Vytvori se novy svazek od knihy.
-        EntityCopy copy = new EntityCopy();
-        copy.setBookId(book);
-        book.getCopyCollection().add(copy);
+        // Vytvori se nove vydani knihy.
+        EntityRelease release = new EntityRelease();
+        release.setBook(book);
+        book.getReleasesCollection().add(release);
         em.persist(book);
-        em.persist(copy);
+        em.persist(release);
 
         // Ziska se uzivatel.
         Principal principal = sessionContext.getCallerPrincipal();
         EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
 
-        // Nastavi se vlastnictvi svazku.
-        EntityOwnership ownership = new EntityOwnership();
-        ownership.setUser(user);
-        ownership.setCopy(copy);
-        ownership.setOwnership(true);
-        ownership.setReadState(EntityOwnership.EnumReadState.UNREAD);
-        user.getOwnershipCollection().add(ownership);
-        copy.getOwnershipCollection().add(ownership);
 
-        em.persist(ownership);
-        em.persist(copy);
-        //em.persist(shelf);  
+        // Vytvori se novy vytisk knihy.
+        EntityPrint print = new EntityPrint();
+        print.setRelease(release);
+        release.getPrintsCollection().add(print);
+        print.setOwnershipType(EntityPrint.EnumOwnershipType.PHYSICAL);
+        print.setReadStatus(EntityPrint.EnumReadStatus.UNREAD);
+        print.setUser(user);
+        user.getPrintsCollection().add(print);
+
+        em.persist(print);
+        em.persist(release);
+        em.persist(user);
+
         em.flush();
     }
 
@@ -91,29 +91,15 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     }
 
     @Override
-    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user) {
-        TypedQuery<EntityCopy> query = (TypedQuery<EntityCopy>) em.createNamedQuery(EntityCopy.FIND_BY_OWNER);
+    public Collection<EntityPrint> getPrintsOwnedByUser(EntityUser user) {
+        TypedQuery<EntityPrint> query = (TypedQuery<EntityPrint>) em.createNamedQuery(EntityPrint.FIND_BY_USER);
         query.setParameter("user", user);
-        return (Collection<EntityCopy>) query.getResultList();
+        return (Collection<EntityPrint>) query.getResultList();
     }
 
     @Override
-    public List<EntityCopy> getCopiesInSelf(String shelfName) {
-        // Ziska se uzivatel.
-        Principal principal = sessionContext.getCallerPrincipal();
-        EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
-
-        Query query = em.createNamedQuery(EntityShelf.FIND_BY_USER_AND_NAME);
-        query.setParameter("user", user);
-        query.setParameter("name", shelfName);
-        EntityShelf shelf = (EntityShelf) query.getSingleResult();
-
-        return (List<EntityCopy>) shelf.getCopyCollection();
-    }
-
-    @Override
-    public List<EntityCopy> getAllCopies() {
-        TypedQuery<EntityCopy> query = (TypedQuery<EntityCopy>) em.createNamedQuery(EntityCopy.FIND_ALL);
+    public List<EntityPrint> getAllPrints() {
+        TypedQuery<EntityPrint> query = (TypedQuery<EntityPrint>) em.createNamedQuery(EntityPrint.FIND_ALL);
         return query.getResultList();
     }
 
@@ -131,27 +117,10 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     }
 
     @Override
-    public Boolean isOwner(EntityUser user, EntityCopy copy) {
-        // Najde se vztah mezi uzivatelem a svazkem.
-        TypedQuery<EntityOwnership> query = (TypedQuery<EntityOwnership>) em.createNamedQuery(EntityOwnership.FIND_BY_USER_AND_COPY);
-        query.setParameter("user", user);
-        query.setParameter("copy", copy);
-        try {
-            EntityOwnership ownership = (EntityOwnership) query.getSingleResult();
-        } catch (NoResultException exception) {
-            // Pokud neexistuje mezi uzivatelem a svazkem vlastnictvi, tak ji nevlastni.
-            return false;
+    public Boolean isOwner(EntityUser user, EntityPrint print) {        
+        if (user.equals(print.getUser())) {
+            return true;
         }
-        // Existuje-li vlastnictvi, pak ji vlastni.
-        return true;
-    }
-
-    @Override
-    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user) {
-        EntityCopy copy = new EntityCopy(book);
-        EntityOwnership ownership = new EntityOwnership(copy, user, true);
-        em.persist(copy);
-        em.persist(ownership);
-        em.flush();
+        return false;
     }
 }
