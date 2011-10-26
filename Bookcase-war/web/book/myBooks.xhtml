@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <body>
 
@@ -17,34 +18,54 @@
 
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
+                <h:form>
+                    <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.title']}"/>
+                            </f:facet>
+                            <h:outputText value="#{copy.bookId.title}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.author']}"/>
+                            </f:facet>
+                            <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.description']}"/>
+                            </f:facet>
+                            <h:outputText value="#{copy.bookId.description}" />    
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.readState']}"/>
+                            </f:facet>
+                            <h:outputText value="#{bundle['state.unread']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
+                                /
+                            <h:commandLink value="#{bundle['action.toRead']}" action="#{book.setToReadStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
+                                / 
+                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
+                                
+                            <h:outputText value="#{bundle['state.toRead']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "TO_READ"}' />
+                                / 
+                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "TO_READ"}' />
 
-                <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle['label.title']}"/>
-                        </f:facet>
-                        <h:outputText value="#{copy.bookId.title}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle['label.author']}"/>
-                        </f:facet>
-                        <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle['label.description']}"/>
-                        </f:facet>
-                        <h:outputText value="#{copy.bookId.description}" />    
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle['label.readState']}"/>
-                        </f:facet>
-                        <h:outputText value="#{book.getReadstatusOfUserForCopy(copy)}" />    
-                    </h:column>
-                </h:dataTable>
+                            <h:outputText value="#{bundle['state.reading']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
+                                / 
+                                <h:commandLink value="#{bundle['action.read']}" action="#{book.setReadStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
+                                / 
+                                <h:commandLink value="#{bundle['action.unfinished']}" action="#{book.setUnfinishedStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
 
+                            <h:outputText value="#{bundle['state.read']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READ"}' />
+                            
+                            <h:outputText value="#{bundle['state.unfinished']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNFINISHED"}' />
+                                / 
+                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNFINISHED"}' />
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
 
             </ui:define>
 

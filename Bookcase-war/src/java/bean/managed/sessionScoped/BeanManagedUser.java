@@ -5,6 +5,7 @@ import bean.stateless.LocalBeanSessionBook;
 import bean.stateless.LocalBeanSessionUser;
 import entity.EntityBook;
 import entity.EntityCopy;
+import entity.EntityOwnership;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
@@ -211,6 +212,10 @@ public class BeanManagedUser implements Serializable {
     public Boolean isAdmin() {
         return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("admin");
     }
+    
+    public Boolean isLibrarian() {
+        return FacesContext.getCurrentInstance().getExternalContext().isUserInRole("librarian");
+    }
 
     /**
      * Vrati v jake roli je uzivatel prihlasen.
@@ -224,15 +229,17 @@ public class BeanManagedUser implements Serializable {
         if (isAdmin() == true) {
             roles.add("admin");
         }
+        if (isLibrarian()) {
+            roles.add("librarian");
+        }
         if (roles.isEmpty() == true) {
             return null;
         }
         return roles.toString();
     }
 
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public void addToOwnership(EntityBook book) {
-//        beanSessionBasket.addCopy(copy);
         beanSessionBook.setBookCopyToUserOwnership(book, getUser());
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
@@ -241,13 +248,34 @@ public class BeanManagedUser implements Serializable {
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
         facesContext.addMessage(null, facesMessage);
     }
+    
+    @RolesAllowed({"user", "admin", "librarian"})
+    public boolean isBookOwnedByUser(EntityBook book) {
+        Collection<EntityOwnership> ownershipCollection = getUser().getOwnershipCollection();
+        for (EntityOwnership ownership : ownershipCollection) {
+            if (ownership.getCopy().getBookId().equals(book))
+                return true;
+        }
+        return false;
+    }
+    
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void addToBasket(EntityCopy copy) {
+        beanSessionBasket.addCopy(copy);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
+        String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
+        facesContext.addMessage(null, facesMessage);
+    }
 
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityCopy> getCopiesInBasket() {
         return beanSessionBasket.getContent();
     }
     
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public void removeFromBasket(EntityCopy copy) {
         beanSessionBasket.removeCopy(copy);
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -258,7 +286,7 @@ public class BeanManagedUser implements Serializable {
         facesContext.addMessage(null, facesMessage);
     }
     
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public void doBorrowBasket() {
         beanSessionBasket.borrow();
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -266,5 +294,5 @@ public class BeanManagedUser implements Serializable {
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
         facesContext.addMessage(null, facesMessage);
     }
-   
+  
  }

@@ -42,22 +42,22 @@ public class BeanManagedFriendship {
     }
 
       
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityUser> friends(){
         return beanSessionUser.getFriends(beanManagedUser.getUser());
     }
     
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityUser> requests(){
         return beanSessionUser.getFriendshipRequests(beanManagedUser.getUser());
     }
     
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityFriendship> myRequests(){
         return beanSessionUser.getUsersRequests(beanManagedUser.getUser());
     }  
     
-     @RolesAllowed({"user", "admin"})
+     @RolesAllowed({"user", "admin", "librarian"})
      public void acept(EntityUser user){
          beanSessionUser.confirmFriendship(user, beanManagedUser.getUser());
           
@@ -68,7 +68,7 @@ public class BeanManagedFriendship {
         facesContext.addMessage(null, facesMessage);
      }
     
-      @RolesAllowed({"user", "admin"})
+      @RolesAllowed({"user", "admin", "librarian"})
      public void reject(EntityUser user){       
          beanSessionUser.refuseFriendship(user, beanManagedUser.getUser());         
           

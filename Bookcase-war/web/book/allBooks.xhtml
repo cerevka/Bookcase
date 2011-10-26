@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
@@ -30,7 +29,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.authorCollection[0].name} #{copy.bookId.authorCollection[0].surname}" />
+                            <h:outputText value="#{bookEntity.authorId.name} #{bookEntity.authorId.surname}" />
                         </h:column>
                         <h:column>
                             <f:facet name="header">
@@ -42,7 +41,9 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
-                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(bookEntity)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
+                            <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(bookEntity)}" rendered="#{!user.isBookOwnedByUser(bookEntity)}" />
+                             / 
+                            <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(copy)}" rendered="#{!book.isBookOwnedByUser(copy)}" />
                         </h:column>
                     </h:dataTable>
                 </h:form>

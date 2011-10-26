@@ -19,6 +19,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  * Prace s knihami.
@@ -29,22 +30,16 @@ import javax.faces.context.FacesContext;
 public class BeanManagedBook {
 
     private static final Logger logger = Logger.getLogger(BeanManagedBook.class.getName());
-
     private EntityBook book = new EntityBook();
-
     private EntityAuthor author = new EntityAuthor();
-
     private String authorName;
-
     private String authorSurname;
-
     @ManagedProperty(value = "#{user}")
     private BeanManagedUser beanManagedUser;
 
     public void setBeanManagedUser(BeanManagedUser beanManagedUser) {
         this.beanManagedUser = beanManagedUser;
     }
-
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
@@ -83,12 +78,12 @@ public class BeanManagedBook {
     public BeanManagedBook() {
     }
 
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityAuthor> getAllAuthors() {
         return beanSessionBook.getAllAuthors();
     }
 
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin", "librarian"})
     public String addNewBook() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
@@ -120,16 +115,16 @@ public class BeanManagedBook {
 
         return null;
     }
-    
+
     /**
      * Vrati kolekci svazku, ktere vlastni aktualne prihlaseny uzivatel.
      * @return Kolekce svazku.
      */
     public Collection<EntityCopy> getCopiesOwnedByUser() {
         return getCopiesOwnerByUser(beanManagedUser.getUser());
-        
+
     }
-    
+
     /**
      * Vrati kolekci svazku vlastnene uzivatelem.
      * @param user Uzivatel, ktery ma vlastnit svazky.
@@ -150,7 +145,7 @@ public class BeanManagedBook {
     public Collection<EntityCopy> getAllCopies() {
         return beanSessionBook.getAllCopies();
     }
-    
+
     public Collection<EntityBook> getAllBooks() {
         return beanSessionBook.getAllBooks();
     }
@@ -161,9 +156,9 @@ public class BeanManagedBook {
      * @return TRUE prihlaseny uzivatel svazek vlastni, jinak FALSE
      */
     public boolean isBookOwnedByUser(EntityCopy copy) {
-        return isBookOwnedByUser(beanManagedUser.getUser(), copy);       
+        return isBookOwnedByUser(beanManagedUser.getUser(), copy);
     }
-    
+
     /**
      * Rozhodne o vlastnictvi svazku.
      * @param user Uzivatel, kteremu ma svazek patrit.
@@ -173,13 +168,37 @@ public class BeanManagedBook {
     public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
         return beanSessionBook.isOwner(user, copy);
     }
-    
-    public EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
+
+    public String getReadstatusOfUserForCopy(EntityCopy copy) {
         for (EntityOwnership ownership : copy.getOwnershipCollection()) {
             if (ownership.getUser().equals(beanManagedUser.getUser())) {
-                return ownership.getReadState();
+                return ownership.getReadState().name();
             }
         }
-        return EnumReadState.UNREAD;
+        return EnumReadState.UNREAD.name();
+    }
+
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void setToReadStatus(EntityCopy copy) {
+        setReadStateToCopy(copy, EnumReadState.TO_READ);
+    }
+
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void setReadingStatus(EntityCopy copy) {
+        setReadStateToCopy(copy, EnumReadState.READING);
+    }
+
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void setReadStatus(EntityCopy copy) {
+        setReadStateToCopy(copy, EnumReadState.READ);
+    }
+
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void setUnfinishedStatus(EntityCopy copy) {
+        setReadStateToCopy(copy, EnumReadState.UNFINISHED);
+    }
+
+    private void setReadStateToCopy(EntityCopy copy, EnumReadState readState) {
+        beanSessionBook.setReadStateToBookCopy(readState, copy, beanManagedUser.getUser());
     }
 }

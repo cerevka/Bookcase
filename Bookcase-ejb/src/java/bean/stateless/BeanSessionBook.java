@@ -17,6 +17,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -190,6 +191,16 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         }        
         // Existuje-li vlastnictvi, pak ji vlastni.
         return true; 
+    }
+    
+    @Override
+    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user) {
+        em.setFlushMode(FlushModeType.AUTO);
+        for (EntityOwnership ownership : copy.getOwnershipCollection()) {
+            if (ownership.getUser().equals(user)) {
+                ownership.setReadState(readState);
+             }
+        }
     }
     
 }

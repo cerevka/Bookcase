@@ -4,6 +4,7 @@ import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
 import entity.EntityUser;
+import entity.EnumReadState;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -103,5 +104,7 @@ public interface LocalBeanSessionBook {
     public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
     
     public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
+    
+    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user);
     
 }
