@@ -6,6 +6,7 @@ import bean.stateless.LocalBeanSessionUser;
 import entity.EntityBook;
 import entity.EntityCopy;
 import entity.EntityOwnership;
+import entity.EntityPrint;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
@@ -42,7 +43,7 @@ public class BeanManagedUser implements Serializable {
 
     @EJB
     private LocalBeanSessionBasket beanSessionBasket;
-    
+
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
@@ -89,7 +90,7 @@ public class BeanManagedUser implements Serializable {
      * Prihlasi uzivatele.
      * @return Vysledek akce.
      */
-    public String doLogin() {       
+    public String doLogin() {
         FacesContext ctx = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         try {
@@ -238,13 +239,18 @@ public class BeanManagedUser implements Serializable {
         return roles.toString();
     }
 
+
     @RolesAllowed({"user", "admin", "librarian"})
     public void addToOwnership(EntityBook book) {
         beanSessionBook.setBookCopyToUserOwnership(book, getUser());
+
+    @RolesAllowed({"user", "admin", "librarian"})
+    public void addToBasket(EntityPrint print) {
+        beanSessionBasket.addPrint(print);
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
-        String bookAddedPattern = bundle.getString("message.success.ownershipSet");
-        String bookAddedMessage = MessageFormat.format(bookAddedPattern, book.getTitle());
+        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
+        String bookAddedMessage = MessageFormat.format(bookAddedPattern, print.getRelease().getBook().getTitle());
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
         facesContext.addMessage(null, facesMessage);
     }
@@ -270,6 +276,7 @@ public class BeanManagedUser implements Serializable {
         facesContext.addMessage(null, facesMessage);
     }
 
+
     @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityCopy> getCopiesInBasket() {
         return beanSessionBasket.getContent();
@@ -278,21 +285,37 @@ public class BeanManagedUser implements Serializable {
     @RolesAllowed({"user", "admin", "librarian"})
     public void removeFromBasket(EntityCopy copy) {
         beanSessionBasket.removeCopy(copy);
+
+    @RolesAllowed({"user", "admin"})
+    public Collection<EntityPrint> getPrintsInBasket() {
+        return beanSessionBasket.getContent();
+    }
+
+    @RolesAllowed({"user", "admin"})
+    public void removeFromBasket(EntityPrint print) {
+        beanSessionBasket.removePrint(print);
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
         String bookRemovedPatter = bundle.getString("message.success.bookRemovedFromBasket");
-        String bookRemovedMessage = MessageFormat.format(bookRemovedPatter, copy.getBookId().getTitle());
+        String bookRemovedMessage = MessageFormat.format(bookRemovedPatter, print.getRelease().getBook().getTitle());
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookRemovedMessage, "");
         facesContext.addMessage(null, facesMessage);
     }
+
     
     @RolesAllowed({"user", "admin", "librarian"})
     public void doBorrowBasket() {
         beanSessionBasket.borrow();
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");        
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
         facesContext.addMessage(null, facesMessage);
     }
-  
- }
+
+    
+    @RolesAllowed({"user", "admin", "librarian"})
+    public boolean isInBasket(EntityPrint print) {
+        return beanSessionBasket.isIn(print);
+    }
+}
+

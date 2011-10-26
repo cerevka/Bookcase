@@ -4,35 +4,17 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <ui:composition>
-        <h:form>
-            <h1><h:outputText value="#{bundle['heading.menu.user']}" /></h1>
-            <ul class="menu">                
-                <h:panelGroup rendered="#{!user.isLogged()}">
-                    <li><h:link outcome="/login" value="#{bundle['menu.login']}" /></li>
-                    <li><h:link outcome="/registration" value="#{bundle['menu.registration']}" /></li>
-                    <li><h:link outcome="/resetPassword" value="#{bundle['menu.resetPassword']}" /></li>
-                </h:panelGroup>
-                <h:panelGroup rendered="#{user.isLogged()}">
-                    <li><h:outputText value="#{user.user.name} #{user.user.surname}" /></li>
-                    <li><h:outputText value="#{user.user.email}" /></li>
-                    <li><h:outputText value="#{user.getRole()}" /></li>
-                    <li><h:link outcome="/user/friendship" value="#{bundle['menu.friendships']}"  /></li>
-                    <li><h:commandLink action="#{user.doLogout()}" value="#{bundle['menu.logout']}" immediate="true"  /></li>
-                </h:panelGroup>
-
-            </ul>
+        <h:form>           
             <h1><h:outputText value="#{bundle['heading.menu.navigation']}" /></h1>
             <ul class="menu">
                 <li><h:link outcome="/index" value="#{bundle['menu.index']}" /></li>
                 <h:panelGroup rendered="#{user.isLogged()}">
-                    <li><h2><h:outputText value="#{bundle['heading.menu.bookcase']}" /></h2></li>
-                    <ul>   
-                        <li><h:link outcome="/user/find" value="#{bundle['menu.user.find']}" /></li>
-                        <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
-                        <li><h:link outcome="/book/myBooks" value="#{bundle['menu.book.my']}" /></li>
-                        <li><h:link outcome="/book/allBooks" value="#{bundle['menu.book.all']}" /></li>
-                        <li><h:link outcome="/book/basket" value="#{bundle['menu.book.basket']}" /></li>
-                    </ul>
+                    <li><h:link outcome="/user/find" value="#{bundle['menu.user.find']}" /></li>
+                    <li><h:link outcome="/user/friendship" value="#{bundle['menu.friendships']}"  /></li>
+                    <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
+                    <li><h:link outcome="/book/myBooks" value="#{bundle['menu.book.my']}" /></li>
+                    <li><h:link outcome="/book/allBooks" value="#{bundle['menu.book.all']}" /></li>
+                    <li><h:link outcome="/book/basket" value="#{bundle['menu.book.basket']}" /></li>
                 </h:panelGroup>
             </ul>
         </h:form>

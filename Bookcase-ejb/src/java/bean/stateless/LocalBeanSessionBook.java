@@ -2,7 +2,7 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
+import entity.EntityPrint;
 import entity.EntityUser;
 import entity.EnumReadState;
 import java.util.Collection;
@@ -25,47 +25,12 @@ public interface LocalBeanSessionBook {
     public EntityBook getBook(int bookId);
 
     /**
-     * Vrati svazek.
-     * @param copyId Identifikator svazku.
-     * @return Svazek.
-     */
-    public EntityCopy getCopy(int copyId);
-
-
-    /**
-     * Vrati svazky knihy.
-     * @param book Kniha.
-     * @return Seznam svazku.
-     */
-    public List<EntityCopy> getCopies(EntityBook book);
-
-    /**
      * Vrati vsechny knihy.
      * @return Seznam knih.
      */
     public List<EntityBook> getAllBooks();
 
-    /**
-     * Vrati vsechny svazky.
-     * @return Seznam svazku.
-     */
-    public List<EntityCopy> getAllCopies();
-
-    /**
-     * Vrati vsechny knihy od daneho autora.
-     * @param author Autor.
-     * @return Seznam knih od daneho autora.
-     */
-    public List<EntityBook> getAllBooksFromAuthor(EntityAuthor author);
-
-    /**
-     * Vrati vsechny svazky od daneho autora.
-     * @param author Autor.
-     * @return Seznam svazku od daneho autora.
-     */
-    public List<EntityCopy> getAllCopiesFromAuthor(EntityAuthor author);
-
-    /**
+     /**
      * Vrati autora.
      * @param authorId Identifikator autora.
      * @return Autor.
@@ -86,25 +51,30 @@ public interface LocalBeanSessionBook {
     public void addBook(EntityBook book, EntityAuthor author);
 
     /**
-     * Vrati vsechny svazky z dane policky pro prihlaseneho uzivatele..
-     */
-    public List<entity.EntityCopy> getCopiesInSelf(String shelfName);
-
-    /**
      * Rozhodne, zda uzivatel vlastni danou knihu.
      * @return TRUE pokud vlastni, FALSE pokud nevlastni.
      */
-    public Boolean isOwner(EntityUser user, EntityCopy copy);
+    public Boolean isOwner(EntityUser user, EntityPrint print);    
 
     /**
      * Vrati kolekci svazku, ktere vlastni uzivatel.
-     * @param user Uzivatel, jemuz svazky maji patrit.
-     * @return Kolekce knih vlastnenych uzivatelem.
+     * @param user Majitel svazku.
+     * @return Kolekce svazku, ktere vlastni uzivatel.
      */
+
     public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
     
     public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
     
     public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user);
+
+    public Collection<entity.EntityPrint> getPrintsOwnedByUser(EntityUser user);
+
+    /**
+     * Vrati vsechny vytisky.
+     * @return Vsechny vytisky.
+     */
+    public List<EntityPrint> getAllPrints();
+
     
 }

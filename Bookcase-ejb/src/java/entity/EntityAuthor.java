@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -9,9 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -51,8 +54,15 @@ public class EntityAuthor implements Serializable {
     @Column(name = "surname", length = 255)
     private String surname;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
-    private Collection<EntityBook> bookCollection;
+    @JoinTable(name = "writenBy",
+    joinColumns = {
+        @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
+    },
+    inverseJoinColumns = {
+        @JoinColumn(name = "bookId", referencedColumnName = "id", nullable = false)
+    })
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityBook> bookCollection = new ArrayList<EntityBook>();
 
     public EntityAuthor() {
     }

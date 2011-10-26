@@ -1,6 +1,6 @@
 package bean.statefull;
 
-import entity.EntityCopy;
+import entity.EntityPrint;
 import java.util.Collection;
 import javax.ejb.Local;
 
@@ -15,19 +15,19 @@ public interface LocalBeanSessionBasket {
      * Vrati vsechny svazky v kosiku.
      * @return Seznam svazku v kosiku.
      */
-     public Collection<EntityCopy> getContent();
+     public Collection<EntityPrint> getContent();
 
      /**
       * Prida svazek do kosiku.
-      * @param copy Pridavany svazek.
+      * @param print Pridavany svazek.
       */
-     public void addCopy(EntityCopy copy);
+     public void addPrint(EntityPrint print);
 
      /**
       * Odstrani svazek z kosiku.
-      * @param copy Odstranovany svazek.
+      * @param print Odstranovany svazek.
       */
-     public void removeCopy(EntityCopy copy);
+     public void removePrint(EntityPrint print);
 
      /**
       * Vyprazdni kosik.
@@ -36,10 +36,10 @@ public interface LocalBeanSessionBasket {
 
      /**
       * Overi pritomnost svazku v kosiku.
-      * @param entity Overovany svazek.
+      * @param print Overovany svazek.
       * @return
       */
-     public boolean isIn(EntityCopy entity);
+     public boolean isIn(EntityPrint print);
 
      /**
       * Vsechny knihy v kosiku pujci uzivateli.

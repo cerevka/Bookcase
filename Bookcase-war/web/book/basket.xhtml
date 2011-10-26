@@ -18,30 +18,30 @@
                 
                 <f:view>
                     <h:form>                        
-                        <h:dataTable value="#{user.copiesInBasket}" var="copy">
+                        <h:dataTable value="#{user.printsInBasket}" var="print">
                             <h:column>
                                 <f:facet name="header">
                                     <h:outputText value="#{bundle['label.title']}"/>
                                 </f:facet>
-                                <h:outputText value="#{copy.bookId.title}"/>
+                                <h:outputText value="#{print.release.book.title}"/>
                             </h:column>
                             <h:column>
                                 <f:facet name="header">
                                     <h:outputText value="#{bundle['label.author']}"/>
                                 </f:facet>
-                                <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}"/>
+                                <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}"/>
                             </h:column>
                             <h:column>
                                 <f:facet name="header">
                                     <h:outputText value="#{bundle['label.description']}"/>
                                 </f:facet>
-                                <h:outputText value="#{copy.bookId.description}" />
+                                <h:outputText value="#{print.release.book.description}" />
                             </h:column>
                             <h:column>
                                 <f:facet name="header">
                                     <h:outputText value="#{bundle['label.action']}"/>
                                 </f:facet>
-                                <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(copy)}" />
+                                <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(print)}" />
                             </h:column>
                         </h:dataTable>
                         <h:commandButton value="#{bundle['action.borrow']}" action="#{user.doBorrowBasket()}" />
