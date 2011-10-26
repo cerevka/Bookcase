@@ -5,6 +5,7 @@ import entity.EntityBook;
 import entity.EntityEvaluation;
 import entity.EntityPrint;
 import entity.EntityUser;
+import entity.EnumReadState;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -61,6 +62,13 @@ public interface LocalBeanSessionBook {
      * @param user Majitel svazku.
      * @return Kolekce svazku, ktere vlastni uzivatel.
      */
+
+    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
+    
+    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
+    
+    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user);
+
     public Collection<entity.EntityPrint> getPrintsOwnedByUser(EntityUser user);
 
       /**
@@ -75,6 +83,7 @@ public interface LocalBeanSessionBook {
      * @return Vsechny vytisky.
      */
     public List<EntityPrint> getAllPrints();
+
     
      /**
      * prida hodnoceni ke knize

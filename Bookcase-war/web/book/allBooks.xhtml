@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:f="http://java.sun.com/jsf/core">
 
     <body>
 
@@ -30,7 +29,9 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
+
                             <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}" />
+
                         </h:column>
                         <h:column>
                             <f:facet name="header">
@@ -42,7 +43,6 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.action']}"/>
                             </f:facet>
-
                             <h:commandLink value="#{bundle['action.addToOwnership']}" action="#{user.addToOwnership(copy.bookId)}" rendered="#{!book.isPrintOwnedByUser(print)}" />
                             <h:outputText value="   " />
                             <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(print)}" rendered="#{!book.isPrintOwnedByUser(print) and !user.isInBasket(print)}" />
