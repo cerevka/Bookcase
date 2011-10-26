@@ -54,10 +54,6 @@ public class EntityAuthor implements Serializable {
     @Column(name = "surname", length = 255)
     private String surname;
 
-    /*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
-    private Collection<EntityBook> bookCollection;
-     */
     @JoinTable(name = "writenBy",
     joinColumns = {
         @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)

@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.Remove;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -25,15 +24,15 @@ import javax.persistence.PersistenceContext;
  */
 @Stateful
 public class BeanSessionBasket implements LocalBeanSessionBasket {
-    
+
     private static final Logger logger = Logger.getLogger(BeanSessionBasket.class.getName());
-    
+
     @EJB
     private LocalBeanSessionUser beanSessionUser;
-    
+
     @Resource
     private SessionContext sessionContext;
-    
+
     @PersistenceContext
     private EntityManager em;
 
@@ -50,7 +49,7 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
 
     @Override
     public void addCopy(EntityCopy copy) {
-        content.add(copy);        
+        content.add(copy);
     }
 
     @Override
@@ -67,14 +66,13 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
     public boolean isIn(EntityCopy entity) {
         return content.contains(entity);
     }
-    
-    @Override
-    //@Remove
+
+    @Override  
     public void borrow() {
         // Ziska se uzivatel, kteremu se pujcuje.
         Principal principal = sessionContext.getCallerPrincipal();
         EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
-        
+
         // Pujci se jednotlive knizky.
         for (EntityCopy copy : content) {
             copy = em.find(EntityCopy.class, copy.getId());
@@ -85,23 +83,23 @@ public class BeanSessionBasket implements LocalBeanSessionBasket {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, 1);
             borrow.setLimitDate(calendar.getTime());
-            
+
             Collection<EntityBorrow> borrowsOfUser = user.getBorrowCollection();
             if (borrowsOfUser == null) {
                 borrowsOfUser = new ArrayList<EntityBorrow>();
             }
             borrowsOfUser.add(borrow);
-            
+
             Collection<EntityBorrow> borrowsOfCopy = copy.getBorrowCollection();
             if (borrowsOfCopy == null) {
                 borrowsOfCopy = new ArrayList<EntityBorrow>();
             }
             borrowsOfCopy.add(borrow);
-            
+
             em.persist(borrow);
             em.persist(user);
             em.persist(copy);
         }
-        clean();        
+        clean();
     }
 }

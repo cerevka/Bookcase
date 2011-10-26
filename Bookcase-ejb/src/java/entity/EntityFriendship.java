@@ -31,29 +31,31 @@ import javax.persistence.Table;
     @NamedQuery(name = EntityFriendship.FIND_BY_USER2, query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER2_AND_STATE, query = "SELECT f FROM EntityFriendship f WHERE f.userId2 = :userId2 AND f.status= :status"),
     @NamedQuery(name = EntityFriendship.FIND_BY_USER1_AND_USER2, query = "SELECT f FROM EntityFriendship f WHERE f.userId1 = :userId1 AND f.userId2= :userId2")
-
 })
 public class EntityFriendship implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityFriendship.findAll";
-    
+
     public static final String FIND_BY_STATE = "EntityFriendship.findByState";
-    
+
     public static final String FIND_BY_USER1 = "EntityFriendship.findByUserId1";
-    
-    public static final String FIND_BY_USER1_AND_NEG_STATE="EntityFriendship.findByUserId1AndNegState";
-    
+
+    public static final String FIND_BY_USER1_AND_NEG_STATE = "EntityFriendship.findByUserId1AndNegState";
+
     public static final String FIND_BY_USER1_AND_STATE = "EntityFriendship.findByUserId1AndState";
-    
+
     public static final String FIND_BY_USER2 = "EntityFriendship.findByUserId2";
-    
+
     public static final String FIND_BY_USER2_AND_STATE = "EntityFriendship.findByUserId2AndState";
-    
+
     public static final String FIND_BY_USER1_AND_USER2 = "EntityFriendship.findByUserId1AndUserId2";
 
-    public static enum FriendshipState {AUTHORIZED, REJECTED, UNAUTHORIZED}
+    public static enum FriendshipState {
+
+        AUTHORIZED, REJECTED, UNAUTHORIZED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,12 +78,12 @@ public class EntityFriendship implements Serializable {
     public EntityFriendship() {
     }
 
-    public EntityFriendship(EntityUser requestingUser, EntityUser requestedUser){
-        this.userId1=requestingUser;
-        this.userId2=requestedUser;
-        this.status= FriendshipState.UNAUTHORIZED;
+    public EntityFriendship(EntityUser requestingUser, EntityUser requestedUser) {
+        this.userId1 = requestingUser;
+        this.userId2 = requestedUser;
+        this.status = FriendshipState.UNAUTHORIZED;
     }
-    
+
     public EntityFriendship(int id) {
         this.id = id;
     }
@@ -93,7 +95,7 @@ public class EntityFriendship implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public FriendshipState getState() {
         return status;
     }
@@ -143,4 +145,3 @@ public class EntityFriendship implements Serializable {
         return "entity.EntityFriendship[id=" + id + "]";
     }
 }
-

@@ -6,7 +6,6 @@ import entity.EntityCopy;
 import entity.EntityOwnership;
 import entity.EntityShelf;
 import entity.EntityUser;
-import entity.EnumReadState;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +20,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
- *
+ * Beana obstaravajici logiku pro manipulaci s knihami.
  * @author Tomáš Čerevka
  */
 @Stateless
@@ -70,26 +69,12 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         Principal principal = sessionContext.getCallerPrincipal();
         EntityUser user = beanSessionUser.getUserByEmail(principal.getName());
 
-        /*
-         * Policky jiz nejsou treba, byl zmenen pristup k vlastnisvi knihy pres EntityOwnership.
-         * 
-        Query query = em.createNamedQuery(EntityShelf.FIND_BY_USER_AND_NAME);
-        query.setParameter("user", user);
-        query.setParameter("name", "default");
-        EntityShelf shelf = (EntityShelf) query.getSingleResult();
-        
-        
-        // Vlozi se svazek do policky.        
-        copy.getShelfCollection().add(shelf); 
-        shelf.getCopyCollection().add(copy);
-         */
-
         // Nastavi se vlastnictvi svazku.
         EntityOwnership ownership = new EntityOwnership();
         ownership.setUser(user);
         ownership.setCopy(copy);
         ownership.setOwnership(true);
-        ownership.setReadState(EnumReadState.UNREAD);
+        ownership.setReadState(EntityOwnership.EnumReadState.UNREAD);
         user.getOwnershipCollection().add(ownership);
         copy.getOwnershipCollection().add(ownership);
 
@@ -97,16 +82,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(copy);
         //em.persist(shelf);  
         em.flush();
-    }
-
-    @Override
-    public EntityCopy getCopy(int copyId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<EntityCopy> getCopies(EntityBook book) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -140,16 +115,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     public List<EntityCopy> getAllCopies() {
         TypedQuery<EntityCopy> query = (TypedQuery<EntityCopy>) em.createNamedQuery(EntityCopy.FIND_ALL);
         return query.getResultList();
-    }
-
-    @Override
-    public List<EntityBook> getAllBooksFromAuthor(EntityAuthor author) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<EntityCopy> getAllCopiesFromAuthor(EntityAuthor author) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

@@ -6,7 +6,6 @@ import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
 import entity.EntityOwnership;
-import entity.EnumReadState;
 import entity.EntityUser;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -174,12 +173,18 @@ public class BeanManagedBook {
         return beanSessionBook.isOwner(user, copy);
     }
     
-    public EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
+    
+    /**
+     * @TODO Předělat na databázový dotaz (named query). Taková prasárna nepřichází v úvahu!
+     * @param copy
+     * @return 
+     */
+    public EntityOwnership.EnumReadState getReadstatusOfUserForCopy(EntityCopy copy) {
         for (EntityOwnership ownership : copy.getOwnershipCollection()) {
             if (ownership.getUser().equals(beanManagedUser.getUser())) {
                 return ownership.getReadState();
             }
         }
-        return EnumReadState.UNREAD;
+        return EntityOwnership.EnumReadState.UNREAD;
     }
 }

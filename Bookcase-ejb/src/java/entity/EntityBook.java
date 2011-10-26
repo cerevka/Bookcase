@@ -32,13 +32,13 @@ import javax.persistence.Table;
 public class EntityBook implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static final String FIND_ALL = "EntityBook.findAll";
-    
+
     public static final String FIND_BY_ID = "EntityBook.findById";
-    
+
     public static final String FIND_BY_TITLE = "EntityBook.findByTitle";
-    
+
     public static final String FIND_BY_DESCRIPTION = "EntityBook.findByDescription";
 
     @Id
@@ -53,15 +53,9 @@ public class EntityBook implements Serializable {
     @Column(name = "description", length = 1024)
     private String description;
 
-    /*
-    @JoinColumn(name = "authorId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private EntityAuthor authorId;
-    */
-    
     @ManyToMany(mappedBy = "bookCollection", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityAuthor> authorCollection = new ArrayList<EntityAuthor>();
-    
+
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "bookId")
     private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
 

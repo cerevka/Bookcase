@@ -31,7 +31,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
- *
+ * Beana spracujici manipulace s uzivateli.
  * @author Tomáš Čerevka
  */
 @Stateless
@@ -86,18 +86,18 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         // Uzivateli se priradi role "user".               
         EntityGroup userGroup = getGroupByName("user");
         addUserInGroup(user, userGroup);
-        
+
         // Uzivateli se vytvori defaultni policka.
         EntityShelf shelf = new EntityShelf();
         shelf.setUserId(user);
         shelf.setName("default");
-        
+
         Collection<EntityShelf> shelfsOfUser = user.getShelfCollection();
         if (shelfsOfUser == null) {
             shelfsOfUser = new ArrayList<EntityShelf>();
         }
         shelfsOfUser.add(shelf);
-        
+
         em.persist(shelf);
         em.persist(user);
     }
@@ -109,14 +109,14 @@ public class BeanSessionUser implements LocalBeanSessionUser {
             EntityUser user = getUserByEmail(email);
             String newPassword = generatePassword(8);
             user.setPassword(newPassword);
-            em.persist(user);  
+            em.persist(user);
             return newPassword;
         } catch (NoResultException exception) {
             // Uzivatel v databazi neni.
             throw new ExceptionUserDoesNotExist(email);
         }
     }
-    
+
     /**
      * Vygeneruje nahodne heslo o zadane delce.
      * @param lenght Delka noveho hesla.
@@ -145,7 +145,7 @@ public class BeanSessionUser implements LocalBeanSessionUser {
 
     @Override
     public List<EntityUser> getAllUsers() {
-         Query query = em.createNamedQuery(EntityUser.FIND_ALL);
+        Query query = em.createNamedQuery(EntityUser.FIND_ALL);
         return query.getResultList();
     }
 
@@ -153,40 +153,38 @@ public class BeanSessionUser implements LocalBeanSessionUser {
     public List<EntityUser> getFriends(EntityUser user) {
         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_STATE);
         query.setParameter("userId1", user);
-        query.setParameter("status" ,EntityFriendship.FriendshipState.AUTHORIZED);
+        query.setParameter("status", EntityFriendship.FriendshipState.AUTHORIZED);
         List<EntityFriendship> listFriendship = query.getResultList();
-        List<EntityUser> listUsers= new ArrayList<EntityUser>();
-       
+        List<EntityUser> listUsers = new ArrayList<EntityUser>();
+
         //do listu si ulozim jeho pratele ktere zadal o pratelstvi
-        for(EntityFriendship e : listFriendship){
+        for (EntityFriendship e : listFriendship) {
             listUsers.add(e.getUserId2());
         }
-        
-        
+
         Query query2 = em.createNamedQuery(EntityFriendship.FIND_BY_USER2_AND_STATE);
         query2.setParameter("userId2", user);
-        query2.setParameter("status" ,EntityFriendship.FriendshipState.AUTHORIZED);
+        query2.setParameter("status", EntityFriendship.FriendshipState.AUTHORIZED);
         listFriendship = query2.getResultList();
-        
+
         //jeste pridam ty kteri zadali jeho
-        for(EntityFriendship e : listFriendship){
+        for (EntityFriendship e : listFriendship) {
             listUsers.add(e.getUserId1());
         }
-        
         return listUsers;
     }
 
     @Override
     public boolean areFriends(EntityUser user1, EntityUser user2) {
-         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1);
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1);
         query.setParameter("userId1", user1);
-        List<EntityFriendship> l= query.getResultList();
+        List<EntityFriendship> l = query.getResultList();
         Query query2 = em.createNamedQuery(EntityFriendship.FIND_BY_USER2);
         query2.setParameter("userId2", user1);
         l.addAll(query2.getResultList());
-        
-        for(EntityFriendship e: l){
-            if(e.getUserId1().getId()==user2.getId()||e.getUserId2().getId()==user2.getId()){
+
+        for (EntityFriendship e : l) {
+            if (e.getUserId1().getId() == user2.getId() || e.getUserId2().getId() == user2.getId()) {
                 return true;
             }
         }
@@ -195,64 +193,60 @@ public class BeanSessionUser implements LocalBeanSessionUser {
 
     @Override
     public void applyFriendship(EntityUser requestingUser, EntityUser requestedUser) {
-       
+
         EntityUser user = getUserByEmail(requestingUser.getEmail());
         EntityUser user1 = getUserByEmail(requestedUser.getEmail());
-         
-         EntityFriendship f = new EntityFriendship();
-         em.persist(f);
-         f.setUserId1(requestingUser);
-         f.setUserId2(requestedUser);
-         f.setState(EntityFriendship.FriendshipState.UNAUTHORIZED);
-         Collection<EntityFriendship> friendshipsRequestingUser = user.getFriendshipCollection1();
-     
-         if (friendshipsRequestingUser == null) {
+
+        EntityFriendship f = new EntityFriendship();
+        em.persist(f);
+        f.setUserId1(requestingUser);
+        f.setUserId2(requestedUser);
+        f.setState(EntityFriendship.FriendshipState.UNAUTHORIZED);
+        Collection<EntityFriendship> friendshipsRequestingUser = user.getFriendshipCollection1();
+
+        if (friendshipsRequestingUser == null) {
             friendshipsRequestingUser = new ArrayList<EntityFriendship>();
         }
         friendshipsRequestingUser.add(f);
-        
-               
+
 
         Collection<EntityFriendship> friendshipsRequestedUser = user1.getFriendshipCollection2();
-         if (friendshipsRequestedUser == null) {
-            friendshipsRequestedUser= new ArrayList<EntityFriendship>();
+        if (friendshipsRequestedUser == null) {
+            friendshipsRequestedUser = new ArrayList<EntityFriendship>();
         }
-        
+
         friendshipsRequestedUser.add(f);
         em.persist(user);
         em.persist(user1);
         em.persist(f);
-      
+
         em.flush();
-    
     }
 
-     @Override
+    @Override
     public List<EntityUser> getFriendshipRequests(EntityUser user) {
-         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER2_AND_STATE);
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER2_AND_STATE);
         query.setParameter("userId2", user);
         query.setParameter("status", EntityFriendship.FriendshipState.UNAUTHORIZED);
         List<EntityFriendship> l = query.getResultList();
         List<EntityUser> listUsers = new ArrayList<EntityUser>();
-        for(EntityFriendship e :l){
+        for (EntityFriendship e : l) {
             listUsers.add(e.getUserId1());
         }
-        
-         
-         return listUsers;
+        return listUsers;
     }
-    
+
     @Override
     public void confirmFriendship(EntityUser user1, EntityUser user2) {
-       Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
         query.setParameter("userId1", user1);
         query.setParameter("userId2", user2);
-        EntityFriendship f =(EntityFriendship) query.getSingleResult();
+        EntityFriendship f = (EntityFriendship) query.getSingleResult();
         f.setState(EntityFriendship.FriendshipState.AUTHORIZED);
         em.persist(f);
         em.flush();
     }
-    
+
     @Override
     public List<EntityFriendship> getUsersRequests(EntityUser user) {
         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_NEG_STATE);
@@ -261,14 +255,12 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         return query.getResultList();
     }
 
-    
-
     @Override
     public void refuseFriendship(EntityUser user1, EntityUser user2) {
-       Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
         query.setParameter("userId1", user1);
         query.setParameter("userId2", user2);
-        EntityFriendship f =(EntityFriendship) query.getSingleResult();
+        EntityFriendship f = (EntityFriendship) query.getSingleResult();
         f.setState(EntityFriendship.FriendshipState.REJECTED);
         em.persist(f);
         em.flush();
@@ -333,11 +325,9 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         }
     }
 
- 
-
     @Override
     public List<EntityUser> getUserByName(String firstName) {
-         Query query = em.createNamedQuery(EntityUser.FIND_BY_NAME);
+        Query query = em.createNamedQuery(EntityUser.FIND_BY_NAME);
         query.setParameter("name", firstName);
         return query.getResultList();
     }
@@ -356,7 +346,4 @@ public class BeanSessionUser implements LocalBeanSessionUser {
         query.setParameter("surname", surName);
         return query.getResultList();
     }
-
-   
-   
 }

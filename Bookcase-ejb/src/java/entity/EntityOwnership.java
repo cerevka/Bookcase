@@ -42,6 +42,11 @@ public class EntityOwnership implements Serializable {
 
     public static final String FIND_BY_USER_AND_COPY = "EntityOwnership.findByUserAndCopy";
 
+    public static enum EnumReadState {
+
+        UNREAD, READING, READ, TO_READ, UNFINISHED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
