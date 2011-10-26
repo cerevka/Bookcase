@@ -126,7 +126,7 @@ public class BeanManagedBook {
     public Collection<EntityCopy> getCopiesOwnedByUser() {
         return getCopiesOwnerByUser(beanManagedUser.getUser());
 
-
+    }
     public Collection<EntityPrint> getPrintsOwnedByUser() {
         return getPrintsOwnerByUser(beanManagedUser.getUser());
         
@@ -142,6 +142,11 @@ public class BeanManagedBook {
         return beanSessionBook.getPrintsOwnedByUser(user);
     }
 
+     public Collection<EntityCopy> getCopiesOwnerByUser(EntityUser user) {
+        return beanSessionBook.getCopiesOwnedByUser(user);
+    }
+
+    
     public Collection<EntityPrint> getAllPrints() {
         return beanSessionBook.getAllPrints();
     }
@@ -158,6 +163,7 @@ public class BeanManagedBook {
 
     public boolean isBookOwnedByUser(EntityCopy copy) {
         return isBookOwnedByUser(beanManagedUser.getUser(), copy);
+    }
 
     public boolean isPrintOwnedByUser(EntityPrint print) {
         return isPrintOwnedByUser(beanManagedUser.getUser(), print);       
@@ -171,7 +177,7 @@ public class BeanManagedBook {
      * @return TRUE uzivatel svazek vlastni, jinak FALS.
      */
 
-    public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
+   public boolean isBookOwnedByUser(EntityUser user, EntityCopy copy) {
         return beanSessionBook.isOwner(user, copy);
     }
 

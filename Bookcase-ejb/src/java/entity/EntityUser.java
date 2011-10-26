@@ -85,6 +85,11 @@ public class EntityUser implements Serializable {
     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
+     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
+
+  
+    
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityBorrow> borrowCollection = new ArrayList<EntityBorrow>();
 
@@ -196,6 +201,14 @@ public class EntityUser implements Serializable {
         this.evalluationCollection = evalluationCollection;
     }
     
+    
+      public Collection<EntityOwnership> getOwnershipCollection() {
+        return ownershipCollection;
+    }
+
+    public void setOwnershipCollection(Collection<EntityOwnership> ownershipCollection) {
+        this.ownershipCollection = ownershipCollection;
+    }
     
     @Override
     public int hashCode() {

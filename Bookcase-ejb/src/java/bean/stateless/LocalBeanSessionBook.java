@@ -2,6 +2,7 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
+import entity.EntityCopy;
 import entity.EntityEvaluation;
 import entity.EntityPrint;
 import entity.EntityUser;
@@ -99,5 +100,9 @@ public interface LocalBeanSessionBook {
      * @return list hodnoceni
      */
     public List<EntityEvaluation> getEvaluationsByBook(EntityBook book);
+
+    public boolean isOwner(EntityUser user, EntityCopy copy);
+
+  
     
 }

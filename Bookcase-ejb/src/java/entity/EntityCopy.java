@@ -73,8 +73,8 @@ public class EntityCopy implements Serializable {
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
-    private Collection<EntityReservation> reservationCollection;
+  /*  @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
+    private Collection<EntityReservation> reservationCollection;*/
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "copyId")
     private Collection<EntityBorrow> borrowCollection;
@@ -128,7 +128,7 @@ public class EntityCopy implements Serializable {
     public void setShelfCollection(Collection<EntityShelf> shelfCollection) {
         this.shelfCollection = shelfCollection;
     }
-
+/*
     public Collection<EntityReservation> getReservationCollection() {
         return reservationCollection;
     }
@@ -136,7 +136,7 @@ public class EntityCopy implements Serializable {
     public void setReservationCollection(Collection<EntityReservation> reservationCollection) {
         this.reservationCollection = reservationCollection;
     }
-
+*/
     public Collection<EntityBorrow> getBorrowCollection() {
         return borrowCollection;
     }

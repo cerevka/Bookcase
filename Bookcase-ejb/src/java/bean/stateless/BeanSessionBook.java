@@ -2,10 +2,13 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
+import entity.EntityCopy;
 import entity.EntityEvaluation;
+import entity.EntityOwnership;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
+import entity.EnumReadState;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +17,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -164,5 +168,37 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         return query.getResultList();
     }
     
+   @Override
+    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user) {
+        em.setFlushMode(FlushModeType.AUTO);
+        for (EntityOwnership ownership : copy.getOwnershipCollection()) {
+            if (ownership.getUser().equals(user)) {
+                ownership.setReadState(readState);
+             }
+        }
+    }
+  
+
+    @Override
+    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isOwner(EntityUser user, EntityCopy copy) {
+         Collection<EntityOwnership> c=copy.getOwnershipCollection() ;
+             for(EntityOwnership e : c){
+                 if(e.getUser().equals(user)){
+            return true;
+                 }
+        }
+        return false;
+    }
+
    
 }

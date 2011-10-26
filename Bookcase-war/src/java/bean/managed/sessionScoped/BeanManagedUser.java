@@ -243,6 +243,7 @@ public class BeanManagedUser implements Serializable {
     @RolesAllowed({"user", "admin", "librarian"})
     public void addToOwnership(EntityBook book) {
         beanSessionBook.setBookCopyToUserOwnership(book, getUser());
+    }
 
     @RolesAllowed({"user", "admin", "librarian"})
     public void addToBasket(EntityPrint print) {
@@ -264,7 +265,7 @@ public class BeanManagedUser implements Serializable {
         }
         return false;
     }
-    
+    /*
     @RolesAllowed({"user", "admin", "librarian"})
     public void addToBasket(EntityCopy copy) {
         beanSessionBasket.addCopy(copy);
@@ -274,18 +275,19 @@ public class BeanManagedUser implements Serializable {
         String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
         facesContext.addMessage(null, facesMessage);
-    }
+    }*/
 
-
+/*
     @RolesAllowed({"user", "admin", "librarian"})
     public Collection<EntityCopy> getCopiesInBasket() {
         return beanSessionBasket.getContent();
-    }
-    
+    }*/
+    /*
     @RolesAllowed({"user", "admin", "librarian"})
     public void removeFromBasket(EntityCopy copy) {
         beanSessionBasket.removeCopy(copy);
-
+    }
+*/
     @RolesAllowed({"user", "admin"})
     public Collection<EntityPrint> getPrintsInBasket() {
         return beanSessionBasket.getContent();
