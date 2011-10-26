@@ -16,6 +16,7 @@
                     <li><h:outputText value="#{user.user.name} #{user.user.surname}" /></li>
                     <li><h:outputText value="#{user.user.email}" /></li>
                     <li><h:outputText value="#{user.getRole()}" /></li>
+                    <li><h:link outcome="/user/friendship" value="#{bundle['menu.friendships']}"  /></li>
                     <li><h:commandLink action="#{user.doLogout()}" value="#{bundle['menu.logout']}" immediate="true"  /></li>
                 </h:panelGroup>
 
@@ -25,7 +26,8 @@
                 <li><h:link outcome="/index" value="#{bundle['menu.index']}" /></li>
                 <h:panelGroup rendered="#{user.isLogged()}">
                     <li><h2><h:outputText value="#{bundle['heading.menu.bookcase']}" /></h2></li>
-                    <ul>                    
+                    <ul>   
+                        <li><h:link outcome="/user/find" value="#{bundle['menu.user.find']}" /></li>
                         <li><h:link outcome="/book/addBook" value="#{bundle['menu.book.add']}" /></li>
                         <li><h:link outcome="/book/myBooks" value="#{bundle['menu.book.my']}" /></li>
                         <li><h:link outcome="/book/allBooks" value="#{bundle['menu.book.all']}" /></li>

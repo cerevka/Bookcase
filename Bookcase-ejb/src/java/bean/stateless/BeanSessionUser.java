@@ -1,10 +1,13 @@
 package bean.stateless;
 
+import entity.EntityFriendship;
 import entity.EntityUser;
 import entity.EntityGroup;
 import entity.EntityShelf;
 import exception.ExceptionUserAlreadyExists;
 import exception.ExceptionUserDoesNotExist;
+import java.security.Principal;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -142,32 +145,133 @@ public class BeanSessionUser implements LocalBeanSessionUser {
 
     @Override
     public List<EntityUser> getAllUsers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+         Query query = em.createNamedQuery(EntityUser.FIND_ALL);
+        return query.getResultList();
     }
 
     @Override
     public List<EntityUser> getFriends(EntityUser user) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_STATE);
+        query.setParameter("userId1", user);
+        query.setParameter("status" ,EntityFriendship.FriendshipState.AUTHORIZED);
+        List<EntityFriendship> listFriendship = query.getResultList();
+        List<EntityUser> listUsers= new ArrayList<EntityUser>();
+       
+        //do listu si ulozim jeho pratele ktere zadal o pratelstvi
+        for(EntityFriendship e : listFriendship){
+            listUsers.add(e.getUserId2());
+        }
+        
+        
+        Query query2 = em.createNamedQuery(EntityFriendship.FIND_BY_USER2_AND_STATE);
+        query2.setParameter("userId2", user);
+        query2.setParameter("status" ,EntityFriendship.FriendshipState.AUTHORIZED);
+        listFriendship = query2.getResultList();
+        
+        //jeste pridam ty kteri zadali jeho
+        for(EntityFriendship e : listFriendship){
+            listUsers.add(e.getUserId1());
+        }
+        
+        return listUsers;
     }
 
     @Override
     public boolean areFriends(EntityUser user1, EntityUser user2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1);
+        query.setParameter("userId1", user1);
+        List<EntityFriendship> l= query.getResultList();
+        Query query2 = em.createNamedQuery(EntityFriendship.FIND_BY_USER2);
+        query2.setParameter("userId2", user1);
+        l.addAll(query2.getResultList());
+        
+        for(EntityFriendship e: l){
+            if(e.getUserId1().getId()==user2.getId()||e.getUserId2().getId()==user2.getId()){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void applyFriendship(EntityUser user1, EntityUser user2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void applyFriendship(EntityUser requestingUser, EntityUser requestedUser) {
+       
+        EntityUser user = getUserByEmail(requestingUser.getEmail());
+        EntityUser user1 = getUserByEmail(requestedUser.getEmail());
+         
+         EntityFriendship f = new EntityFriendship();
+         em.persist(f);
+         f.setUserId1(requestingUser);
+         f.setUserId2(requestedUser);
+         f.setState(EntityFriendship.FriendshipState.UNAUTHORIZED);
+         Collection<EntityFriendship> friendshipsRequestingUser = user.getFriendshipCollection1();
+     
+         if (friendshipsRequestingUser == null) {
+            friendshipsRequestingUser = new ArrayList<EntityFriendship>();
+        }
+        friendshipsRequestingUser.add(f);
+        
+               
+
+        Collection<EntityFriendship> friendshipsRequestedUser = user1.getFriendshipCollection2();
+         if (friendshipsRequestedUser == null) {
+            friendshipsRequestedUser= new ArrayList<EntityFriendship>();
+        }
+        
+        friendshipsRequestedUser.add(f);
+        em.persist(user);
+        em.persist(user1);
+        em.persist(f);
+      
+        em.flush();
+    
     }
 
+     @Override
+    public List<EntityUser> getFriendshipRequests(EntityUser user) {
+         Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER2_AND_STATE);
+        query.setParameter("userId2", user);
+        query.setParameter("status", EntityFriendship.FriendshipState.UNAUTHORIZED);
+        List<EntityFriendship> l = query.getResultList();
+        List<EntityUser> listUsers = new ArrayList<EntityUser>();
+        for(EntityFriendship e :l){
+            listUsers.add(e.getUserId1());
+        }
+        
+         
+         return listUsers;
+    }
+    
     @Override
     public void confirmFriendship(EntityUser user1, EntityUser user2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+       Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
+        query.setParameter("userId1", user1);
+        query.setParameter("userId2", user2);
+        EntityFriendship f =(EntityFriendship) query.getSingleResult();
+        f.setState(EntityFriendship.FriendshipState.AUTHORIZED);
+        em.persist(f);
+        em.flush();
     }
+    
+    @Override
+    public List<EntityFriendship> getUsersRequests(EntityUser user) {
+        Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_NEG_STATE);
+        query.setParameter("userId1", user);
+        query.setParameter("status", EntityFriendship.FriendshipState.AUTHORIZED);
+        return query.getResultList();
+    }
+
+    
 
     @Override
     public void refuseFriendship(EntityUser user1, EntityUser user2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+       Query query = em.createNamedQuery(EntityFriendship.FIND_BY_USER1_AND_USER2);
+        query.setParameter("userId1", user1);
+        query.setParameter("userId2", user2);
+        EntityFriendship f =(EntityFriendship) query.getSingleResult();
+        f.setState(EntityFriendship.FriendshipState.REJECTED);
+        em.persist(f);
+        em.flush();
     }
 
     @Override
@@ -228,4 +332,31 @@ public class BeanSessionUser implements LocalBeanSessionUser {
             logger.log(Level.SEVERE, "Error when putting a message into queue: JMS exception", exception);
         }
     }
+
+ 
+
+    @Override
+    public List<EntityUser> getUserByName(String firstName) {
+         Query query = em.createNamedQuery(EntityUser.FIND_BY_NAME);
+        query.setParameter("name", firstName);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<EntityUser> getUserByNameAndSurname(String firstName, String surName) {
+        Query query = em.createNamedQuery(EntityUser.FIND_BY_NAME_AND_SURNAME);
+        query.setParameter("name", firstName);
+        query.setParameter("surname", surName);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<EntityUser> getUserBySurname(String surName) {
+        Query query = em.createNamedQuery(EntityUser.FIND_BY_SURNAME);
+        query.setParameter("surname", surName);
+        return query.getResultList();
+    }
+
+   
+   
 }

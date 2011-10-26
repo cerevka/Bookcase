@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+         <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['title.user.friendships']}" />            
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.user.friendships']}" /></h1>
+                
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+
+               <h2><h:outputText value="#{bundle['heading.friends']}" /></h2> 
+               <h:form>                                        
+                   <h:dataTable value="#{friendship.friends()}" var="item">                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.first']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.last']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.surname}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.email']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </h:column>                       
+                    </h:dataTable>
+                   
+                    <h2><h:outputText value="#{bundle['heading.friendship.requests']}" /></h2> 
+                                                    
+                   <h:dataTable value="#{friendship.requests()}" var="item">                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.first']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.last']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.surname}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.email']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.action']}"/>
+                            </f:facet>
+                            <h:commandLink value="#{bundle['action.accept']}" action="#{friendship.acept(item)}" />
+                            <h:outputText value="  "/>
+                            <h:commandLink value="#{bundle['action.reject']}" action="#{friendship.reject(item)}" />
+
+                        </h:column>
+                    </h:dataTable>
+                   
+                    <h2><h:outputText value="#{bundle['heading.friendship.requested']}" /></h2> 
+                                                    
+                    <h:dataTable value="#{friendship.myRequests()}" var="item">                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.first']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId2.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.last']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId2.surname}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.email']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId2.email}"/>
+                        </h:column>  
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['friendship.request.state']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.state}"/>
+                        </h:column>    
+                    </h:dataTable>
+                </h:form>
+              
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

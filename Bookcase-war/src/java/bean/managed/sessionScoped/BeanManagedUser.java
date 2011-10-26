@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 /**
  *
  * @author Tomáš Čerevka
+ * @author Adam Činčura
  */
 @ManagedBean(name = "user")
 @SessionScoped
@@ -87,7 +88,7 @@ public class BeanManagedUser implements Serializable {
      * Prihlasi uzivatele.
      * @return Vysledek akce.
      */
-    public String doLogin() {
+    public String doLogin() {       
         FacesContext ctx = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) ctx.getExternalContext().getRequest();
         try {
@@ -265,4 +266,5 @@ public class BeanManagedUser implements Serializable {
         FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.borrowed"), "");
         facesContext.addMessage(null, facesMessage);
     }
+   
  }

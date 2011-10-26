@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+         <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['title.user.find']}" />            
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.user.find']}" /></h1>
+                
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+
+                
+               <h:form> 
+                    <h:panelGrid columns="2" columnClasses="firstColumn, secondColumn">                                            
+
+                        <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
+                        <h:inputText id="name" value="#{findUser.firstName}" title="#{bundle['label.name.first']}" />
+                      
+
+                        <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
+                        <h:inputText id="surname" value="#{findUser.surName}" title="#{bundle['label.name.last']}" />
+                   
+
+                    </h:panelGrid>
+                   <h:commandButton value="#{bundle['action.find.user']}" action="#{findUser.Find()}" />
+        
+                                 
+                   <h:dataTable value="#{findUser.users}" var="item" rendered="#{findUser.renderResult()}">                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.first']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.name.last']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.surname}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.email']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['action.request.friendship']}"/>
+                            </f:facet>
+                            <h:commandLink value="#{bundle['action.request.friendship']}" action="#{findUser.addFriend(item)}"  rendered="#{!findUser.isFriendship(item)}"/>
+                            <h:outputText value="#{bundle['friendship.exists']}" rendered="#{findUser.isFriendship(item)}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+              
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
