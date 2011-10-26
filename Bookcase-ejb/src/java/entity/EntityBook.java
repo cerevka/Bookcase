@@ -64,6 +64,17 @@ public class EntityBook implements Serializable {
     
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "bookId")
     private Collection<EntityCopy> copyCollection = new ArrayList<EntityCopy>();
+    
+    @OneToMany(mappedBy = "bookId",cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityEvaluation> evaluationCollection = new ArrayList<EntityEvaluation>();
+
+    public Collection<EntityEvaluation> getEvaluationCollection() {
+        return evaluationCollection;
+    }
+
+    public void setEvaluationCollection(Collection<EntityEvaluation> evaluationCollection) {
+        this.evaluationCollection = evaluationCollection;
+    }
 
     public EntityBook() {
     }

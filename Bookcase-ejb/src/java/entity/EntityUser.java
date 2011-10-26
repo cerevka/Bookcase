@@ -92,6 +92,17 @@ public class EntityUser implements Serializable {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
 
+    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Collection<EntityEvaluation> evalluationCollection = new ArrayList<EntityEvaluation>();
+
+   public Collection<EntityEvaluation> getEvalluationCollection() {
+        return evalluationCollection;
+    }
+
+    public void setEvalluationCollection(Collection<EntityEvaluation> evalluationCollection) {
+        this.evalluationCollection = evalluationCollection;
+    }
+    
     public EntityUser() {
     }
 

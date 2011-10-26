@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['tittle.book.find']}" />            
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.book.find']}" /></h1>
+
+
+
+
+                <h:form> 
+
+
+                    <h:outputLabel value="#{bundle['label.book.name']}:" for="tittle" />
+                    <h:inputText id="tittle" value="#{findBook.tittle}" title="#{bundle['label.book.name']}" />
+
+                    <h:commandButton value="#{bundle['action.book.find']}" action="#{findBook.Find()}" />
+
+                    <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+                    <h:dataTable value="#{findBook.foundBooks}" var="item" rendered="#{findBook.renderResult()}">                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.book.name']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.title}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.book.author']}"/>
+                            </f:facet>
+
+
+
+
+                            <h:dataTable value="#{item.authorCollection}" var="author">
+                                <h:column>
+
+                                    <h:outputText value="#{author.name}"/>
+                                    <h:outputText value="  "/>
+                                    <h:outputText value="#{author.surname}"/>
+                                </h:column>       
+
+                            </h:dataTable>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['action.book.detail']}"/>
+                            </f:facet>
+                            <h:commandLink value="#{bundle['action.book.detail']}" action="#{findBook.bookDetail(item)}" />
+                        </h:column>
+
+                    </h:dataTable>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

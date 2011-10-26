@@ -8,6 +8,7 @@
             <h1><h:outputText value="#{bundle['heading.menu.navigation']}" /></h1>
             <ul class="menu">
                 <li><h:link outcome="/index" value="#{bundle['menu.index']}" /></li>
+                 <li><h:link outcome="/book/find" value="#{bundle['menu.book.find']}" /></li>
                 <h:panelGroup rendered="#{user.isLogged()}">
                     <li><h:link outcome="/user/find" value="#{bundle['menu.user.find']}" /></li>
                     <li><h:link outcome="/user/friendship" value="#{bundle['menu.friendships']}"  /></li>

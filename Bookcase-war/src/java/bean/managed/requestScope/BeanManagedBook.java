@@ -18,6 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -25,7 +26,7 @@ import javax.faces.context.FacesContext;
  * @author Tomáš Čerevka
  */
 @ManagedBean(name = "book")
-@RequestScoped
+@ViewScoped
 public class BeanManagedBook {
 
     private static final Logger logger = Logger.getLogger(BeanManagedBook.class.getName());
@@ -34,6 +35,8 @@ public class BeanManagedBook {
 
     private EntityAuthor author = new EntityAuthor();
 
+    private int bookId;
+    
     private String authorName;
 
     private String authorSurname;
@@ -48,6 +51,14 @@ public class BeanManagedBook {
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
+    
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
     public EntityBook getBook() {
         return book;
     }
@@ -182,4 +193,7 @@ public class BeanManagedBook {
         }
         return EnumReadState.UNREAD;
     }
+    
+   
+    
 }

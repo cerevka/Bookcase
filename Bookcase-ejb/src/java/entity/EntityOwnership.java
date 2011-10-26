@@ -55,11 +55,11 @@ public class EntityOwnership implements Serializable {
     @Enumerated(EnumType.STRING)
     private EnumReadState readState;
 
-    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityUser user;
 
-    @JoinColumn(name = "copyId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "copy", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private EntityCopy copy;
 

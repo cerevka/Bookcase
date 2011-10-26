@@ -74,11 +74,16 @@ public class BeanManagedFindUser {
                 foundUsers = beanSessionUser.getUserByName(firstName);
             }
         }
+        
+          if(foundUsers.isEmpty()){
+       FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        String message = bundle.getString("message.found.nothing");
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
+        facesContext.addMessage(null, facesMessage);
+            
+        }
         return null;
-    }
-
-    public Collection<EntityUser> getAllUsers() {
-        return beanSessionUser.getAllUsers();
     }
 
     public boolean renderResult() {

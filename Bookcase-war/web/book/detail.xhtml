@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+
+            <ui:param name="title" value="#{bundle['title.book.detail']}" />            
+
+            <ui:define name="content">
+                <h1><h:outputText value="#{bundle['heading.book.detail']}" /></h1>
+
+                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+
+
+                <h:form> 
+                    <h2><h:outputText value="#{evaluateBook.init().title}" /></h2>
+                    <p><h:outputText value="#{evaluateBook.book.description}" /></p>
+                    
+                    <h2><h:outputText value="#{bundle['label.evaluate']}" /></h2>
+                   <p>
+                        <h:commandLink value="brak" action="#{evaluateBook.evaluate(0)}" />
+                        <h:outputText value="  " />
+                         <h:commandLink value="20%" action="#{evaluateBook.evaluate(20)}" />
+                         <h:outputText value="  " />
+                          <h:commandLink value="40%" action="#{evaluateBook.evaluate(40)}" />
+                          <h:outputText value="  " />
+                           <h:commandLink value="60%" action="#{evaluateBook.evaluate(60)}" />
+                           <h:outputText value="  " />
+                            <h:commandLink value="80%" action="#{evaluateBook.evaluate(80)}" />
+                            <h:outputText value="  " />
+                             <h:commandLink value="100%" action="#{evaluateBook.evaluate(100)}" />
+
+                    </p>    
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

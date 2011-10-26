@@ -3,6 +3,7 @@ package bean.stateless;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityCopy;
+import entity.EntityEvaluation;
 import entity.EntityOwnership;
 import entity.EntityShelf;
 import entity.EntityUser;
@@ -188,5 +189,44 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(copy);
         em.persist(ownership);
         em.flush();
+    }
+
+    @Override
+    public List<EntityBook> getBooksByTittle(String title) {
+        Query query = em.createNamedQuery(EntityBook.FIND_BY_TITLE);
+        query.setParameter("title", title);
+        return query.getResultList();        
+    }
+
+    @Override
+    public void evaluateBook(EntityBook book, EntityUser user, int value) {
+        Query query = em.createNamedQuery(EntityUser.FIND_BY_ID);
+        query.setParameter("id", user.getId());
+        EntityUser u = (EntityUser) query.getSingleResult();
+        
+        Query query1 = em.createNamedQuery(EntityBook.FIND_BY_ID);
+        query1.setParameter("id", book.getId());
+        EntityBook b = (EntityBook) query1.getSingleResult();
+        
+        EntityEvaluation e = new EntityEvaluation();
+      
+        e.setBookId(b);
+        e.setRate(value);
+        e.setUserId(u);
+        
+        u.getEvalluationCollection().add(e);
+        b.getEvaluationCollection().add(e);
+        
+        em.persist(e);
+        em.persist(u);
+        em.persist(b);
+        em.flush();        
+    }
+
+    @Override
+    public List<EntityEvaluation> getEvaluationsByBook(EntityBook book) {
+       Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK);
+        query.setParameter("book", book);
+        return query.getResultList();
     }
 }

@@ -7,32 +7,32 @@
 
     <body>
 
-         <ui:composition template="./../WEB-INF/templates/layout.xhtml">
+        <ui:composition template="./../WEB-INF/templates/layout.xhtml">
 
             <ui:param name="title" value="#{bundle['title.user.find']}" />            
 
             <ui:define name="content">
                 <h1><h:outputText value="#{bundle['heading.user.find']}" /></h1>
-                
-                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
-                
-               <h:form> 
+
+
+                <h:form> 
                     <h:panelGrid columns="2" columnClasses="firstColumn, secondColumn">                                            
 
                         <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
                         <h:inputText id="name" value="#{findUser.firstName}" title="#{bundle['label.name.first']}" />
-                      
+
 
                         <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
                         <h:inputText id="surname" value="#{findUser.surName}" title="#{bundle['label.name.last']}" />
-                   
+
 
                     </h:panelGrid>
-                   <h:commandButton value="#{bundle['action.find.user']}" action="#{findUser.Find()}" />
-        
-                                 
-                   <h:dataTable value="#{findUser.users}" var="item" rendered="#{findUser.renderResult()}">                        
+                    <h:commandButton value="#{bundle['action.find.user']}" action="#{findUser.Find()}" />
+                    <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+
+
+                    <h:dataTable value="#{findUser.users}" var="item" rendered="#{findUser.renderResult()}">                        
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.name.first']}"/>
@@ -60,7 +60,7 @@
                         </h:column>
                     </h:dataTable>
                 </h:form>
-              
+
 
             </ui:define>
 
