@@ -19,80 +19,34 @@
                 <h:messages globalOnly="true" errorClass="error" infoClass="success" />
 
                 <h:form>
-                    <h:dataTable value="#{book.copiesOwnedByUser}" var="copy">  
+                    <h:dataTable value="#{book.printsOwnedByUser}" var="print">  
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.title']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.title}"/>
+                            <h:outputText value="#{print.release.book.title}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.author']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.authorId.name} #{copy.bookId.authorId.surname}"/>
+                            <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}"/>
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.description']}"/>
                             </f:facet>
-                            <h:outputText value="#{copy.bookId.description}" />    
+                            <h:outputText value="#{print.release.book.description}" />    
                         </h:column>
                         <h:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle['label.readState']}"/>
                             </f:facet>
-                            <h:outputText value="#{bundle['state.unread']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
-                                /
-                            <h:commandLink value="#{bundle['action.toRead']}" action="#{book.setToReadStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
-                                / 
-                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNREAD"}' />
-                                
-                            <h:outputText value="#{bundle['state.toRead']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "TO_READ"}' />
-                                / 
-                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "TO_READ"}' />
-
-
-                            <h:outputText value="#{bundle['state.reading']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
-                                / 
-                                <h:commandLink value="#{bundle['action.read']}" action="#{book.setReadStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
-                                / 
-                                <h:commandLink value="#{bundle['action.unfinished']}" action="#{book.setUnfinishedStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READING"}' />
-
-                            <h:dataTable value="#{book.printsOwnedByUser}" var="print">  
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="#{bundle['label.title']}"/>
-                                    </f:facet>
-                                    <h:outputText value="#{print.release.book.title}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="#{bundle['label.author']}"/>
-                                    </f:facet>
-                                    <h:outputText value="#{print.release.book.authorCollection[0].name} #{print.release.book.authorCollection[0].surname}"/>
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="#{bundle['label.description']}"/>
-                                    </f:facet>
-                                    <h:outputText value="#{print.release.book.description}" />    
-                                </h:column>
-                                <h:column>
-                                    <f:facet name="header">
-                                        <h:outputText value="#{bundle['label.description']}"/>
-                                    </f:facet>
-                                    <h:outputText value="#{print.readStatus}" />    
-                                </h:column>
-                            </h:dataTable>
-
-
-                            <h:outputText value="#{bundle['state.read']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "READ"}' />
-                            
-                            <h:outputText value="#{bundle['state.unfinished']}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNFINISHED"}' />
-                                / 
-                            <h:commandLink value="#{bundle['action.reading']}" action="#{book.setReadingStatus(copy)}" rendered='#{book.getReadstatusOfUserForCopy(copy) == "UNFINISHED"}' />
-                        </h:column>
+                            <h:selectOneMenu value="#{print.readStatus}" valueChangeListener="#{book.changeReadStatus}" onchange="submit()">                                
+                                <f:attribute name="print" value="#{print}" />
+                                <f:selectItems value="#{book.readStatuses}" />                                
+                            </h:selectOneMenu> 
+                        </h:column>                                            
                     </h:dataTable>
                 </h:form>
 

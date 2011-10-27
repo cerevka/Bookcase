@@ -3,9 +3,6 @@ package bean.managed.sessionScoped;
 import bean.statefull.LocalBeanSessionBasket;
 import bean.stateless.LocalBeanSessionBook;
 import bean.stateless.LocalBeanSessionUser;
-import entity.EntityBook;
-import entity.EntityCopy;
-import entity.EntityOwnership;
 import entity.EntityPrint;
 import entity.EntityUser;
 import exception.ExceptionUserAlreadyExists;
@@ -239,12 +236,6 @@ public class BeanManagedUser implements Serializable {
         return roles.toString();
     }
 
-
-    @RolesAllowed({"user", "admin", "librarian"})
-    public void addToOwnership(EntityBook book) {
-        beanSessionBook.setBookCopyToUserOwnership(book, getUser());
-    }
-
     @RolesAllowed({"user", "admin", "librarian"})
     public void addToBasket(EntityPrint print) {
         beanSessionBasket.addPrint(print);
@@ -256,38 +247,6 @@ public class BeanManagedUser implements Serializable {
         facesContext.addMessage(null, facesMessage);
     }
     
-    @RolesAllowed({"user", "admin", "librarian"})
-    public boolean isBookOwnedByUser(EntityBook book) {
-        Collection<EntityOwnership> ownershipCollection = getUser().getOwnershipCollection();
-        for (EntityOwnership ownership : ownershipCollection) {
-            if (ownership.getCopy().getBookId().equals(book))
-                return true;
-        }
-        return false;
-    }
-    /*
-    @RolesAllowed({"user", "admin", "librarian"})
-    public void addToBasket(EntityCopy copy) {
-        beanSessionBasket.addCopy(copy);
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
-        String bookAddedPattern = bundle.getString("message.success.bookAddedToBasket");
-        String bookAddedMessage = MessageFormat.format(bookAddedPattern, copy.getBookId().getTitle());
-        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bookAddedMessage, "");
-        facesContext.addMessage(null, facesMessage);
-    }*/
-
-/*
-    @RolesAllowed({"user", "admin", "librarian"})
-    public Collection<EntityCopy> getCopiesInBasket() {
-        return beanSessionBasket.getContent();
-    }*/
-    /*
-    @RolesAllowed({"user", "admin", "librarian"})
-    public void removeFromBasket(EntityCopy copy) {
-        beanSessionBasket.removeCopy(copy);
-    }
-*/
     @RolesAllowed({"user", "admin"})
     public Collection<EntityPrint> getPrintsInBasket() {
         return beanSessionBasket.getContent();

@@ -2,13 +2,10 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
 import entity.EntityEvaluation;
-import entity.EntityOwnership;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
-import entity.EnumReadState;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +14,6 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -122,18 +118,18 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     }
 
     @Override
-    public Boolean isOwner(EntityUser user, EntityPrint print) {        
+    public Boolean isOwner(EntityUser user, EntityPrint print) {
         if (user.equals(print.getUser())) {
             return true;
         }
         return false;
     }
-    
+
     @Override
     public List<EntityBook> getBooksByTittle(String title) {
         Query query = em.createNamedQuery(EntityBook.FIND_BY_TITLE);
         query.setParameter("title", title);
-        return query.getResultList();        
+        return query.getResultList();
     }
 
     @Override
@@ -141,64 +137,39 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         Query query = em.createNamedQuery(EntityUser.FIND_BY_ID);
         query.setParameter("id", user.getId());
         EntityUser u = (EntityUser) query.getSingleResult();
-        
+
         Query query1 = em.createNamedQuery(EntityBook.FIND_BY_ID);
         query1.setParameter("id", book.getId());
         EntityBook b = (EntityBook) query1.getSingleResult();
-        
+
         EntityEvaluation e = new EntityEvaluation();
-      
+
         e.setBookId(b);
         e.setRate(value);
         e.setUserId(u);
-        
+
         u.getEvalluationCollection().add(e);
         b.getEvaluationCollection().add(e);
-        
+
         em.persist(e);
         em.persist(u);
         em.persist(b);
-        em.flush();        
+        em.flush();
     }
 
     @Override
     public List<EntityEvaluation> getEvaluationsByBook(EntityBook book) {
-       Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK);
+        Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK);
         query.setParameter("book", book);
         return query.getResultList();
     }
-    
-   @Override
-    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user) {
-        em.setFlushMode(FlushModeType.AUTO);
-        for (EntityOwnership ownership : copy.getOwnershipCollection()) {
-            if (ownership.getUser().equals(user)) {
-                ownership.setReadState(readState);
-             }
-        }
-    }
-  
 
     @Override
-    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setPrintReadState(EntityPrint.EnumReadStatus readState, EntityPrint print) {
+        print = em.merge(print);
+        em.refresh(print);
+        print.setReadStatus(readState);
+        em.persist(print);
+        em.flush();
     }
-
-    @Override
-    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isOwner(EntityUser user, EntityCopy copy) {
-         Collection<EntityOwnership> c=copy.getOwnershipCollection() ;
-             for(EntityOwnership e : c){
-                 if(e.getUser().equals(user)){
-            return true;
-                 }
-        }
-        return false;
-    }
-
-   
-}
+ }

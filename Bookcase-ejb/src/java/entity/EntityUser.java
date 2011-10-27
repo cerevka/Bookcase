@@ -79,25 +79,18 @@ public class EntityUser implements Serializable {
     @OneToMany(mappedBy = "userId2", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityFriendship> friendshipCollection2 = new ArrayList<EntityFriendship>();
 
-     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityEvaluation> evalluationCollection = new ArrayList<EntityEvaluation>();
-    
+
     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityShelf> shelfCollection = new ArrayList<EntityShelf>();
 
-     @OneToMany(mappedBy = "userId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Collection<EntityOwnership> ownershipCollection = new ArrayList<EntityOwnership>();
-
-  
-    
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityBorrow> borrowCollection = new ArrayList<EntityBorrow>();
 
-    
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<EntityPrint> printsCollection = new ArrayList<EntityPrint>();
-   
-    
+
     public EntityUser() {
     }
 
@@ -192,24 +185,15 @@ public class EntityUser implements Serializable {
     public void setPrintsCollection(Collection<EntityPrint> printsCollection) {
         this.printsCollection = printsCollection;
     }
-    
-      public Collection<EntityEvaluation> getEvalluationCollection() {
+
+    public Collection<EntityEvaluation> getEvalluationCollection() {
         return evalluationCollection;
     }
 
     public void setEvalluationCollection(Collection<EntityEvaluation> evalluationCollection) {
         this.evalluationCollection = evalluationCollection;
     }
-    
-    
-      public Collection<EntityOwnership> getOwnershipCollection() {
-        return ownershipCollection;
-    }
 
-    public void setOwnershipCollection(Collection<EntityOwnership> ownershipCollection) {
-        this.ownershipCollection = ownershipCollection;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;

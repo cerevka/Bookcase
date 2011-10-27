@@ -2,11 +2,9 @@ package bean.stateless;
 
 import entity.EntityAuthor;
 import entity.EntityBook;
-import entity.EntityCopy;
 import entity.EntityEvaluation;
 import entity.EntityPrint;
 import entity.EntityUser;
-import entity.EnumReadState;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -58,19 +56,13 @@ public interface LocalBeanSessionBook {
      */
     public Boolean isOwner(EntityUser user, EntityPrint print);    
 
+    
     /**
-     * Vrati kolekci svazku, ktere vlastni uzivatel.
-     * @param user Majitel svazku.
-     * @return Kolekce svazku, ktere vlastni uzivatel.
+     * Vrati kolekci vytisku, ktere patri uzivateli.
+     * @param user Kteremu uzivateli maji vytisky patrit.
+     * @return Vytisky patrici uzivateli.
      */
-
-    public Collection<EntityCopy> getCopiesOwnedByUser(EntityUser user);
-    
-    public void setBookCopyToUserOwnership(EntityBook book, EntityUser user);
-    
-    public void setReadStateToBookCopy(EnumReadState readState, EntityCopy copy, EntityUser user);
-
-    public Collection<entity.EntityPrint> getPrintsOwnedByUser(EntityUser user);
+    public Collection<EntityPrint> getPrintsOwnedByUser(EntityUser user);
 
       /**
      * Vrati kolekci knih odpovidajicho nazvu
@@ -100,8 +92,13 @@ public interface LocalBeanSessionBook {
      * @return list hodnoceni
      */
     public List<EntityEvaluation> getEvaluationsByBook(EntityBook book);
-
-    public boolean isOwner(EntityUser user, EntityCopy copy);
+ 
+    /**
+     * Nastavi vytisku stav precteni.
+     * @param readState Novy stav.
+     * @param print Vytisk.
+     */
+    public void setPrintReadState(EntityPrint.EnumReadStatus readState, EntityPrint print);
 
   
     
