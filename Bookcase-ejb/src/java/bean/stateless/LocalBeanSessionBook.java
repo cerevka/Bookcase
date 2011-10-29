@@ -100,6 +100,13 @@ public interface LocalBeanSessionBook {
      */
     public void setPrintReadState(EntityPrint.EnumReadStatus readState, EntityPrint print);
 
-  
+    
+    /**
+     * Vrati hodnoceni vybraneho uzivatele pro vzbranou knihu
+     * pokud hodnoceni neexustuje vraci null
+     * @param EntityBook book vybrana kniha.
+     * @param EntityUser vybrany uzivatel.
+     */
+    public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user);
     
 }

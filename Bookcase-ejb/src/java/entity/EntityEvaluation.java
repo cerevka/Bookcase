@@ -20,14 +20,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "entityEvaluation", catalog = "bookcase", schema = "")
 @NamedQueries({
-@NamedQuery(name = EntityEvaluation.FIND_BY_BOOK, query = "SELECT e FROM EntityEvaluation e where e.bookId = :book")
-   
+@NamedQuery(name = EntityEvaluation.FIND_BY_BOOK, query = "SELECT e FROM EntityEvaluation e where e.bookId = :book"),
+@NamedQuery(name = EntityEvaluation.FIND_BY_BOOK_AND_USER, query = "SELECT e FROM EntityEvaluation e where e.bookId = :book AND e.userId = :user")   
 })
 public class EntityEvaluation implements Serializable {    
     
     private static final long serialVersionUID = 1L;
     public static final String FIND_BY_BOOK = "EntityEvaluation.findByBook";
-    
+    public static final String FIND_BY_BOOK_AND_USER = "EntityEvaluation.findByBookAndUser";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,13 @@ public class EntityEvaluation implements Serializable {
     @ManyToOne(optional = false)
     private EntityBook bookId;
 
+       
+    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private EntityUser userId;
     
+    
+     
     public EntityEvaluation(){
         
     }
@@ -53,10 +59,6 @@ public class EntityEvaluation implements Serializable {
     public void setBookId(EntityBook bookId) {
         this.bookId = bookId;
     }
-    
-    @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private EntityUser userId;
     
     public int getRate() {
         return rate;

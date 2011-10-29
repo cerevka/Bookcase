@@ -20,22 +20,33 @@
                 <h:form> 
                     <h2><h:outputText value="#{evaluateBook.init().title}" /></h2>
                     <p><h:outputText value="#{evaluateBook.book.description}" /></p>
-                    
-                    <h2><h:outputText value="#{bundle['label.evaluate']}" /></h2>
-                   <p>
+                    <p><h:outputText value="#{bundle['label.evaluation.actual']}" />
+                        <h:outputText value="#{evaluateBook.getEvaluation()}" />
+                    </p>
+                 
+                    <h2>
+                        <h:outputText value="#{bundle['label.evaluate']}" />
+                       </h2>
+                   
+                    <h:column rendered="#{!evaluateBook.isEvaluated() and user.isLogged()}" >
                         <h:commandLink value="brak" action="#{evaluateBook.evaluate(0)}" />
                         <h:outputText value="  " />
-                         <h:commandLink value="20%" action="#{evaluateBook.evaluate(20)}" />
-                         <h:outputText value="  " />
-                          <h:commandLink value="40%" action="#{evaluateBook.evaluate(40)}" />
-                          <h:outputText value="  " />
-                           <h:commandLink value="60%" action="#{evaluateBook.evaluate(60)}" />
-                           <h:outputText value="  " />
-                            <h:commandLink value="80%" action="#{evaluateBook.evaluate(80)}" />
-                            <h:outputText value="  " />
-                             <h:commandLink value="100%" action="#{evaluateBook.evaluate(100)}" />
-
-                    </p>    
+                        <h:commandLink value="20%" action="#{evaluateBook.evaluate(20)}" />
+                        <h:outputText value="  " />
+                        <h:commandLink value="40%" action="#{evaluateBook.evaluate(40)}" />
+                        <h:outputText value="  " />
+                        <h:commandLink value="60%" action="#{evaluateBook.evaluate(60)}" />
+                        <h:outputText value="  " />
+                        <h:commandLink value="80%" action="#{evaluateBook.evaluate(80)}" />
+                        <h:outputText value="  " />
+                        <h:commandLink value="100%" action="#{evaluateBook.evaluate(100)}" />
+                       </h:column>
+                    <h:column rendered="#{evaluateBook.isEvaluated() and user.isLogged()}">
+                        <h:outputText value="#{bundle['label.myEvaluation']}"  />
+                        <h:outputText value="#{evaluateBook.myEvaluation()}"/>
+                        <h:outputText value=" %" />
+                        </h:column>
+                        
                 </h:form>
             </ui:define>
 

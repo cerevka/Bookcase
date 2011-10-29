@@ -172,4 +172,19 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(print);
         em.flush();
     }
+
+    @Override
+    public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user) {
+      
+        Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK_AND_USER);
+        query.setParameter("book", book);
+        query.setParameter("user", user);
+        List<EntityEvaluation> l= query.getResultList();
+        if(l.isEmpty()){
+           return null;
+        }
+        else{
+            return l.get(0);
+        }
+    }
  }
