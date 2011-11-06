@@ -49,6 +49,18 @@ public class BeanSessionBookcase implements LocalBeanSessionBookcase {
            em.persist(groupUser);
        }
        
+       // Skupina "librarian".
+       TypedQuery<EntityGroup> queryLibrarian = (TypedQuery<EntityGroup>) em.createNamedQuery(EntityGroup.FIND_BY_NAME);
+       queryLibrarian.setParameter("name", "librarian");
+       try {
+           queryLibrarian.getSingleResult();           
+       } catch (NoResultException exception) {
+           // Skupina "librarian" neexistuje, vytvori se.
+           EntityGroup groupLibrarian = new EntityGroup();
+           groupLibrarian.setName("librarian");
+           em.persist(groupLibrarian);
+       }
+       
        // Testovaci uzivatel.
        TypedQuery<EntityGroup> queryTestUser = (TypedQuery<EntityGroup>) em.createNamedQuery(EntityUser.FIND_BY_EMAIL);
        queryTestUser.setParameter("email", "bookcase@cerevka.cz");
