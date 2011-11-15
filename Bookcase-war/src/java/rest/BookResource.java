@@ -65,7 +65,7 @@ public class BookResource {
      * @throws VerboseException Vraci 404, pokud kniha neexistuje.
      */
     @GET
-    @Path("/rating/{isbn}")
+    @Path("/{isbn}/rating")
     @Produces(MediaType.TEXT_PLAIN)
     public String getRating(@PathParam("isbn") String isbn) {
 
