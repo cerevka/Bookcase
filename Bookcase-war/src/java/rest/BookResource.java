@@ -1,6 +1,7 @@
 package rest;
 
 import bean.stateless.LocalBeanSessionBook;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityEvaluation;
@@ -56,31 +57,42 @@ public class BookResource {
     }
     
     
-    
      
     /**
      * Vrati hodnoceni knihy.
      * @param isbn ISBN knihy.
      * @return Hodnoceni v TEXT_PLAIN.
-     * @throws WebApplicationException Vraci 404, pokud kniha neexistuje.
+     * @throws VerboseException Vraci 404, pokud kniha neexistuje.
      */
     @GET
     @Path("/rating/{isbn}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getRating(@PathParam("isbn") String isbn) {
 
+        
+        try{
         // nactu vsechny hodnoceni dane knihy
         EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
         EntityBook entityBook = entityRelease.getBook();
-        List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
-       
-        //spocte se hodnoceni jako prumer vsech hodnoceni
+         List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
+         
+         //spocte se hodnoceni jako prumer vsech hodnoceni
         int evaluation = 0;
         for (EntityEvaluation e : evaluations) {
             evaluation += e.getRate();
         }
         
         return Integer.toString(evaluation / evaluations.size());
+        }
+        catch(Exception ex){
+            String message="Book with ISBN: "+isbn+" was not found!";
+         throw new VerboseException(message,Status.NOT_FOUND);
+            
+        }
+       
+       
+       
+      
     }
     
     
