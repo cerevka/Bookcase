@@ -14,11 +14,9 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.WebApplicationException;
 
 /**
  * Beana obstaravajici logiku pro manipulaci s knihami.
@@ -134,16 +132,11 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         query.setParameter("title", title);
         return query.getResultList();
     }
-    
+
     @Override
-    public EntityRelease getReleaseByISBN(String isbn)  {
+    public EntityRelease getReleaseByISBN(String isbn) {
         TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
         query.setParameter("isbn", isbn);
-        try{
-        EntityRelease release = query.getSingleResult();
-        } catch (NoResultException exception) {
-            throw new WebApplicationException(404);
-        }
         return query.getSingleResult();
     }
 
@@ -190,16 +183,15 @@ public class BeanSessionBook implements LocalBeanSessionBook {
 
     @Override
     public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user) {
-      
+
         Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK_AND_USER);
         query.setParameter("book", book);
         query.setParameter("user", user);
-        List<EntityEvaluation> l= query.getResultList();
-        if(l.isEmpty()){
-           return null;
-        }
-        else{
+        List<EntityEvaluation> l = query.getResultList();
+        if (l.isEmpty()) {
+            return null;
+        } else {
             return l.get(0);
         }
     }
- }
+}

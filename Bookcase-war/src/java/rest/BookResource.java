@@ -2,7 +2,6 @@ package rest;
 
 import bean.stateless.LocalBeanSessionBook;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityEvaluation;
 import entity.EntityRelease;
@@ -29,7 +28,6 @@ public class BookResource {
     @EJB
     private LocalBeanSessionBook beanSeasonBook;
 
-    
     /**
      * Vrati informace o knize.
      * @param isbn ISBN knihy.
@@ -40,24 +38,17 @@ public class BookResource {
     @Path("/{isbn}")
     @Produces(MediaType.APPLICATION_XML)
     public Book getBook(@PathParam("isbn") String isbn) {
+        try {
+            // Vyzvednou se data.
+            EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);         
 
-        // Vyzvednou se data.
-        EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
-        EntityBook entityBook = entityRelease.getBook();
-
-        // Data se napamatuji na XML entity.
-        Book book = new Book();
-        book.isbn = entityRelease.getIsbn();
-        book.title = entityBook.getTitle();
-        for (EntityAuthor author : entityBook.getAuthorCollection()) {
-            Author authorXML = new Author(author.getName(), author.getSurname());
-            book.authors.add(authorXML);
+            // Data se napamatuji na XML entity.                 
+            return new Book(entityRelease);
+        } catch (Exception exception) {
+            throw new VerboseException("Book with ISBN: " + isbn + " was not found!", Status.NOT_FOUND);
         }
-        return book;
     }
-    
-    
-     
+
     /**
      * Vrati hodnoceni knihy.
      * @param isbn ISBN knihy.
@@ -68,32 +59,26 @@ public class BookResource {
     @Path("/{isbn}/rating")
     @Produces(MediaType.TEXT_PLAIN)
     public String getRating(@PathParam("isbn") String isbn) {
+        try {
+            // nactu vsechny hodnoceni dane knihy
+            EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
+            EntityBook entityBook = entityRelease.getBook();
+            List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
 
-        
-        try{
-        // nactu vsechny hodnoceni dane knihy
-        EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
-        EntityBook entityBook = entityRelease.getBook();
-         List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
-         
-         //spocte se hodnoceni jako prumer vsech hodnoceni
-        int evaluation = 0;
-        for (EntityEvaluation e : evaluations) {
-            evaluation += e.getRate();
+            //spocte se hodnoceni jako prumer vsech hodnoceni
+            int evaluation = 0;
+            for (EntityEvaluation e : evaluations) {
+                evaluation += e.getRate();
+            }
+
+            return Integer.toString(evaluation / evaluations.size());
+        } catch (Exception ex) {
+            String message = "Book with ISBN: " + isbn + " was not found!";
+            throw new VerboseException(message, Status.NOT_FOUND);
         }
-        
-        return Integer.toString(evaluation / evaluations.size());
-        }
-        catch(Exception ex){
-            String message="Book with ISBN: "+isbn+" was not found!";
-         throw new VerboseException(message,Status.NOT_FOUND);
-            
-        }
-       
-       
-       
-      
+
+
+
+
     }
-    
-    
 }
