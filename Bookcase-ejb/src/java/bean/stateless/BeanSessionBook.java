@@ -14,9 +14,11 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 
 /**
  * Beana obstaravajici logiku pro manipulaci s knihami.
@@ -130,6 +132,18 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         Query query = em.createNamedQuery(EntityBook.FIND_BY_TITLE);
         query.setParameter("title", title);
         return query.getResultList();
+    }
+    
+    @Override
+    public EntityRelease getReleaseByISBN(String isbn)  {
+        TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
+        query.setParameter("isbn", isbn);
+        try{
+        EntityRelease release = query.getSingleResult();
+        } catch (NoResultException exception) {
+            throw new WebApplicationException(404);
+        }
+        return query.getSingleResult();
     }
 
     @Override

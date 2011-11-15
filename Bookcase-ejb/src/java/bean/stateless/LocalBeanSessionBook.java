@@ -4,10 +4,12 @@ import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityEvaluation;
 import entity.EntityPrint;
+import entity.EntityRelease;
 import entity.EntityUser;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
+import javax.persistence.NoResultException;
 
 /**
  * Beana zajistujici praci s knihami.
@@ -108,5 +110,13 @@ public interface LocalBeanSessionBook {
      * @param EntityUser vybrany uzivatel.
      */
     public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user);
+
+    /**
+     * Vrati vydani s danym ISBN.
+     * @param isbn ISBN.
+     * @return Vydani.
+     * @throws NoResultException Pokud se nepodari vydani najit.
+     */
+    public EntityRelease getReleaseByISBN(String isbn) throws NoResultException;
     
 }
