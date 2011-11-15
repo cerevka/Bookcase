@@ -116,8 +116,6 @@ public class BeanManagedEvaluateBook {
     @RolesAllowed({"user", "admin"})
     public int myEvaluation() {
         EntityEvaluation e = beanSessionBook.getEaluationByBookAndUser(book, beanManagedUser.getUser());
-
-
         if (e  == null) {
             return 0;
         } else {

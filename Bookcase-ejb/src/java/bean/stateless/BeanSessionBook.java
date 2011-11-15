@@ -23,6 +23,7 @@ import javax.ws.rs.WebApplicationException;
 /**
  * Beana obstaravajici logiku pro manipulaci s knihami.
  * @author Tomáš Čerevka
+ * @author Adam Činčura
  */
 @Stateless
 public class BeanSessionBook implements LocalBeanSessionBook {

@@ -31,6 +31,7 @@ import javax.persistence.TypedQuery;
 /**
  * Beana spracujici manipulace s uzivateli.
  * @author Tomáš Čerevka
+ * @author Adam Činčura
  */
 @Stateless
 public class BeanSessionUser implements LocalBeanSessionUser {

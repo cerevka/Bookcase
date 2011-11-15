@@ -3,12 +3,11 @@ package rest;
 import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
+import entity.EntityEvaluation;
 import entity.EntityRelease;
-import java.util.Iterator;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
@@ -20,6 +19,7 @@ import javax.ws.rs.core.MediaType;
  * REST Web Service
  *
  * @author Tomáš Čerevka
+ * @author Adam Činčura
  */
 @Path("/book")
 @Stateless
@@ -54,5 +54,34 @@ public class BookResource {
         }
         return book;
     }
+    
+    
+    
+     
+    /**
+     * Vrati hodnoceni knihy.
+     * @param isbn ISBN knihy.
+     * @return Hodnoceni v TEXT_PLAIN.
+     * @throws WebApplicationException Vraci 404, pokud kniha neexistuje.
+     */
+    @GET
+    @Path("/rating/{isbn}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getRating(@PathParam("isbn") String isbn) {
+
+        // nactu vsechny hodnoceni dane knihy
+        EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
+        EntityBook entityBook = entityRelease.getBook();
+        List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
+       
+        //spocte se hodnoceni jako prumer vsech hodnoceni
+        int evaluation = 0;
+        for (EntityEvaluation e : evaluations) {
+            evaluation += e.getRate();
+        }
+        
+        return Integer.toString(evaluation / evaluations.size());
+    }
+    
     
 }
