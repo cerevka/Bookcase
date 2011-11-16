@@ -43,7 +43,7 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     }
 
     @Override
-    public void addBook(EntityBook book, EntityAuthor author) {
+    public void addBook(EntityBook book, EntityRelease release, EntityAuthor author) {
         // Autor se umisti do databaze.
         if (author.getId() != null) {
             author = em.merge(author);
@@ -59,7 +59,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(author);
 
         // Vytvori se nove vydani knihy.
-        EntityRelease release = new EntityRelease();
         release.setBook(book);
         book.getReleasesCollection().add(release);
         em.persist(book);

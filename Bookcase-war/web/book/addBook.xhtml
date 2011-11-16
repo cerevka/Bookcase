@@ -48,6 +48,20 @@
                         <h:outputLabel value="#{bundle['label.description']}:" for="description" />
                         <h:inputText id="description" value="#{book.book.description}" title="#{bundle['label.description']}" required="true" requiredMessage="#{bundle['message.required.description']}" />  
                         <h:message for="description" errorClass="error" />
+                        
+                        <h:outputLabel value="#{bundle['label.isbn']}:" for="isbn" />
+                        <h:inputText id="isbn" value="#{book.release.isbn}" title="#{bundle['label.isbn']}" required="true" requiredMessage="#{bundle['message.required.isbn']}" />  
+                        <h:message for="isbn" errorClass="error" />
+                        
+                        <h:outputLabel value="#{bundle['label.publisher']}:" for="publisher" />
+                        <h:inputText id="publisher" value="#{book.release.publisher}" title="#{bundle['label.publisher']}" required="true" requiredMessage="#{bundle['message.required.publisher']}" />  
+                        <h:message for="publisher" errorClass="error" />
+                        
+                        <h:outputLabel value="#{bundle['label.publishDate']}:" for="publishDate" />
+                        <h:inputText id="publishDate" value="#{book.release.publishDate}" title="#{bundle['label.publishDate']}" required="true" requiredMessage="#{bundle['message.required.publishDate']}" converterMessage="#{bundle['convertor.date.releaseYear']}">
+                            <f:convertDateTime pattern="yyyy" />
+                        </h:inputText>  
+                        <h:message for="publishDate" errorClass="error" />
                     </h:panelGrid>
                     
                     <h:commandButton action="#{book.addNewBook()}" value="#{bundle['action.add.book']}" />

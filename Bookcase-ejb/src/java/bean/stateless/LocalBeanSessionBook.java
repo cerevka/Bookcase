@@ -50,7 +50,7 @@ public interface LocalBeanSessionBook {
      * @param book Pridavana kniha.
      * @param author Autor knihy.
      */
-    public void addBook(EntityBook book, EntityAuthor author);
+    public void addBook(EntityBook book, EntityRelease release, EntityAuthor author);
 
     /**
      * Rozhodne, zda uzivatel vlastni danou knihu.
