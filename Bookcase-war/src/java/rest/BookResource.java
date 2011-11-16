@@ -8,8 +8,11 @@ import entity.EntityRelease;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -40,7 +43,7 @@ public class BookResource {
     public Book getBook(@PathParam("isbn") String isbn) {
         try {
             // Vyzvednou se data.
-            EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);         
+            EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
 
             // Data se napamatuji na XML entity.                 
             return new Book(entityRelease);
@@ -76,9 +79,24 @@ public class BookResource {
             String message = "Book with ISBN: " + isbn + " was not found!";
             throw new VerboseException(message, Status.NOT_FOUND);
         }
+    }
 
-
-
-
+    /**
+     * Aktualizje popis knihy a vrati jeji aktualni podobu.
+     * @param isbn ISBN knihy.
+     * @param description Novy popis knihy.
+     * @return Nova podoba knihy v XML.
+     */
+    @PUT
+    @Path("/{isbn}/description")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Book updateDescription(@PathParam("isbn") String isbn, @FormParam("description") String description) {
+        try {
+            beanSeasonBook.updateBookDescriptionByISBN(isbn, description);            
+            return getBook(isbn);
+        } catch (Exception exception) {
+            throw new VerboseException("Book with ISBN: " + isbn + " was not found!", Status.NOT_FOUND);
+        }
     }
 }

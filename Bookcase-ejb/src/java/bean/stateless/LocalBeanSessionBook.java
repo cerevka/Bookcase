@@ -119,4 +119,12 @@ public interface LocalBeanSessionBook {
      */
     public EntityRelease getReleaseByISBN(String isbn) throws NoResultException;
     
+    /**
+     * Aktualizuje popis knihy.
+     * @param isbn ISBN.
+     * @param description Novy popis knihy.
+     * @throws NoResultException Pokud se nepodari knihu najit.
+     */
+    public void updateBookDescriptionByISBN(String isbn, String description) throws NoResultException;
+    
 }

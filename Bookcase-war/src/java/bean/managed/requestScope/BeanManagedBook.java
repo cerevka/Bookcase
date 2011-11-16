@@ -5,7 +5,6 @@ import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityPrint;
-import entity.EntityPrint.EnumReadStatus;
 import entity.EntityRelease;
 import entity.EntityUser;
 import java.text.MessageFormat;

@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -182,7 +183,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
 
     @Override
     public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user) {
-
         Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK_AND_USER);
         query.setParameter("book", book);
         query.setParameter("user", user);
@@ -193,4 +193,19 @@ public class BeanSessionBook implements LocalBeanSessionBook {
             return l.get(0);
         }
     }
+
+    @Override
+    public void updateBookDescriptionByISBN(String isbn, String description) throws NoResultException {
+        TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
+        query.setParameter("isbn", isbn);
+        EntityRelease release = query.getSingleResult();
+        
+        release.getBook().setDescription(description);
+        em.persist(release);
+        em.flush();
+    }
+    
+    
+    
+    
 }
