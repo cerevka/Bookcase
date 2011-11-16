@@ -48,18 +48,14 @@ public interface LocalBeanSessionBook {
     /**
      * Prida novou knihu do databaze.
      * @param book Pridavana kniha.
-     * @param author Autor knihy.
-     */
-    public void addBook(EntityBook book, EntityAuthor author);
-    
-    /**
-     * Prida novou knihu do databaze.
-     * @param book Pridavana kniha.
      * @param seznam authoru Autor knihy.
      * @param release Release knihy.
      */
     public void addBook(EntityBook book, List<EntityAuthor> author, EntityRelease release);
     
+    public void addBook(EntityBook book, EntityRelease release, EntityAuthor author);
+
+
     /**
      * Rozhodne, zda uzivatel vlastni danou knihu.
      * @return TRUE pokud vlastni, FALSE pokud nevlastni.
@@ -126,5 +122,13 @@ public interface LocalBeanSessionBook {
      * @throws NoResultException Pokud se nepodari vydani najit.
      */
     public EntityRelease getReleaseByISBN(String isbn) throws NoResultException;
+    
+    /**
+     * Aktualizuje popis knihy.
+     * @param isbn ISBN.
+     * @param description Novy popis knihy.
+     * @throws NoResultException Pokud se nepodari knihu najit.
+     */
+    public void updateBookDescriptionByISBN(String isbn, String description) throws NoResultException;
     
 }

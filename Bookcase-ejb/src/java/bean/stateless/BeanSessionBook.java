@@ -21,7 +21,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.WebApplicationException;
 
 /**
  * Beana obstaravajici logiku pro manipulaci s knihami.
@@ -46,7 +45,7 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     }
 
     @Override
-    public void addBook(EntityBook book, EntityAuthor author) {
+    public void addBook(EntityBook book, EntityRelease release, EntityAuthor author) {
         // Autor se umisti do databaze.
         if (author.getId() != null) {
             author = em.merge(author);
@@ -62,7 +61,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(author);
 
         // Vytvori se nove vydani knihy.
-        EntityRelease release = new EntityRelease();
         release.setBook(book);
         book.getReleasesCollection().add(release);
         em.persist(book);
@@ -140,11 +138,6 @@ public class BeanSessionBook implements LocalBeanSessionBook {
     public EntityRelease getReleaseByISBN(String isbn) {
         TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
         query.setParameter("isbn", isbn);
-        try {
-            EntityRelease release = query.getSingleResult();
-        } catch (NoResultException exception) {
-            throw new WebApplicationException(404);
-        }
         return query.getSingleResult();
     }
 
@@ -272,4 +265,20 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         }
         return result;
     }
+
+    @Override
+    public void updateBookDescriptionByISBN(String isbn, String description) throws NoResultException {
+        TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
+        query.setParameter("isbn", isbn);
+        EntityRelease release = query.getSingleResult();
+        
+        release.getBook().setDescription(description);
+        em.persist(release);
+        em.flush();
+    }
+    
+    
+    
+    
+
 }

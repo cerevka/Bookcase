@@ -5,7 +5,7 @@ import bean.stateless.LocalBeanSessionBook;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityPrint;
-import entity.EntityPrint.EnumReadStatus;
+import entity.EntityRelease;
 import entity.EntityUser;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -31,6 +31,8 @@ public class BeanManagedBook {
     private static final Logger logger = Logger.getLogger(BeanManagedBook.class.getName());
 
     private EntityBook book = new EntityBook();
+    
+    private EntityRelease release = new EntityRelease();
 
     private EntityAuthor author = new EntityAuthor();
 
@@ -80,6 +82,15 @@ public class BeanManagedBook {
         this.authorSurname = authorSurname;
     }
 
+    public EntityRelease getRelease() {
+        return release;
+    }
+
+    public void setRelease(EntityRelease release) {
+        this.release = release;
+    }
+
+
     public BeanManagedBook() {
     }
 
@@ -105,7 +116,7 @@ public class BeanManagedBook {
             facesContext.addMessage(null, facesMessage);
         }
         // Kniha i s autorem se prida.
-        beanSessionBook.addBook(book, author);
+        beanSessionBook.addBook(book, release, author);
 
         // Zobrazi se hlaseni o nove knize.
         String newBookPattern = bundle.getString("message.success.bookAdded");
@@ -115,6 +126,7 @@ public class BeanManagedBook {
 
         // Vycisti se promenne.
         book = new EntityBook();
+        release = new EntityRelease();
         author = new EntityAuthor();
         authorName = authorSurname = "";
 
