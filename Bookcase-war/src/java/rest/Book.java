@@ -4,10 +4,7 @@ import entity.EntityAuthor;
 import entity.EntityRelease;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import javax.swing.text.DateFormatter;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,7 +32,8 @@ public class Book {
             this.authors.add(author);
         }
         this.publisher = release.getPublisher();
-        this.publishDate = release.getPublishDate().toString();
+        this.publishDate = DateFormat.getDateInstance(
+            DateFormat.MEDIUM).format(release.getPublishDate());
     }
 
     public String isbn;

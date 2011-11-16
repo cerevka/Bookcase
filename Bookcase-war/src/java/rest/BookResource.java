@@ -6,6 +6,8 @@ import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityEvaluation;
 import entity.EntityRelease;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -125,7 +127,10 @@ public class BookResource {
             EntityRelease release = new EntityRelease();
             release.setIsbn(newBook.isbn);
             release.setEan(newBook.ean);
-            release.setPublishDate(new Date(newBook.publishDate));
+            Date date ; 
+            DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            date = (Date)formatter.parse(newBook.publishDate);  
+            release.setPublishDate(date);
             release.setPublisher(newBook.publisher);
             beanSeasonBook.addBook(book, authors, release);
         } catch (Exception e) {
