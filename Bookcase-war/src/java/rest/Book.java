@@ -4,6 +4,7 @@ import entity.EntityAuthor;
 import entity.EntityRelease;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -34,6 +35,9 @@ public class Book {
         this.publisher = release.getPublisher();
         this.publishDate = DateFormat.getDateInstance(
             DateFormat.MEDIUM).format(release.getPublishDate());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(release.getPublishDate());
+        this.publishYear = calendar.get(Calendar.YEAR);
     }
 
     public String isbn;
@@ -51,4 +55,6 @@ public class Book {
     @XmlElementWrapper(name = "authors")
     @XmlElement(name = "author")
     public Collection<Author> authors = new ArrayList<Author>();
+
+    public int publishYear;
 }

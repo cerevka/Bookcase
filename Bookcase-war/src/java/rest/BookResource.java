@@ -6,22 +6,30 @@ import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityEvaluation;
 import entity.EntityRelease;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST Web Service
@@ -35,6 +43,9 @@ public class BookResource {
 
     @EJB
     private LocalBeanSessionBook beanSeasonBook;
+    
+    @Context
+    UriInfo uriInfo;
 
     /**
      * Vrati informace o knize.
@@ -108,11 +119,11 @@ public class BookResource {
         }
     }
     
-    @PUT
+    @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Book createBook(Book newBook) {
+    public Response createBook(Book newBook) {
         try {
             List<EntityAuthor> authors = new ArrayList<EntityAuthor>(newBook.authors.size());
             for (Author author : newBook.authors) {
@@ -136,6 +147,15 @@ public class BookResource {
         } catch (Exception e) {
             throw new VerboseException("Error while book creation.", Status.BAD_REQUEST);
         }
-        return getBook(newBook.isbn);
+        URI baseUri = uriInfo.getBaseUri();
+        Response response = null;
+        try {
+             response =Response.created(new URI( baseUri.toString() + "rest/book/" + newBook.isbn))
+                     .entity(getBook(newBook.isbn))
+                     .build();
+        } catch (URISyntaxException ex) {
+            throw new VerboseException("Error while book creation.", Status.BAD_REQUEST);
+        }
+        return response;
     }
 }
