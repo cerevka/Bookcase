@@ -29,7 +29,6 @@ public class BookResource {
     @EJB
     private LocalBeanSessionBook beanSeasonBook;
 
-    
     /**
      * Vrati informace o knize.
      * @param isbn ISBN knihy.
@@ -55,9 +54,7 @@ public class BookResource {
         }
         return book;
     }
-    
-    
-     
+
     /**
      * Vrati hodnoceni knihy.
      * @param isbn ISBN knihy.
@@ -69,31 +66,30 @@ public class BookResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getRating(@PathParam("isbn") String isbn) {
 
-        
-        try{
-        // nactu vsechny hodnoceni dane knihy
-        EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
-        EntityBook entityBook = entityRelease.getBook();
-         List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
-         
-         //spocte se hodnoceni jako prumer vsech hodnoceni
-        int evaluation = 0;
-        for (EntityEvaluation e : evaluations) {
-            evaluation += e.getRate();
+
+        try {
+            // nactu vsechny hodnoceni dane knihy
+            EntityRelease entityRelease = beanSeasonBook.getReleaseByISBN(isbn);
+            EntityBook entityBook = entityRelease.getBook();
+            List<EntityEvaluation> evaluations = beanSeasonBook.getEvaluationsByBook(entityBook);
+
+            //spocte se hodnoceni jako prumer vsech hodnoceni
+            int evaluation = 0;
+            for (EntityEvaluation e : evaluations) {
+                evaluation += e.getRate();
+            }
+
+            return Integer.toString(evaluation / evaluations.size());
+        } catch (Exception ex) {
+            String message = "Book with ISBN: " + isbn + " was not found!";
+            throw new VerboseException(message, Status.NOT_FOUND);
+
         }
-        
-        return Integer.toString(evaluation / evaluations.size());
-        }
-        catch(Exception ex){
-            String message="Book with ISBN: "+isbn+" was not found!";
-         throw new VerboseException(message,Status.NOT_FOUND);
-            
-        }
-       
-       
-       
-      
+
+
+
+
     }
-    
-    
+
+
 }

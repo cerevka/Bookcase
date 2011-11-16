@@ -38,7 +38,7 @@ public interface LocalBeanSessionBook {
      * @return Autor.
      */
     public EntityAuthor getAuthor(int authorId);
-
+    
     /**
      * Vrati vsechny autory.
      * @return Seznam autoru.
@@ -51,7 +51,15 @@ public interface LocalBeanSessionBook {
      * @param author Autor knihy.
      */
     public void addBook(EntityBook book, EntityAuthor author);
-
+    
+    /**
+     * Prida novou knihu do databaze.
+     * @param book Pridavana kniha.
+     * @param seznam authoru Autor knihy.
+     * @param release Release knihy.
+     */
+    public void addBook(EntityBook book, List<EntityAuthor> author, EntityRelease release);
+    
     /**
      * Rozhodne, zda uzivatel vlastni danou knihu.
      * @return TRUE pokud vlastni, FALSE pokud nevlastni.

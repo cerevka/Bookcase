@@ -28,7 +28,8 @@ import javax.persistence.Table;
     @NamedQuery(name = EntityAuthor.FIND_ALL, query = "SELECT a FROM EntityAuthor a"),
     @NamedQuery(name = EntityAuthor.FIND_BY_ID, query = "SELECT a FROM EntityAuthor a WHERE a.id = :id"),
     @NamedQuery(name = EntityAuthor.FIND_BY_NAME, query = "SELECT a FROM EntityAuthor a WHERE a.name = :name"),
-    @NamedQuery(name = EntityAuthor.FIND_BY_SURNAME, query = "SELECT a FROM EntityAuthor a WHERE a.surname = :surname")
+    @NamedQuery(name = EntityAuthor.FIND_BY_SURNAME, query = "SELECT a FROM EntityAuthor a WHERE a.surname = :surname"),
+    @NamedQuery(name = EntityAuthor.FIND_BY_NAME_AND_SURNAME, query = "SELECT a FROM EntityAuthor a WHERE a.surname = :surname AND a.name = :name")
 })
 public class EntityAuthor implements Serializable {
 
@@ -41,6 +42,8 @@ public class EntityAuthor implements Serializable {
     public static final String FIND_BY_NAME = "EntityAuthor.findByName";
 
     public static final String FIND_BY_SURNAME = "EntityAuthor.findBySurname";
+    
+    public static final String FIND_BY_NAME_AND_SURNAME = "EntityAuthor.findByNameAndSurname";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,12 +7,15 @@ import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -30,10 +33,8 @@ public class BeanSessionBook implements LocalBeanSessionBook {
 
     @PersistenceContext
     private EntityManager em;
-
     @Resource
     private SessionContext sessionContext;
-
     @EJB
     private LocalBeanSessionUser beanSessionUser;
 
@@ -134,13 +135,13 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         query.setParameter("title", title);
         return query.getResultList();
     }
-    
+
     @Override
-    public EntityRelease getReleaseByISBN(String isbn)  {
+    public EntityRelease getReleaseByISBN(String isbn) {
         TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
         query.setParameter("isbn", isbn);
-        try{
-        EntityRelease release = query.getSingleResult();
+        try {
+            EntityRelease release = query.getSingleResult();
         } catch (NoResultException exception) {
             throw new WebApplicationException(404);
         }
@@ -190,16 +191,85 @@ public class BeanSessionBook implements LocalBeanSessionBook {
 
     @Override
     public EntityEvaluation getEaluationByBookAndUser(EntityBook book, EntityUser user) {
-      
         Query query = em.createNamedQuery(EntityEvaluation.FIND_BY_BOOK_AND_USER);
         query.setParameter("book", book);
         query.setParameter("user", user);
-        List<EntityEvaluation> l= query.getResultList();
-        if(l.isEmpty()){
-           return null;
-        }
-        else{
+        List<EntityEvaluation> l = query.getResultList();
+        if (l.isEmpty()) {
+            return null;
+        } else {
             return l.get(0);
         }
     }
- }
+
+    @Override
+    public void addBook(EntityBook book, List<EntityAuthor> authors, EntityRelease release) {
+        List<EntityAuthor> bookAuthors = getListOfAuthors(authors);
+        EntityRelease foundRelease = gerReleaseByISBN(release);
+        EntityBook foundBook = getBookByTitle(book);
+        if (foundBook == null) {
+            foundBook = book;
+            em.persist(foundBook);
+        }
+        if (foundRelease == null) {
+            foundRelease = release;
+            em.persist(foundRelease);
+        }
+        foundBook.getAuthorCollection().addAll(bookAuthors);
+        foundRelease.setBook(foundBook);
+        em.flush();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private List<EntityAuthor> getListOfAuthors(List<EntityAuthor> authors) {
+        List<EntityAuthor> bookAuthors = new ArrayList<EntityAuthor>(authors.size());
+        for (EntityAuthor entityAuthor : authors) {
+            EntityAuthor author = getAuthorByNameAndSurname(entityAuthor);
+            if (author != null) {
+                bookAuthors.add(author);
+            } else {
+                em.persist(entityAuthor);
+                em.flush();
+                bookAuthors.add(entityAuthor);
+            }
+        }
+        return bookAuthors;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private EntityAuthor getAuthorByNameAndSurname(EntityAuthor entityAuthor) {
+        Query query = em.createNamedQuery(EntityAuthor.FIND_BY_NAME_AND_SURNAME);
+        query.setParameter("name", entityAuthor.getName());
+        query.setParameter("surname", entityAuthor.getSurname());
+        EntityAuthor author = null;
+        try {
+            author = (EntityAuthor) query.getSingleResult();
+        } catch (NoResultException exception) {
+        }
+        return author;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private EntityBook getBookByTitle(EntityBook book) {
+        Query bookQuery = em.createNamedQuery(EntityBook.FIND_BY_TITLE);
+        bookQuery.setParameter("title", book.getTitle());
+        EntityBook result = null;
+        try {
+            result = (EntityBook) bookQuery.getSingleResult();
+        } catch (NoResultException exception) {
+        }
+        return result;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    private EntityRelease gerReleaseByISBN(EntityRelease release) {
+        Query releaseQuery = em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
+        releaseQuery.setParameter("isbn", release.getIsbn());
+        EntityRelease result = null;
+        try {
+            result = (EntityRelease) releaseQuery.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return result;
+    }
+}

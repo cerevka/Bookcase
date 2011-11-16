@@ -41,7 +41,7 @@ public class EntityRelease implements Serializable {
     public static final String FIND_BY_ID = "EntityRelease.findById";
 
     public static final String FIND_BY_ISBN = "EntityRelease.findByISBN";
-
+    
     public static final String FIND_BY_EAN = "EntityRelease.findByEAN";
 
     @Id
