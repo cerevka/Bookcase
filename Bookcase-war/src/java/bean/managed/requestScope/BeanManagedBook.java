@@ -2,14 +2,23 @@ package bean.managed.requestScope;
 
 import bean.managed.sessionScoped.BeanManagedUser;
 import bean.stateless.LocalBeanSessionBook;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -19,6 +28,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.ws.rs.core.Response.StatusType;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Prace s knihami.
@@ -29,24 +42,17 @@ import javax.faces.event.ValueChangeEvent;
 public class BeanManagedBook {
 
     private static final Logger logger = Logger.getLogger(BeanManagedBook.class.getName());
-
     private EntityBook book = new EntityBook();
-    
     private EntityRelease release = new EntityRelease();
-
     private EntityAuthor author = new EntityAuthor();
-
     private String authorName;
-
-    private String authorSurname;  
-
+    private String authorSurname;
     @ManagedProperty(value = "#{user}")
     private BeanManagedUser beanManagedUser;
 
     public void setBeanManagedUser(BeanManagedUser beanManagedUser) {
         this.beanManagedUser = beanManagedUser;
     }
-
     @EJB
     private LocalBeanSessionBook beanSessionBook;
 
@@ -90,7 +96,6 @@ public class BeanManagedBook {
         this.release = release;
     }
 
-
     public BeanManagedBook() {
     }
 
@@ -129,6 +134,54 @@ public class BeanManagedBook {
         release = new EntityRelease();
         author = new EntityAuthor();
         authorName = authorSurname = "";
+
+        return null;
+    }
+
+    public String prefillBook() {
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
+        FacesMessage facesMessage;
+
+        Client client = Client.create();
+        WebResource resource = client.resource("http://1.mdw11ws105t2.appspot.com/resources/title");
+        resource = resource.path(release.getIsbn());
+        ClientResponse clientResponse = resource.get(ClientResponse.class);
+        
+        switch (clientResponse.getStatus()) {
+            case 200:
+                String data = clientResponse.getEntity(String.class);
+                try {
+                    JSONObject json = new JSONObject(data);
+                    book.setTitle(json.getString("name"));
+                    SimpleDateFormat formatter = new SimpleDateFormat("YYYY");
+                    release.setPublishDate(formatter.parse(json.getString("publishYear")));
+                    release.setPublisher(json.getString("publisherNames"));
+                    
+                    JSONArray authors = json.getJSONArray("authors");
+                    authorName = authors.getJSONObject(0).getString("firstName");
+                    authorSurname = authors.getJSONObject(0).getString("surname");
+                } catch (JSONException exception) {
+                    facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("message.error.invalidInput"), "");
+                    facesContext.addMessage(null, facesMessage);
+                } catch (ParseException exception) {
+                    facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("message.error.invalidPublishDate"), "");
+                    facesContext.addMessage(null, facesMessage);
+                }
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, bundle.getString("message.success.bookFound"), "");
+                facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage(null, facesMessage);
+                break;
+            case 404:
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("message.error.bookNotFound"), "");
+                facesContext.addMessage(null, facesMessage);
+                break;
+            default:
+                facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, bundle.getString("message.error.unknownError"), String.valueOf(clientResponse.getStatus()));
+                facesContext.addMessage(null, facesMessage);
+                break;
+        }
 
         return null;
     }

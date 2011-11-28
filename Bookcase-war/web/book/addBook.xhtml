@@ -12,31 +12,40 @@
             <ui:param name="title" value="#{bundle['title.book.add']}" />            
 
             <ui:define name="content">
-                <h1><h:outputText value="#{bundle['heading.book.add']}" /></h1>
+                <h1><h:outputText value="#{bundle['heading.book.add']}" /></h1>                
 
-                <h:messages globalOnly="true" errorClass="error" infoClass="success" />
-
-                <h:form id="addBookForm">    
+                <h:form id="addBookForm">
+                    <h:messages globalOnly="true" errorClass="error" infoClass="success" />
+                    
                     <h2><h:outputText value="#{bundle['heading.author']}" /></h2>
                     <p><h:outputText value="#{bundle['info.whenAddNewAuthor']}" /></p>
-                    
+
                     <h:panelGrid columns="3" columnClasses="firstColumn, secondColumn, thirdColumn">
-                        
+
+                        <h:outputLabel value="#{bundle['label.isbn']}:" for="isbn" />
+                        <h:inputText id="isbn" value="#{book.release.isbn}" title="#{bundle['label.isbn']}" required="true" requiredMessage="#{bundle['message.required.isbn']}" />  
+                        <h:panelGroup>
+                            <h:commandButton action="#{book.prefillBook()}" value="#{bundle['action.prefillBook']}">
+                                <f:ajax execute="isbn" render="@form" />
+                            </h:commandButton>
+                            <h:message for="isbn" errorClass="error" />
+                        </h:panelGroup>
+
                         <h:outputLabel value="#{bundle['label.author']}:" for="author" />
                         <h:selectOneMenu id="author" value="#{book.author}" title="#{bundle['label.author']}" >
                             <f:selectItem noSelectionOption="true" itemLabel="#{bundle['label.newAuthor']}" />
                             <f:selectItems value="#{book.allAuthors}" var="author" itemLabel="#{author.name} #{author.surname}" />                           
                         </h:selectOneMenu>
                         <h:message for="author" errorClass="error" />                        
-                        
+
                         <h:outputLabel value="#{bundle['label.name.first']}:" for="name" />
                         <h:inputText id="name" value="#{book.authorName}" title="#{bundle['label.name.first']}" />
                         <h:message for="name" errorClass="error" />
-                        
+
                         <h:outputLabel value="#{bundle['label.name.last']}:" for="surname" />
                         <h:inputText id="surname" value="#{book.authorSurname}" title="#{bundle['label.name.last']}" />
                         <h:message for="surname" errorClass="error" />
-                        
+
                     </h:panelGrid>
 
                     <h2><h:outputText value="#{bundle['heading.title']}" /></h2>
@@ -44,28 +53,24 @@
                         <h:outputLabel value="#{bundle['label.title']}:" for="title" />
                         <h:inputText id="title" value="#{book.book.title}" title="#{bundle['label.title']}" required="true" requiredMessage="#{bundle['message.required.title']}" />
                         <h:message for="title" errorClass="error" />
-                        
+
                         <h:outputLabel value="#{bundle['label.description']}:" for="description" />
                         <h:inputText id="description" value="#{book.book.description}" title="#{bundle['label.description']}" required="true" requiredMessage="#{bundle['message.required.description']}" />  
                         <h:message for="description" errorClass="error" />
-                        
-                        <h:outputLabel value="#{bundle['label.isbn']}:" for="isbn" />
-                        <h:inputText id="isbn" value="#{book.release.isbn}" title="#{bundle['label.isbn']}" required="true" requiredMessage="#{bundle['message.required.isbn']}" />  
-                        <h:message for="isbn" errorClass="error" />
-                        
+
                         <h:outputLabel value="#{bundle['label.publisher']}:" for="publisher" />
                         <h:inputText id="publisher" value="#{book.release.publisher}" title="#{bundle['label.publisher']}" required="true" requiredMessage="#{bundle['message.required.publisher']}" />  
                         <h:message for="publisher" errorClass="error" />
-                        
+
                         <h:outputLabel value="#{bundle['label.publishDate']}:" for="publishDate" />
                         <h:inputText id="publishDate" value="#{book.release.publishDate}" title="#{bundle['label.publishDate']}" required="true" requiredMessage="#{bundle['message.required.publishDate']}" converterMessage="#{bundle['convertor.date.releaseYear']}">
                             <f:convertDateTime pattern="yyyy" />
                         </h:inputText>  
                         <h:message for="publishDate" errorClass="error" />
                     </h:panelGrid>
-                    
+
                     <h:commandButton action="#{book.addNewBook()}" value="#{bundle['action.add.book']}" />
-                    
+
                 </h:form>
 
             </ui:define>
