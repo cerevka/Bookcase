@@ -5,18 +5,18 @@ import bean.stateless.LocalBeanSessionBook;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import entity.EntityAuthor;
 import entity.EntityBook;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
-import java.text.DateFormat;
+import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +28,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.ws.rs.core.Response.StatusType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MultivaluedMap;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -122,7 +126,7 @@ public class BeanManagedBook {
         }
         // Kniha i s autorem se prida.
         beanSessionBook.addBook(book, release, author);
-
+        addBookToFulltextSearch(book);
         // Zobrazi se hlaseni o nove knize.
         String newBookPattern = bundle.getString("message.success.bookAdded");
         String newBookMessage = MessageFormat.format(newBookPattern, book.getTitle());
@@ -139,7 +143,7 @@ public class BeanManagedBook {
     }
 
     public String prefillBook() {
-        
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle bundle = facesContext.getApplication().getResourceBundle(facesContext, "bundle");
         FacesMessage facesMessage;
@@ -148,7 +152,7 @@ public class BeanManagedBook {
         WebResource resource = client.resource("http://1.mdw11ws105t2.appspot.com/resources/title");
         resource = resource.path(release.getIsbn());
         ClientResponse clientResponse = resource.get(ClientResponse.class);
-        
+
         switch (clientResponse.getStatus()) {
             case 200:
                 String data = clientResponse.getEntity(String.class);
@@ -158,7 +162,7 @@ public class BeanManagedBook {
                     SimpleDateFormat formatter = new SimpleDateFormat("YYYY");
                     release.setPublishDate(formatter.parse(json.getString("publishYear")));
                     release.setPublisher(json.getString("publisherNames"));
-                    
+
                     JSONArray authors = json.getJSONArray("authors");
                     authorName = authors.getJSONObject(0).getString("firstName");
                     authorSurname = authors.getJSONObject(0).getString("surname");
@@ -184,6 +188,103 @@ public class BeanManagedBook {
         }
 
         return null;
+    }
+
+    /**
+     * Přidá knihu do fulltextového vyhledávače
+     * @param EntityBook book kniha 
+     */
+    private void addBookToFulltextSearch(EntityBook book) {
+        Client client = Client.create();
+
+        //prihlaseni do jejich systemu
+        WebResource resource = client.resource("http://ec2-46-137-144-208.eu-west-1.compute.amazonaws.com:3000/user/login/");
+        MultivaluedMap queryParams = new MultivaluedMapImpl();
+        queryParams.add("username", "bookcase");
+        queryParams.add("password", "bookcase");
+        ClientResponse clientResponse = resource.post(ClientResponse.class, queryParams);
+        //ulozeni seccion cookie
+        Cookie sessionCookie = clientResponse.getCookies().get(0);
+        switch (clientResponse.getStatus()) {
+            case 200:
+
+                break;
+            default:
+                logger.log(Level.WARNING, "faield to login fulltext service");
+                logger.log(Level.WARNING, "book id:{0} was not addes to fulltext search", book.getId());
+                break;
+        }
+        try {
+            //pridani stranky do vyhledavace
+            //UID mam nastaveny napevno...kdby sme toho s nima delali vic,
+            //bylo by lespi je mit nekde v souboru a kontrolovat je
+            JSONObject tittle = new JSONObject().put("element_uid", 40);
+            tittle.put("content", book.getTitle());
+
+            String authors = "";
+            List<EntityAuthor> authorsCollection = (List) book.getAuthorCollection();
+            for (EntityAuthor a : authorsCollection) {
+                authors += a.getName();
+                authors += " ";
+                authors += a.getSurname();
+                authors += ", ";
+            }
+            authors = authors.substring(0, authors.length() - 2);
+
+            JSONObject autor = new JSONObject().put("element_uid", 41);
+            autor.put("content", authors);
+            JSONObject desc = new JSONObject().put("element_uid", 42);
+            desc.put("content", book.getDescription());
+            JSONArray page = new JSONArray();
+            page.put(tittle);
+            page.put(autor);
+            page.put(desc);
+            JSONObject message = new JSONObject();
+            message.put("scheme_uid", 185);
+            message.put("lang_uid", 1);
+            
+            //zjisti fragmenty url kde aplikace bezi
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            String host = ctx.getExternalContext().getRequestServerName();
+            String app = ctx.getExternalContext().getRequestContextPath();
+            String port = new Integer(ctx.getExternalContext().getRequestServerPort()).toString();
+
+            //kdyby nefungovalo automaticky generovani aktualni url tak na produkcnim serveru
+            //nahradit radkou dole
+            //  String tag = "http://www.bookcase.cz/book/detail.xhtml?bookId"+book.getId();
+            String tag = host + ":" + port + app + "/book/detail.xhtml?bookId=" + book.getId();
+            message.put("tag", tag);
+            message.put("data", page);
+
+            //tohle je tu protoze JSONObject escapuje znak "/"
+            String outMessage = message.toString().replace("\\", "");
+            WebResource resource2 = client.resource("http://ec2-46-137-144-208.eu-west-1.compute.amazonaws.com:3000/page/");
+            ClientResponse clientResponse2 = resource2.cookie(sessionCookie).type("application/json").post(ClientResponse.class, outMessage);
+
+            switch (clientResponse2.getStatus()) {
+                case 200:
+                    break;
+                default:
+                    logger.log(Level.WARNING, "faield to add book to fulltext search");
+                    logger.log(Level.WARNING, "book id:{0} was not addes to fulltext search", book.getId());
+            }
+        } catch (JSONException ex) {
+            Logger.getLogger(BeanManagedBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+
+        //odhlaseni z jejich systemu
+        WebResource resource3 = client.resource("http://ec2-46-137-144-208.eu-west-1.compute.amazonaws.com:3000/user/logout/");
+        ClientResponse clientResponse3 = resource3.cookie(sessionCookie).post(ClientResponse.class);
+
+        switch (clientResponse3.getStatus()) {
+            case 200:
+                break;
+            default:
+                logger.log(Level.WARNING, "faield to logout from fulltext service");
+        }
+
     }
 
     /**
