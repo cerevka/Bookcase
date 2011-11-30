@@ -190,7 +190,7 @@ public class BeanManagedBook {
      * Přidá knihu do fulltextového vyhledávače
      * @param EntityBook book kniha 
      */
-    private void addBookToFulltextSearch(EntityBook book) {
+    public void addBookToFulltextSearch(EntityBook book) {
         Client client = Client.create();
 
         //prihlaseni do jejich systemu
@@ -253,7 +253,7 @@ public class BeanManagedBook {
             message.put("data", page);
 
             //tohle je tu protoze JSONObject escapuje znak "/"
-            String outMessage = message.toString().replaceAll("\\", "");
+            String outMessage = message.toString().replace("\\", "");
             WebResource resource2 = client.resource("http://ec2-46-137-144-208.eu-west-1.compute.amazonaws.com:3000/page/");
             ClientResponse clientResponse2 = resource2.cookie(sessionCookie).type("application/json").post(ClientResponse.class, outMessage);
 
