@@ -11,7 +11,6 @@ import entity.EntityBook;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
-import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,9 +27,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MultivaluedMap;
 import org.codehaus.jettison.json.JSONArray;
@@ -252,12 +248,12 @@ public class BeanManagedBook {
             //kdyby nefungovalo automaticky generovani aktualni url tak na produkcnim serveru
             //nahradit radkou dole
             //  String tag = "http://www.bookcase.cz/book/detail.xhtml?bookId"+book.getId();
-            String tag = host + ":" + port + app + "/book/detail.xhtml?bookId=" + book.getId();
+            String tag = "http://" + host + ":" + port + app + "/book/detail.xhtml?bookId=" + book.getId();
             message.put("tag", tag);
             message.put("data", page);
 
             //tohle je tu protoze JSONObject escapuje znak "/"
-            String outMessage = message.toString().replace("\\", "");
+            String outMessage = message.toString().replaceAll("\\", "");
             WebResource resource2 = client.resource("http://ec2-46-137-144-208.eu-west-1.compute.amazonaws.com:3000/page/");
             ClientResponse clientResponse2 = resource2.cookie(sessionCookie).type("application/json").post(ClientResponse.class, outMessage);
 
