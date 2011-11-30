@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <body>
 
@@ -58,6 +59,18 @@
                             <h:commandLink value="#{bundle['action.book.detail']}" action="#{findBook.bookDetail(item)}" />
                         </h:column>
 
+                    </h:dataTable>
+                    
+                    <c:if test="#{findBook.searchResults.size() > 0}">
+                        <h2>#{bundle['label.find.fulltextResults']}</h2>
+                    </c:if>
+                    <h:dataTable value="#{findBook.searchResults}" var="item" rendered="#{findBook.searchResults.size() > 0}" >                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle['label.find.result']}"/>
+                            </f:facet>
+                            <a href="#{item.tag}"><h:outputText value="#{item.result}" escape="false" /></a>
+                        </h:column>
                     </h:dataTable>
                 </h:form>
             </ui:define>
