@@ -11,7 +11,6 @@ import entity.EntityBook;
 import entity.EntityPrint;
 import entity.EntityRelease;
 import entity.EntityUser;
-import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,9 +27,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MultivaluedMap;
 import org.codehaus.jettison.json.JSONArray;
@@ -194,7 +190,7 @@ public class BeanManagedBook {
      * Přidá knihu do fulltextového vyhledávače
      * @param EntityBook book kniha 
      */
-    private void addBookToFulltextSearch(EntityBook book) {
+    public void addBookToFulltextSearch(EntityBook book) {
         Client client = Client.create();
 
         //prihlaseni do jejich systemu
@@ -252,7 +248,7 @@ public class BeanManagedBook {
             //kdyby nefungovalo automaticky generovani aktualni url tak na produkcnim serveru
             //nahradit radkou dole
             //  String tag = "http://www.bookcase.cz/book/detail.xhtml?bookId"+book.getId();
-            String tag = host + ":" + port + app + "/book/detail.xhtml?bookId=" + book.getId();
+            String tag = "http://" + host + ":" + port + app + "/book/detail.xhtml?bookId=" + book.getId();
             message.put("tag", tag);
             message.put("data", page);
 

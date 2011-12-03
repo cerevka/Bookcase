@@ -48,6 +48,12 @@
                             <h:commandLink value="#{bundle['action.addToBasket']}" action="#{user.addToBasket(print)}" rendered="#{!book.isPrintOwnedByUser(print) and !user.isInBasket(print)}" />
                             <h:commandLink value="#{bundle['action.removeFromBasket']}" action="#{user.removeFromBasket(print)}" rendered="#{user.isInBasket(print)}" />
                         </h:column>
+                        <h:column rendered="#{user.isAdmin()}">
+                            <f:facet name="header">
+                                <h:outputText value="Fulltext" />
+                            </f:facet>
+                            <h:commandLink value="Add to fulltext" action="#{book.addBookToFulltextSearch(print.release.book)}" />
+                        </h:column>
                     </h:dataTable>
                 </h:form>
 
