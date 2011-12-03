@@ -131,4 +131,6 @@ public interface LocalBeanSessionBook {
      */
     public void updateBookDescriptionByISBN(String isbn, String description) throws NoResultException;
     
+    public boolean existsISBN(String isbn);
+    
 }

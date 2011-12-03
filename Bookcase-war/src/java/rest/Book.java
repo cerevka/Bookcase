@@ -33,8 +33,6 @@ public class Book {
             this.authors.add(author);
         }
         this.publisher = release.getPublisher();
-        this.publishDate = DateFormat.getDateInstance(
-            DateFormat.MEDIUM).format(release.getPublishDate());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(release.getPublishDate());
         this.publishYear = calendar.get(Calendar.YEAR);
@@ -49,8 +47,6 @@ public class Book {
     public String description;
     
     public String ean;
-    
-    public String publishDate;
 
     @XmlElementWrapper(name = "authors")
     @XmlElement(name = "author")

@@ -276,9 +276,18 @@ public class BeanSessionBook implements LocalBeanSessionBook {
         em.persist(release);
         em.flush();
     }
-    
-    
-    
+
+    @Override
+    public boolean existsISBN(String isbn) {
+        TypedQuery<EntityRelease> query = (TypedQuery<EntityRelease>) em.createNamedQuery(EntityRelease.FIND_BY_ISBN);
+        query.setParameter("isbn", isbn);
+        Collection<EntityRelease> releases = query.getResultList();
+        if (releases.isEmpty()) {
+            return false;
+        } else{
+            return true;
+        }
+    }
     
 
 }

@@ -367,4 +367,6 @@ public class BeanManagedBook {
     public EntityPrint.EnumReadStatus[] getReadStatuses() {
         return EntityPrint.EnumReadStatus.values();
     }
+    
+    
 }

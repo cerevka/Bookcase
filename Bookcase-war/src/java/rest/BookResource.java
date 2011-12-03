@@ -9,6 +9,7 @@ import entity.EntityRelease;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,9 +44,9 @@ public class BookResource {
 
     @EJB
     private LocalBeanSessionBook beanSeasonBook;
-    
     @Context
     UriInfo uriInfo;
+    private static final Logger logger = Logger.getLogger(BookResource.class.getName());
 
     /**
      * Vrati informace o knize.
@@ -89,10 +90,11 @@ public class BookResource {
             for (EntityEvaluation e : evaluations) {
                 evaluation += e.getRate();
             }
-            if (evaluation == 0)
-                return  Integer.toString(0);
-            else
+            if (evaluation == 0) {
+                return Integer.toString(0);
+            } else {
                 return Integer.toString(evaluation / evaluations.size());
+            }
         } catch (Exception ex) {
             String message = "Book with ISBN: " + isbn + " was not found!";
             throw new VerboseException(message, Status.NOT_FOUND);
@@ -112,19 +114,24 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Book updateDescription(@PathParam("isbn") String isbn, @FormParam("description") String description) {
         try {
-            beanSeasonBook.updateBookDescriptionByISBN(isbn, description);            
+            beanSeasonBook.updateBookDescriptionByISBN(isbn, description);
             return getBook(isbn);
         } catch (Exception exception) {
             throw new VerboseException("Book with ISBN: " + isbn + " was not found!", Status.NOT_FOUND);
         }
     }
-    
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response createBook(Book newBook) {
+    public Response createBook(Book newBook) {        
+        Response response = null;
         try {
+            //if (beanSeasonBook.existsISBN(newBook.isbn) == true) {
+            //    throw new VerboseException("Book with this ISBN already exists.", Status.CONFLICT);
+            //}
+            
             List<EntityAuthor> authors = new ArrayList<EntityAuthor>(newBook.authors.size());
             for (Author author : newBook.authors) {
                 EntityAuthor entityAuthor = new EntityAuthor();
@@ -138,22 +145,20 @@ public class BookResource {
             EntityRelease release = new EntityRelease();
             release.setIsbn(newBook.isbn);
             release.setEan(newBook.ean);
-            Date date ; 
-            DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            date = (Date)formatter.parse(newBook.publishDate);  
+            Date date;
+            SimpleDateFormat formatter = new SimpleDateFormat("YYYY");
+            date = (Date) formatter.parse(String.valueOf(newBook.publishYear));
             release.setPublishDate(date);
             release.setPublisher(newBook.publisher);
             beanSeasonBook.addBook(book, authors, release);
-        } catch (Exception e) {
-            throw new VerboseException("Error while book creation.", Status.BAD_REQUEST);
-        }
-        URI baseUri = uriInfo.getBaseUri();
-        Response response = null;
-        try {
-             response =Response.created(new URI( baseUri.toString() + "rest/book/" + newBook.isbn))
-                     .entity(getBook(newBook.isbn))
-                     .build();
-        } catch (URISyntaxException ex) {
+
+            URI baseUri = uriInfo.getBaseUri();
+            response = Response.created(new URI(baseUri.toString() + "rest/book/" + newBook.isbn)).entity(getBook(newBook.isbn)).build();
+        } catch (ParseException exception) {
+            logger.log(Level.SEVERE, "Parse Exception", exception);
+            throw new VerboseException("Invalid input XML.", Status.BAD_REQUEST);
+        } catch (URISyntaxException exception) {
+            logger.log(Level.SEVERE, "URI Syntax Exception", exception);
             throw new VerboseException("Error while book creation.", Status.BAD_REQUEST);
         }
         return response;
